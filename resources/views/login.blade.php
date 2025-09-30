@@ -2,7 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<main class="bg-gray-100">
+<main class="bg-gray-50">
     <div class="flex flex-col items-center justify-center min-h-screen px-4">
         <div class="w-full max-w-xs sm:max-w-sm md:max-w-md">
             <div class="text-center mb-8">
