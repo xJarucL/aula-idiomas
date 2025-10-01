@@ -14,7 +14,7 @@ Route::post('/iniciando_sesion', [UserController::class, 'login'])
 
 
 Route::prefix('alumno')->group(function(){
-    Route::get('/alumno/inicio', function () {
+    Route::get('/inicio', function () {
         return view('alumno.inicio');
     })->name('alumno.inicio');
 });
