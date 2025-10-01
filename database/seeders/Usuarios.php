@@ -40,7 +40,7 @@ class Usuarios extends Seeder
             'ap_materno' => 'Montes',
             'matricula' => '202200096',
             'email' => null,
-            'password' => Hash::make('sergio'),
+            'password' => Hash::make('202200096'),
             'fk_tipo_usuario' => 1
         ]);
     }

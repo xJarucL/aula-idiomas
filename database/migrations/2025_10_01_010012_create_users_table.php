@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('matricula')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->string('password');
+            $table->text('img_user')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->unsignedBigInteger('fk_tipo_usuario')->nullable();
