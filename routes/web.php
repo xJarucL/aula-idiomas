@@ -32,5 +32,29 @@ Route::prefix('coordinacion')->group(function(){
     Route::get('/inicio', function () {
         return view('coordinacion.inicio');
     })->name('coordinacion.inicio');
-});
 
+    Route::get('/lista-alumnos', function () {
+        return view('coordinacion.lista-alumnos');
+    })->name('coordinacion.lista-alumnos');
+
+    Route::get('/lista-docente', function () {
+        return view('coordinacion.lista-docente');
+    })->name('coordinacion.lista-docente');
+
+    
+    Route::get('/lista-grupos', function () {
+        return view('coordinacion.lista-grupos');
+    })->name('coordinacion.lista-grupos');
+
+    Route::get('/registro-alumno', function () {
+        return view('coordinacion.registro-alumno');
+    })->name('coordinacion.registro-alumno');
+
+    Route::get('/registro-docente', function () {
+        return view('coordinacion.registro-docente');
+    })->name('coordinacion.registro-docente');
+
+    Route::get('/registro-grupo', function () {
+        return view('coordinacion.registro-grupo');
+    })->name('coordinacion.registro-grupo');
+});
