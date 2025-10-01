@@ -1,9 +1,9 @@
 @extends('components.menu')
 
-@section('title', 'Panel')
+@section('title', 'Alumno')
 
 @section('content')
 
-<h1>Contenido de la vista</h1>
+<h1>Panel de inicio de Alumno</h1>
 
 @endsection
