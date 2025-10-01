@@ -1,15 +1,18 @@
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js'])
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <main class="bg-gray-50">
+
+    <x-msj-alert />
+
     <div class="flex flex-col items-center justify-center min-h-screen px-4">
         <div class="w-full max-w-xs sm:max-w-sm md:max-w-md">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold text-gray-900 mb-2">Bienvenido de nuevo</h1>
                 <h3 class="text-gray-600 text-sm">Inicia sesión para continuar con tus actividades</h3>
             </div>
-            <form class="space-y-4" action="" method="post">
+            <form id="form-insertar" data-url="{{ route('iniciando') }}" class="space-y-4" action="" method="post">
                 @csrf
                 <div>
                     <input
@@ -27,11 +30,7 @@
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
-                <button
-                    class="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition duration-200 shadow-md"
-                    type="submit">
-                    Iniciar Sesión
-                </button>
+                <input class="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition duration-200 shadow-md" type="submit" value="Iniciar sesión">
             </form>
         </div>
 </main>
