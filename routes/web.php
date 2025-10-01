@@ -14,6 +14,7 @@ Route::post('/iniciando_sesion', [UserController::class, 'login'])
     ->name('iniciando');
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
 Route::prefix('alumno')->group(function(){
@@ -41,7 +42,7 @@ Route::prefix('coordinacion')->group(function(){
         return view('coordinacion.lista-docente');
     })->name('coordinacion.lista-docente');
 
-    
+
     Route::get('/lista-grupos', function () {
         return view('coordinacion.lista-grupos');
     })->name('coordinacion.lista-grupos');
