@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 
+
 Route::get('/', function () {
     return view('login');
 })->name('login');
@@ -11,7 +12,8 @@ Route::get('/', function () {
 Route::post('/iniciando_sesion', [UserController::class, 'login'])
     ->middleware('guest')
     ->name('iniciando');
-
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
 Route::prefix('alumno')->group(function(){
@@ -32,5 +34,3 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.inicio');
 });
 
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
