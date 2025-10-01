@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nombres');
             $table->string('ap_paterno');
             $table->string('ap_materno')->nullable();
-            $table->string('matricula')->nullable();
-            $table->string('email')->nullable();
+            $table->string('matricula')->nullable()->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

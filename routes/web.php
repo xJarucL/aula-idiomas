@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GoogleController;
 
 Route::get('/', function () {
     return view('login');
@@ -18,3 +19,18 @@ Route::prefix('alumno')->group(function(){
         return view('alumno.inicio');
     })->name('alumno.inicio');
 });
+
+Route::prefix('docente')->group(function(){
+    Route::get('/inicio', function () {
+        return view('docente.inicio');
+    })->name('docente.inicio');
+});
+
+Route::prefix('coordinacion')->group(function(){
+    Route::get('/inicio', function () {
+        return view('coordinacion.inicio');
+    })->name('coordinacion.inicio');
+});
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
