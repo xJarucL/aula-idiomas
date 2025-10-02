@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\GoogleController;
 
 
@@ -34,9 +35,7 @@ Route::prefix('coordinacion')->group(function(){
         return view('coordinacion.inicio');
     })->name('coordinacion.inicio');
 
-    Route::get('/lista-alumnos', function () {
-        return view('coordinacion.lista-alumnos');
-    })->name('coordinacion.lista-alumnos');
+    Route::get('/lista-alumnos', [AlumnoController::class, 'listaAlumnos'])->name('coordinacion.lista-alumnos');
 
     Route::get('/lista-docente', function () {
         return view('coordinacion.lista-docente');

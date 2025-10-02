@@ -15,5 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(TipoUsuario::class);
         $this->call(Usuarios::class);
+        $this->call(Alumnos::class);
+        $this->call(Cuatrimestres::class);
+        $this->call(Carreras::class);
+        $this->call(Grupos::class);
+        $this->call(GrupoAlumnos::class);
+        $this->call(Materias::class);
+        $this->call(GrupoMaterias::class);
     }
 }
