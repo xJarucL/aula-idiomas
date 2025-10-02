@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Aula de Inglés')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -51,9 +51,19 @@
                 <!-- Menú desplegable -->
                 <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-sm shadow-lg z-50">
                     <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-teal-50 rounded-lg">Perfil</a>
-                    <form method="POST" action="">
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-500 hover:text-white rounded-b-sm">Cerrar sesión</button>
+                        <button type="submit"
+                                data-swal-form
+                                data-target-form="logout-form"
+                                data-swal-title="Cerrar sesión"
+                                data-swal-text="¿Deseas cerrar tu sesión actualmente activa?"
+                                data-swal-icon="warning"
+                                data-swal-confirm="Sí, cerrar sesión"
+                                data-swal-cancel="Cancelar"
+                                class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-500 hover:text-white rounded-b-sm">
+                            Cerrar sesión
+                        </button>
                     </form>
                 </div>
             </div>
