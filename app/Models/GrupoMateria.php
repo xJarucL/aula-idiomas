@@ -12,4 +12,16 @@ class GrupoMateria extends Model
 
     protected $table = 'grupo_materia';
     protected $primaryKey = 'pk_grupo_materia';
+
+    public function grupo(){
+        return $this->belongsTo(Grupo::class, 'fk_grupo', 'pk_grupo');
+    }
+
+    public function materia(){
+        return $this->belongsTo(Materia::class, 'fk_materia', 'pk_materia');
+    }
+
+    public function docente(){
+        return $this->belongsTo(User::class, 'fk_docente', 'pk_usuario');
+    }
 }

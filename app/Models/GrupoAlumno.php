@@ -12,4 +12,12 @@ class GrupoAlumno extends Model
 
     protected $table = 'grupo_alumno';
     protected $primaryKey = 'pk_grupo_alumno';
+
+    public function alumno(){
+        return $this->belongsTo(Alumno::class, 'fk_alumno', 'pk_alumno');
+    }
+
+    public function grupo(){
+        return $this->belongsTo(Grupo::class, 'fk_grupo', 'pk_grupo');
+    }
 }

@@ -13,4 +13,8 @@ class Alumno extends Model
     protected $table = 'alumno';
     protected $primaryKey = 'pk_alumno';
 
+    public function alumno(){
+        return $this->belongsTo(User::class, 'fk_usuario', 'pk_usuario');
+    }
+
 }
