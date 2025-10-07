@@ -44,7 +44,7 @@ class Usuarios extends Seeder
             'fk_tipo_usuario' => 1
         ]);
 
-        ser::create([
+        User::create([
             'nombres' => 'Ariel',
             'ap_paterno' => 'Salazar',
             'ap_materno' => null,

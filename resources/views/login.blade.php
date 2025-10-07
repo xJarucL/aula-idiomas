@@ -26,7 +26,7 @@
                         type="password" id="password" name="password" placeholder="Contraseña" required>
                 </div>
                 <div class="text-right">
-                    <a href="#" class="text-sm text-teal-500 hover:underline">
+                    <a href="{{ route('recuperar-contrasena') }}" class="text-sm text-teal-500 hover:underline">
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
