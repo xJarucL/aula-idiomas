@@ -43,5 +43,25 @@ class Usuarios extends Seeder
             'password' => Hash::make('202200096'),
             'fk_tipo_usuario' => 1
         ]);
+
+        ser::create([
+            'nombres' => 'Ariel',
+            'ap_paterno' => 'Salazar',
+            'ap_materno' => null,
+            'matricula' => null,
+            'email' => 'aasm052002@gmail.com',
+            'password' => Hash::make('ariel'),
+            'fk_tipo_usuario' => 3
+        ]);
+
+        User::create([
+            'nombres' => 'Ángel',
+            'ap_paterno' => 'Medina',
+            'ap_materno' => null,
+            'matricula' => null,
+            'email' => 'angelariel6860@gmail.com',
+            'password' => Hash::make('angel'),
+            'fk_tipo_usuario' => 2
+        ]);
     }
 }

@@ -7,7 +7,7 @@
 <section class="flex flex-col md:flex-row justify-between m-2 items-start md:items-center">
     <div class="">
         <h1 class="text-4xl font-bold text-black">Panel del Coordinador</h1>
-        <span class="text-gray-500 font-light mt-2">Bienvenido, coordinadora Jaruny</span>
+        <span class="text-gray-500 font-light mt-2">Bienvenido/a,  {{ Auth::user()->nombres }} {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno }}.</span>
     </div>
     <div class="flex md:flex-row items-center justify-center gap-2 mt-4 md:mt-0 w-full md:w-auto">
         <a href="{{ route('coordinacion.registro-docente') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow">Registrar docentes</a>
@@ -24,26 +24,26 @@
         icon="users" 
         color="blue" 
     />
-    
-    <x-card-info 
-        title="Docentes" 
-        count="12" 
-        icon="user" 
-        color="green" 
+
+    <x-card-info
+        title="Docentes"
+        count="12"
+        icon="user"
+        color="green"
     />
-    
-    <x-card-info 
-        title="Alumnos" 
-        count="12" 
-        icon="book" 
-        color="teal" 
+
+    <x-card-info
+        title="Alumnos"
+        count="12"
+        icon="book"
+        color="teal"
     />
-    
-    <x-card-info 
-        title="Actividades creadas" 
-        count="8" 
-        icon="document" 
-        color="gray" 
+
+    <x-card-info
+        title="Cursos"
+        count="8"
+        icon="document"
+        color="gray"
     />
 </section>
 {{-- sections resumen --}}
