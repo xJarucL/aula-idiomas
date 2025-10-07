@@ -9,6 +9,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-200 min-h-screen">
+
    <nav class="bg-teal-600 text-white p-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">

@@ -10,7 +10,7 @@
         <span class="text-gray-500 font-light mt-2">Bienvenido/a,  {{ Auth::user()->nombres }} {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno }}.</span>
     </div>
     <div class="flex items-center justify-center gap-2">
-        <a href="#" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow">Gestionar docentes</a>
+        <a href="{{route('coordinacion.lista-docente')}}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow">Gestionar docentes</a>
         <a href="{{ route('coordinacion.lista-alumnos') }}" class="bg-teal-200 text-white m-3 p-2 rounded-lg hover:bg-teal-400 shadow">Gestionar alumnos</a>
         <a href="#" class="bg-teal-100 text-gray-500 m-3 p-2 rounded-lg hover:bg-teal-300 hover:text-white shadow">Gestionar grupos</a>
     </div>
@@ -19,31 +19,34 @@
     {{-- cartas informaticas --}}
     <x-card-info
         title="Grupos"
-        count="12"
+        :count="$gruposCount"
         icon="users"
         color="blue"
+        link="{{ route('coordinacion.lista-grupos') }}"
     />
 
     <x-card-info
         title="Docentes"
-        count="12"
+        :count="$docentesCount"
         icon="user"
         color="green"
+        link="{{ route('coordinacion.lista-docente') }}"
     />
 
     <x-card-info
         title="Alumnos"
-        count="12"
+        :count="$alumnosCount"
         icon="book"
         color="teal"
+        link="{{ route('coordinacion.lista-alumnos') }}"
     />
 
-    <x-card-info
+    <!-- <x-card-info
         title="Cursos"
         count="8"
         icon="document"
         color="gray"
-    />
+    /> -->
 </section>
 {{-- sections resumen --}}
 <section class="flex-1 flex justify-between mt-10">

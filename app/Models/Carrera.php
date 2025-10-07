@@ -12,4 +12,8 @@ class Carrera extends Model
 
     protected $table = 'carrera';
     protected $primaryKey = 'pk_carrera';
+
+    public function grupos(){
+        return $this->hasMany(Grupo::class, 'fk_carrera', 'pk_carrera');
+    }
 }

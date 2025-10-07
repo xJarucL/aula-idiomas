@@ -13,6 +13,10 @@ class Alumno extends Model
     protected $table = 'alumno';
     protected $primaryKey = 'pk_alumno';
 
+    protected $fillable = [
+        'fk_usuario',
+    ];
+
     public function usuario(){
         return $this->belongsTo(User::class, 'fk_usuario', 'pk_usuario');
     }

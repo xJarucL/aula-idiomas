@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\CoordinadorController;
+use App\Models\Grupo;
+
 
 
 Route::get('/', function () {
@@ -31,9 +34,7 @@ Route::prefix('docente')->group(function(){
 });
 
 Route::prefix('coordinacion')->group(function(){
-    Route::get('/inicio', function () {
-        return view('coordinacion.inicio');
-    })->name('coordinacion.inicio');
+    Route::get('/inicio', [CoordinadorController::class, 'inicio'])->name('coordinacion.inicio');
 
     Route::get('/lista-alumnos', [AlumnoController::class, 'listaAlumnos'])->name('coordinacion.lista-alumnos');
 
@@ -47,8 +48,10 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.lista-grupos');
 
     Route::get('/registro-alumno', function () {
-        return view('coordinacion.registro-alumno');
+        $grupos = Grupo::with(['carrera', 'cuatrimestre'])->get();
+        return view('coordinacion.registro-alumno', compact('grupos'));
     })->name('coordinacion.registro-alumno');
+    Route::post('/guardar-alumno', [AlumnoController::class, 'store'])->name('coordinacion.guardar-alumno');
 
     Route::get('/registro-docente', function () {
         return view('coordinacion.registro-docente');
