@@ -22,7 +22,15 @@
             <!-- Links -->
             <div class="flex-1 flex justify-center">
                 <div class="hidden md:flex items-center gap-14">
-                    <a href="#" class="text-white hover:text-teal-950 transition text-sm font-medium">Panel</a>
+                    @auth
+                        @if(auth()->user()->fk_tipo_usuario == '1')
+                            <a href="{{route('alumno.inicio')}}" class="text-white hover:text-teal-950 transition text-sm font-medium">Panel</a>
+                        @elseif(auth()->user()->fk_tipo_usuario == '2')
+                            <a href="{{route('docente.inicio')}}" class="text-white hover:text-teal-950 transition text-sm font-medium">Panel</a>
+                        @elseif(auth()->user()->fk_tipo_usuario == '3')
+                            <a href="{{route('coordinacion.inicio')}}" class="text-white hover:text-teal-950 transition text-sm font-medium">Panel</a>
+                        @endif
+                    @endauth
                     <a href="#" class="text-white hover:text-teal-950 transition text-sm font-medium">Docentes</a>
                     <a href="#" class="text-white hover:text-teal-950 transition text-sm font-medium">Alumnos</a>
                     <a href="#" class="text-white hover:text-teal-950 transition text-sm font-medium">Grupos</a>
