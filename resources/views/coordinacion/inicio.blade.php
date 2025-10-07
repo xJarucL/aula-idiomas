@@ -38,12 +38,12 @@
         icon="book"
         color="teal"
     />
-
-    <x-card-info
-        title="Cursos"
-        count="8"
-        icon="document"
-        color="gray"
+    
+    <x-card-info 
+        title="Actividades creadas" 
+        count="8" 
+        icon="document" 
+        color="gray" 
     />
 </section>
 {{-- sections resumen --}}
