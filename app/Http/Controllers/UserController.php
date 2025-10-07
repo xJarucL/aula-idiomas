@@ -40,4 +40,17 @@ class UserController extends Controller
             ], 422);
         }
     }
+
+    public function logout(Request $request){
+        $nombres = Auth::user() ? Auth::user()->username : 'Usuario no autenticado';
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Cerraste sesión correctamente.');
+    }
+
+
 }
