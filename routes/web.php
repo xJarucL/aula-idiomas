@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlumnoController;
+use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CoordinadorController;
 use App\Models\Grupo;
@@ -38,10 +39,7 @@ Route::prefix('coordinacion')->group(function(){
 
     Route::get('/lista-alumnos', [AlumnoController::class, 'listaAlumnos'])->name('coordinacion.lista-alumnos');
 
-    Route::get('/lista-docente', function () {
-        return view('coordinacion.lista-docente');
-    })->name('coordinacion.lista-docente');
-
+    Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docente');
 
     Route::get('/lista-grupos', function () {
         return view('coordinacion.lista-grupos');
