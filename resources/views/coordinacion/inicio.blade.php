@@ -41,12 +41,14 @@
         link="{{ route('coordinacion.lista-alumnos') }}"
     />
 
-    <!-- <x-card-info
-        title="Cursos"
-        count="8"
-        icon="document"
-        color="gray"
-    /> -->
+    <x-card-info
+        title="Coordinación"
+        :count="1"
+        icon="user"
+        color="blue"
+        link="#"
+    />
+
 </section>
 {{-- sections resumen --}}
 <section class="flex-1 flex justify-between mt-10">
