@@ -13,8 +13,16 @@ class Alumno extends Model
     protected $table = 'alumno';
     protected $primaryKey = 'pk_alumno';
 
-    public function alumno(){
+    public function usuario(){
         return $this->belongsTo(User::class, 'fk_usuario', 'pk_usuario');
+    }
+
+    public function grupos(){
+        return $this->hasMany(GrupoAlumno::class, 'fk_alumno', 'pk_alumno');
+    }
+
+    public function calificaciones(){
+        return $this->hasMany(Calificaciones::class, 'fk_alumno', 'pk_alumno');
     }
 
 }

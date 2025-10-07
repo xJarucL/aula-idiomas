@@ -14,7 +14,10 @@ class Alumnos extends Seeder
     public function run(): void
     {
         Alumno::create([
-            'fk_usuario' => '3',
+            'fk_usuario' => '5',
+        ]);
+        Alumno::create([
+            'fk_usuario' => '6',
         ]);
     }
 }

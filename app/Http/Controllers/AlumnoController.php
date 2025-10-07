@@ -4,15 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Alumno;
 use App\Models\Tipo_usuario;
 
 class AlumnoController extends Controller
 {
     public function listaAlumnos(){
-        $usuarios = User::where('fk_tipo_usuario', 1)
-                    ->orderBy('nombres', 'asc')
-                    ->paginate(10);
+        $alumnos = Alumno::with([
+                'usuario',
+                'grupos.grupo.carrera',
+                'calificaciones'
+            ])
+            ->paginate(10);
 
-        return view('coordinacion.lista-alumnos', compact('usuarios'));
+        foreach ($alumnos as $alumno) {
+            $promedio = $alumno->calificaciones->avg('calificacion');
+            $alumno->promedio = $promedio ? number_format($promedio, 1) : 'Sin registro';
+        }
+
+        return view('coordinacion.lista-alumnos', compact('alumnos'));
     }
 }
