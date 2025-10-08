@@ -12,12 +12,9 @@
                 <h1 class="text-3xl font-bold text-black">Registro de Alumno</h1>
                 <span class="text-gray-500 font-light pt-2 block">Complete el siguiente formulario</span>
             </div>
-            <button
-                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 shadow"
-                type="button"
-            >
+            <a href="{{route('coordinacion.lista-alumnos')}}" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 shadow">
                 Cancelar
-            </button>
+            </a>
         </div>
         <form id="form-insertar" data-url="{{ route('coordinacion.guardar-alumno') }}" class="grid grid-cols-1 md:grid-cols-2 gap-6" action="" method="post">
             @csrf
@@ -54,7 +51,7 @@
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     name="fk_grupo" id="fk_grupo"
                 >
-                    <option class="text-gray-500 font-light" value="">Selecciona una carrera</option>
+                    <option class="text-gray-500 font-light" value="">Selecciona un grupo</option>
                     @foreach ($grupos as $grupo)
                         <option value="{{ $grupo->pk_grupo }}">
                             {{ $grupo->cuatrimestre->num_cuatri ?? 'Sin cuatri' }}°{{ $grupo->nombre }} -

@@ -52,6 +52,7 @@ Route::prefix('coordinacion')->group(function(){
     Route::get('/registro-docente', function () {
         return view('coordinacion.registro-docente');
     })->name('coordinacion.registro-docente');
+    Route::post('/guardar-docente', [CoordinadorController::class, 'store'])->name('coordinacion.guardar-docente');
 
     Route::get('/registro-grupo', function () {
         return view('coordinacion.registro-grupo');

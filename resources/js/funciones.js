@@ -13,39 +13,47 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function (response) {
+                // Mostrar mensaje de éxito
                 $('#mensaje')
                     .removeClass('error')
-                    .addClass(response.class)
+                    .addClass(response.class || 'success')
                     .html(response.mensaje)
                     .fadeIn();
 
                 setTimeout(function () {
-                    window.location.href = response.ruta;
+                    if (response.ruta) {
+                        window.location.href = response.ruta;
+                    } else {
+                        $('#mensaje').fadeOut();
+                    }
                 }, 2000);
             },
-            error: function (response) {
-                let res = response.responseJSON;
+            error: function (xhr) {
+                let res = xhr.responseJSON;
                 let mensaje = '';
 
-                if (typeof res.mensaje === 'object') {
-                    for (let campo in res.mensaje) {
-                        res.mensaje[campo].forEach(function (error) {
-                            mensaje += `${error} <br>`;
+                if (xhr.status === 422 && res.errores) {
+                    // 🔹 Concatenar errores de validación
+                    mensaje += `<strong>${res.mensaje || 'Error de validación:'}</strong><br>`;
+                    for (let campo in res.errores) {
+                        res.errores[campo].forEach(function (error) {
+                            mensaje += `${error}<br>`;
                         });
                     }
                 } else {
-                    mensaje = res.mensaje;
+                    // 🔹 Otros errores
+                    mensaje = res?.mensaje || 'Ha ocurrido un error inesperado.';
                 }
 
                 $('#mensaje')
                     .removeClass('success')
-                    .addClass(res.class)
+                    .addClass(res?.class || 'error')
                     .html(mensaje)
                     .fadeIn();
 
                 setTimeout(function () {
                     $('#mensaje').fadeOut();
-                }, 2000);
+                }, 4000);
             }
         });
     });
