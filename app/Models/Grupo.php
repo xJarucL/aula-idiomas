@@ -13,6 +13,13 @@ class Grupo extends Model
     protected $table = 'grupo';
     protected $primaryKey = 'pk_grupo';
 
+    protected $fillable = [
+        'nombre',
+        'año',
+        'fk_carrera',
+        'fk_cuatrimestre'
+    ];
+
     public function carrera(){
         return $this->belongsTo(Carrera::class, 'fk_carrera', 'pk_carrera');
     }

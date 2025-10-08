@@ -83,4 +83,44 @@ class CoordinadorController extends Controller
         }
     }
 
+    public function guardarGrupo(Request $request){
+        try {
+            $validated = $request->validate([
+                'nombre' => 'required|string|max:1',
+                'fk_carrera' => 'required|string|max:1',
+                'fk_cuatrimestre' => 'required|string|max:2',
+                'año' => 'required|string|max:4',
+            ]);
+
+            $grupo = Grupo::create([
+                'nombre' => $validated['nombre'],
+                'fk_carrera' => $validated['fk_carrera'],
+                'fk_cuatrimestre' => $validated['fk_cuatrimestre'],
+                'año' => $validated['año']
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Grupo registrado correctamente.',
+                'ruta' => route('coordinacion.lista-grupos'),
+                'class' => 'success'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error de validación.',
+                'errores' => $e->errors(),
+                'class' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al registrar el grupo.',
+                'detalle' => $e->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
 }

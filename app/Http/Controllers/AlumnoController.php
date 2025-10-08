@@ -34,7 +34,7 @@ class AlumnoController extends Controller
     public function store(Request $request){
         try {
             $validated = $request->validate([
-                'matricula' => 'required|unique:users,matricula|max:20',
+                'matricula' => 'required|unique:users,matricula|max:9',
                 'nombres' => 'required|string|max:100',
                 'ap_paterno' => 'required|string|max:100',
                 'ap_materno' => 'nullable|string|max:100',

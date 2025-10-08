@@ -7,6 +7,8 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CoordinadorController;
 use App\Models\Grupo;
+use App\Models\Carrera;
+use App\Models\Cuatrimestre;
 
 
 
@@ -59,8 +61,11 @@ Route::prefix('coordinacion')->group(function(){
     Route::post('/guardar-docente', [CoordinadorController::class, 'store'])->name('coordinacion.guardar-docente');
 
     Route::get('/registro-grupo', function () {
-        return view('coordinacion.registro-grupo');
+        $carreras = Carrera::all();
+        $cuatrimestres = Cuatrimestre::all();
+        return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres'));
     })->name('coordinacion.registro-grupo');
+    Route::post('/guardar-grupo', [CoordinadorController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
 
 });
 
