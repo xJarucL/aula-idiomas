@@ -11,14 +11,14 @@
         <span class="text-gray-500 font-light mt-2 block">Listado de Información de coordinadores</span>
     </div>
     <div class="flex items-center justify-center gap-2">
-        <a href="#" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Registrar Coordinador</a>
+        <a href="{{ route('coordinacion.registro-coordinador') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Registrar Coordinador</a>
     </div>
 </section>
 {{-- Buscador y filtro --}}
 <section class="flex flex-col md:flex-row justify-between mt-5 gap-5">
     <input
         class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full md:w-2/3 shadow text-sm md:text-base"
-        type="text" placeholder="Buscar Coordinador..." 
+        type="text" placeholder="Buscar Coordinador..."
     >
     <div class="flex md:flex-row justify-end gap-2 w-full md:w-1/3">
         <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
@@ -44,64 +44,56 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="px-2 py-2 flex items-center space-x-3 border-b border-gray-200">
-                        <img
-                        class="w-10 h-10 mr-2 rounded-full object-cover border" 
-                        src="{{asset('img/default.jpg')}}" alt="">
-                        Jaruny Lupe Cardenas Tirado
-                    </td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaru@gmail.com</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                        <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
-                            <option value="" >Acceso</option>
-                            <option value="">No acceso</option>
-                        </select>
-                    </td>
-                     <td class="py-2 px-2 md:px-4 border-b border-gray-100">
-                        <div class="flex justify-center items-center gap-3">
-                            <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
-                                Editar
-                            </a>
-                            <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
-                                Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                                <tr>
-                    <td class="px-2 py-2 flex items-center space-x-3 border-b border-gray-200">
-                        <img
-                        class="w-10 h-10 mr-2 rounded-full object-cover border" 
-                        src="{{asset('img/default.jpg')}}" alt="">
-                        Jaruny Lupe Cardenas Tirado
-                    </td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaru@gmail.com</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                        <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
-                            <option value="" >Acceso</option>
-                            <option value="">No acceso</option>
-                        </select>
-                    </td>
-                     <td class="py-2 px-2 md:px-4 border-b border-gray-100">
-                        <div class="flex justify-center items-center gap-3">
-                            <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
-                                Editar
-                            </a>
-                            <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
-                                Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                @if($coordinadores->isEmpty())
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
+                            No hay coordinadores para mostrar
+                        </td>
+                    </tr>
+                @else
+                    @foreach ($coordinadores as $coordinador)
+                        <tr>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                <div class="flex items-center space-x-3">
+                                    <img
+                                        src="{{ $coordinador->img_user ? asset('storage/'.$coordinador->img_user) : asset('img/default.jpg') }}"
+                                        alt="coordinador"
+                                        class="w-10 h-10 rounded-full object-cover border"
+                                    />
+                                    <span class="text-gray-800 font-medium">
+                                        {{ $coordinador->nombres }}
+                                        {{ $coordinador->ap_paterno }}
+                                        {{ $coordinador->ap_materno }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                {{ $coordinador->email }}
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
+                                    <option value="" >Coordinador</option>
+                                    <option value="">Docente</option>
+                                </select>
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-100">
+                                <div class="flex justify-center items-center gap-3">
+                                    <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
+                                        Editar
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
-        <div class="flex justify-end items-center mt-3 gap-2 text-sm mr-2" >
-            <a href="#" class="text-gray-500">Anterior</a>
-            <a href="#" class="bg-green-700 text-white rounded-full px-3 py-1">1</a>
-            <a href="#" class="text-gray-500">Siguiente</a>
+        <div class="mt-6">
+            {{ $coordinadores->links() }}
         </div>
-
     </div>
 </section>
 

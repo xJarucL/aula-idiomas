@@ -45,9 +45,7 @@ Route::prefix('coordinacion')->group(function(){
 
     Route::get('/lista-grupos', [CoordinadorController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
 
-    Route::get('/lista-coordinador', function () {
-        return view('coordinacion.lista-coordinador');
-    })->name('coordinacion.lista-coordinador');
+    Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
 
     Route::get('/registro-alumno', function () {
         $grupos = Grupo::with(['carrera', 'cuatrimestre'])->get();
@@ -66,6 +64,11 @@ Route::prefix('coordinacion')->group(function(){
         return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres'));
     })->name('coordinacion.registro-grupo');
     Route::post('/guardar-grupo', [CoordinadorController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
+
+    Route::get('/registro-coordinador', function () {
+        return view('coordinacion.registro-coordinador');
+    })->name('coordinacion.registro-coordinador');
+    Route::post('/guardar-coordinador', [CoordinadorController::class, 'guardarCoordinador'])->name('coordinacion.guardar-coordinador');
 
 });
 

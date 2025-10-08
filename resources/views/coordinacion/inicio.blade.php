@@ -38,10 +38,10 @@
 
     <x-card-info
         title="Coordinación"
-        :count="1"
+        :count="$coordinadoresCount"
         icon="user"
         color="blue"
-        link="#"
+        link="{{route('coordinacion.lista-coordinador')}}"
     />
 
 </section>
