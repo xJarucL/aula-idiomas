@@ -11,7 +11,7 @@
         <span class="text-gray-500 font-light mt-2 block">Listado de Información de los grupos</span>
     </div>
     <div class="flex items-center justify-center gap-2">
-        <a href="{{ route('coordinacion.registro-docente') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Crear grupo</a>
+        <a href="{{ route('coordinacion.registro-grupo') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Crear grupo</a>
     </div>
 </section>
 {{-- Buscador y filtro --}}
@@ -42,27 +42,24 @@
             <thead>
                 <tr class="bg-gray-100">
                     <th class="py-2 px-2 md:px-4 text-left">Nombre del grupo</th>
-                    <th class="py-2 px-2 md:px-4 text-left">Grado</th>
-                    <th class="py-2 px-2 md:px-4 text-left">Docente asignado</th>
-                    <th class="py-2 px-2 md:px-4 text-left">Cantidad de alumnos</th>
+                    <th class="py-2 px-2 md:px-4 text-left">Carrera</th>
+                    <th class="py-2 px-2 md:px-4 text-left">Cuatrimestre</th>
+                    <th class="py-2 px-2 md:px-4 text-left">Año</th>
                     <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Licenciatura en turismo</td>
+                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">SLL PORT</td>
+                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Turismo</td>
                     <td class="py-2 px-2 md:px-4 border-b border-gray-200">10mo</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaruny Lupe Cardenas Tirado</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">0</td>
+                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">2025</td>
                     <td class="py-2 px-1 border-b border-gray-100">
                         <div class="flex items-center justify-center gap-2">
-                              <a href="#" class="text-green-600 hover:text-green-800" title="Agregar alumno">
-                                Agregar alumno
-                            </a>
-                            <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
+                            <a href="#" class="text-green-600 hover:text-green-800 ">
                                 Editar
                             </a>
-                            <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
+                            <a href="#" class="text-red-500 hover:text-red-700">
                                 Eliminar
                             </a>
                         </div>

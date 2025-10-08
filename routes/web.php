@@ -41,6 +41,9 @@ Route::prefix('coordinacion')->group(function(){
         return view('coordinacion.lista-docente');
     })->name('coordinacion.lista-docente');
 
+    Route::get('/lista-coordinador', function () {
+        return view('coordinacion.lista-coordinador');
+    })->name('coordinacion.lista-coordinador');
 
     Route::get('/lista-grupos', function () {
         return view('coordinacion.lista-grupos');
@@ -57,6 +60,7 @@ Route::prefix('coordinacion')->group(function(){
     Route::get('/registro-grupo', function () {
         return view('coordinacion.registro-grupo');
     })->name('coordinacion.registro-grupo');
+    
 });
 
 Route::get('/recuperar-contrasena', function (){

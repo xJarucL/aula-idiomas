@@ -9,11 +9,6 @@
         <h1 class="text-4xl font-bold text-black">Panel del Coordinador</h1>
         <span class="text-gray-500 font-light mt-2">Bienvenido/a,  {{ Auth::user()->nombres }} {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno }}.</span>
     </div>
-    <div class="flex md:flex-row items-center justify-center gap-2 mt-4 md:mt-0 w-full md:w-auto">
-        <a href="{{ route('coordinacion.registro-docente') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow">Registrar docentes</a>
-        <a href="{{ route('coordinacion.registro-alumno') }}" class="bg-teal-400 text-white m-3 p-2 rounded-lg hover:bg-teal-600 shadow">Registrar alumnos</a>
-        <a href="{{ route('coordinacion.registro-grupo') }}" class="bg-teal-100 text-gray-500 m-3 p-2 rounded-lg hover:bg-teal-500 hover:text-white shadow">Crear grupos</a>
-    </div>
 </section>
 
 {{-- cartas informaticas --}}
