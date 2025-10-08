@@ -58,3 +58,7 @@ Route::prefix('coordinacion')->group(function(){
         return view('coordinacion.registro-grupo');
     })->name('coordinacion.registro-grupo');
 });
+
+Route::get('/recuperar-contrasena', function (){
+    return view('./reset/recuperar-contrasena');
+})->name('recuperar-contrasena');
