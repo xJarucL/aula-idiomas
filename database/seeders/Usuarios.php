@@ -14,6 +14,8 @@ class Usuarios extends Seeder
      */
     public function run(): void
     {
+
+        // Coordinación
         User::create([
             'nombres' => 'María',
             'ap_paterno' => 'Angeles',
@@ -54,6 +56,17 @@ class Usuarios extends Seeder
             'fk_tipo_usuario' => 3
         ]);
 
+        // Docentes
+        User::create([
+            'nombres' => 'Roberto',
+            'ap_paterno' => 'Gonzales',
+            'ap_materno' => null,
+            'matricula' => null,
+            'email' => 'jarunyta1096@gmail.com',
+            'password' => Hash::make('roberto'),
+            'fk_tipo_usuario' => 2
+        ]);
+
         User::create([
             'nombres' => 'Ángel',
             'ap_paterno' => 'Medina',
@@ -63,5 +76,26 @@ class Usuarios extends Seeder
             'password' => Hash::make('angel'),
             'fk_tipo_usuario' => 2
         ]);
+
+        // Alumnos (Prueba)
+        User::create([
+            'nombres' => 'Sergio',
+            'ap_paterno' => 'Moles',
+            'ap_materno' => 'Montes',
+            'matricula' => '202200096',
+            'email' => null,
+            'password' => Hash::make('202200096'),
+            'fk_tipo_usuario' => 1
+        ]);
+        User::create([
+            'nombres' => 'César',
+            'ap_paterno' => 'Fuentes',
+            'ap_materno' => null,
+            'matricula' => '202200097',
+            'email' => null,
+            'password' => Hash::make('202200097'),
+            'fk_tipo_usuario' => 1
+        ]);
+
     }
 }

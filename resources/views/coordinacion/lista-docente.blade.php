@@ -18,7 +18,7 @@
 <section class="flex flex-col md:flex-row justify-between mt-5 gap-5">
     <input
         class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full md:w-2/3 shadow text-sm md:text-base"
-        type="text" placeholder="Buscar docente..." 
+        type="text" placeholder="Buscar docente..."
     >
     <div class="flex flex-col md:flex-row justify-between gap-2 w-full md:w-1/3">
         <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
@@ -43,32 +43,47 @@
                 <tr class="bg-gray-100">
                     <th class="py-2 px-2 md:px-4 text-left">Nombre Completo</th>
                     <th class="py-2 px-2 md:px-4 text-left">Correo</th>
-                    <th class="py-2 px-2 md:px-4 text-left">Telefono</th>
-                    <th class="py-2 px-2 md:px-4 text-left">Nivel de ingles</th>
                     <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaruny Lupe Cardenas Tirado</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaru@gmail.com</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">B3</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                        <span class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
-                            8.3
-                        </span>
-                    </td>
-                     <td class="py-2 px-2 md:px-4 border-b border-gray-100">
-                        <div class="flex justify-center items-center gap-3">
-                            <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
-                                Editar
-                            </a>
-                            <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
-                                Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                 @if($docentes->isEmpty())
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
+                            No hay docentes para mostrar
+                        </td>
+                    </tr>
+                @else
+                     @foreach ($docentes as $docente)
+                        <tr>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                <div class="flex items-center space-x-3">
+                                    <img
+                                        src="{{ $docente->img_user ? asset('storage/'.$docente->img_user) : asset('img/default.jpg') }}"
+                                        alt="docente"
+                                        class="w-10 h-10 rounded-full object-cover border"
+                                    />
+                                    <span class="text-gray-800 font-medium">
+                                        {{ $docente->nombres }}
+                                        {{ $docente->ap_paterno }}
+                                        {{ $docente->ap_materno }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">{{$docente->email}}</td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-100">
+                                <div class="flex justify-center items-center gap-3">
+                                    <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
+                                        Editar
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="flex justify-end items-center mt-3 gap-2 text-sm mr-2" >

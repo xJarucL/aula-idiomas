@@ -20,4 +20,6 @@ class GrupoAlumno extends Model
     public function grupo(){
         return $this->belongsTo(Grupo::class, 'fk_grupo', 'pk_grupo');
     }
+
+
 }

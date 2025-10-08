@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlumnoController;
+use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\CoordinadorController;
+use App\Models\Grupo;
+
 
 
 Route::get('/', function () {
@@ -31,36 +35,33 @@ Route::prefix('docente')->group(function(){
 });
 
 Route::prefix('coordinacion')->group(function(){
-    Route::get('/inicio', function () {
-        return view('coordinacion.inicio');
-    })->name('coordinacion.inicio');
+    Route::get('/inicio', [CoordinadorController::class, 'inicio'])->name('coordinacion.inicio');
 
     Route::get('/lista-alumnos', [AlumnoController::class, 'listaAlumnos'])->name('coordinacion.lista-alumnos');
 
-    Route::get('/lista-docente', function () {
-        return view('coordinacion.lista-docente');
-    })->name('coordinacion.lista-docente');
+    Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docente');
+
+    Route::get('/lista-grupos', [CoordinadorController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
 
     Route::get('/lista-coordinador', function () {
         return view('coordinacion.lista-coordinador');
     })->name('coordinacion.lista-coordinador');
 
-    Route::get('/lista-grupos', function () {
-        return view('coordinacion.lista-grupos');
-    })->name('coordinacion.lista-grupos');
-
     Route::get('/registro-alumno', function () {
-        return view('coordinacion.registro-alumno');
+        $grupos = Grupo::with(['carrera', 'cuatrimestre'])->get();
+        return view('coordinacion.registro-alumno', compact('grupos'));
     })->name('coordinacion.registro-alumno');
+    Route::post('/guardar-alumno', [AlumnoController::class, 'store'])->name('coordinacion.guardar-alumno');
 
     Route::get('/registro-docente', function () {
         return view('coordinacion.registro-docente');
     })->name('coordinacion.registro-docente');
+    Route::post('/guardar-docente', [CoordinadorController::class, 'store'])->name('coordinacion.guardar-docente');
 
     Route::get('/registro-grupo', function () {
         return view('coordinacion.registro-grupo');
     })->name('coordinacion.registro-grupo');
-    
+
 });
 
 Route::get('/recuperar-contrasena', function (){

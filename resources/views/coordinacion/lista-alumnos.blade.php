@@ -40,47 +40,70 @@
         <div class="border-2 border-gray-300 rounded-xl p-2 bg-white shadow">
             <table class="min-w-full text-xs md:text-base">
                 <thead>
-                    <tr class="bg-gray-100">
-                        <th class="py-2 px-2 md:px-4 text-left">Nombre Completo</th>
-                        <th class="py-2 px-2 md:px-4 text-left">Docente asignado</th>
-                        <th class="py-2 px-2 md:px-4 text-left">Carrera</th>
-                        <th class="py-2 px-2 md:px-4 text-left">Cuatrimestre</th>
-                        <th class="py-2 px-2 md:px-4 text-left">Calificación</th>
-                        <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
+                    <tr class="bg-gray-100 text-left">
+                        <th class="py-3 px-4">Matrícula</th>
+                        <th class="py-3 px-4">Nombre Completo</th>
+                        <th class="py-3 px-4">Carrera</th>
+                        <th class="py-3 px-4">Promedio</th>
+                        <th class="py-3 px-4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if($usuarios->isEmpty())
+                    @if($alumnos->isEmpty())
                         <tr>
                             <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
-                                No hay usuarios para mostrar
+                                No hay alumnos para mostrar
                             </td>
                         </tr>
                     @else
-                        @foreach ($usuarios as $usuario)
-                            <tr>
-                                <td class="x-6 py-4 flex items-center space-x-3">
-                                    <img
-                                        src="{{ $usuario->img_user ? asset('storage/'.$usuario->img_user) : asset('img/default.jpg') }}"
-                                        alt="Usuario"
-                                        class="w-10 h-10 rounded-full object-cover border"
-                                    />
-                                    <span>{{ $usuario->nombres }} {{ $usuario->ap_paterno }} {{ $usuario->ap_materno }}</span>
+                        @foreach ($alumnos as $alumno)
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                                {{-- Matrícula --}}
+                                <td class="py-3 px-4 align-middle text-gray-800">
+                                    {{ $alumno->usuario->matricula }}
                                 </td>
-                                <td class="py-2 px-2 md:px-4 border-b border-gray-200">Jaruny Cárdenas</td>
-                                <td class="py-2 px-2 md:px-4 border-b border-gray-200">Turismo</td>
-                                <td class="py-2 px-2 md:px-4 border-b border-gray-200">10mo</td>
-                                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                                    <span class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
-                                        8.3
-                                    </span>
+
+                                {{-- Nombre e imagen --}}
+                                <td class="py-3 px-4 align-middle">
+                                    <div class="flex items-center space-x-3">
+                                        <img
+                                            src="{{ $alumno->usuario->img_user ? asset('storage/'.$alumno->usuario->img_user) : asset('img/default.jpg') }}"
+                                            alt="alumno"
+                                            class="w-10 h-10 rounded-full object-cover border"
+                                        />
+                                        <span class="text-gray-800 font-medium">
+                                            {{ $alumno->usuario->nombres }}
+                                            {{ $alumno->usuario->ap_paterno }}
+                                            {{ $alumno->usuario->ap_materno }}
+                                        </span>
+                                    </div>
                                 </td>
-                                <td class="py-2 px-2 md:px-4 border-b border-gray-100">
+
+                                {{-- Carrera --}}
+                                <td class="py-3 px-4 align-middle text-gray-800">
+                                    {{ $alumno->grupos->first()->grupo->carrera->nombre ?? 'Sin carrera' }}
+                                </td>
+
+                                {{-- Promedio --}}
+                                <td class="py-3 px-4 align-middle">
+                                    @if(is_numeric($alumno->promedio))
+                                        <span class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
+                                            {{ $alumno->promedio }}
+                                        </span>
+                                    @else
+                                        <span class="inline-block bg-gray-200 text-gray-700 font-medium px-3 py-1 rounded-full">
+                                            {{ $alumno->promedio }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                {{-- Acciones --}}
+                                <td class="py-3 px-4 align-middle">
                                     <div class="flex justify-center items-center gap-3">
-                                        <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
+                                        <a href="#" class="text-green-600 hover:text-green-800 font-medium" title="Editar">
                                             Editar
                                         </a>
-                                        <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        <a href="#" class="text-red-500 hover:text-red-700 font-medium" title="Eliminar">
                                             Eliminar
                                         </a>
                                     </div>
@@ -90,12 +113,14 @@
                     @endif
                 </tbody>
             </table>
-            <div class="flex justify-end items-center mt-3 gap-2 text-sm mr-2" >
+
+            {{-- Paginación --}}
+            <div class="flex justify-end items-center mt-3 gap-2 text-sm mr-2">
                 <a href="#" class="text-gray-500">Anterior</a>
                 <a href="#" class="bg-green-700 text-white rounded-full px-3 py-1">1</a>
                 <a href="#" class="text-gray-500">Siguiente</a>
             </div>
-
         </div>
     </section>
+
 @endsection

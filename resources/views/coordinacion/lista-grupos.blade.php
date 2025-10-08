@@ -18,7 +18,7 @@
 <section class="flex flex-col md:flex-row justify-between mt-5 gap-5">
     <input
         class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full md:w-2/3 shadow text-sm md:text-base"
-        type="text" placeholder="Buscar docente..." 
+        type="text" placeholder="Buscar docente..."
     >
     <div class="flex flex-col md:flex-row justify-between gap-2 w-full md:w-1/3">
         <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
@@ -41,7 +41,7 @@
         <table class="min-w-full text-xs md:text-base">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="py-2 px-2 md:px-4 text-left">Nombre del grupo</th>
+                    <th class="py-2 px-2 md:px-4 text-left">Grupo</th>
                     <th class="py-2 px-2 md:px-4 text-left">Carrera</th>
                     <th class="py-2 px-2 md:px-4 text-left">Cuatrimestre</th>
                     <th class="py-2 px-2 md:px-4 text-left">Año</th>
@@ -49,22 +49,46 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">SLL PORT</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">Turismo</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">10mo</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">2025</td>
-                    <td class="py-2 px-1 border-b border-gray-100">
-                        <div class="flex items-center justify-center gap-2">
-                            <a href="#" class="text-green-600 hover:text-green-800 ">
-                                Editar
-                            </a>
-                            <a href="#" class="text-red-500 hover:text-red-700">
-                                Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                @if($grupos->isEmpty())
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
+                            No hay grupos para mostrar
+                        </td>
+                    </tr>
+                @else
+                    @foreach ($grupos as $grupo)
+                        <tr>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                {{ $grupo->fk_cuatrimestre ?? 'Sin cuatri' }}
+                                {{ $grupo->nombre }}
+                                {{ $grupo->carrera->abreviatura ?? 'Sin carrera' }}
+                                {{$grupo->año}}
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                {{$grupo->carrera->nombre}}
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                {{$grupo->fk_cuatrimestre}}
+                            </td>
+                            <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                                {{$grupo->año}}
+                            </td>
+                            <td class="py-2 px-1 border-b border-gray-100">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="#" class="text-green-600 hover:text-green-800" title="Agregar alumno">
+                                        Agregar alumno
+                                    </a>
+                                    <a href="#" class="text-green-600 hover:text-green-800" title="Editar">
+                                        Editar
+                                    </a>
+                                    <a href="#" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                        Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
         <div class="flex justify-end items-center mt-4 gap-2 text-sm mr-2" >

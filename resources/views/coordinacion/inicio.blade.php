@@ -10,36 +10,40 @@
         <span class="text-gray-500 font-light mt-2">Bienvenido/a,  {{ Auth::user()->nombres }} {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno }}.</span>
     </div>
 </section>
-
-{{-- cartas informaticas --}}
-<section class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-    <x-card-info 
-        title="Grupos" 
-        count="12" 
-        icon="users" 
-        color="blue" 
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-10">
+    {{-- cartas informaticas --}}
+    <x-card-info
+        title="Grupos"
+        :count="$gruposCount"
+        icon="users"
+        color="blue"
+        link="{{ route('coordinacion.lista-grupos') }}"
     />
 
     <x-card-info
         title="Docentes"
-        count="12"
+        :count="$docentesCount"
         icon="user"
         color="green"
+        link="{{ route('coordinacion.lista-docente') }}"
     />
 
     <x-card-info
         title="Alumnos"
-        count="12"
+        :count="$alumnosCount"
         icon="book"
         color="teal"
+        link="{{ route('coordinacion.lista-alumnos') }}"
     />
-    
-    <x-card-info 
-        title="Actividades creadas" 
-        count="8" 
-        icon="document" 
-        color="gray" 
+
+    <x-card-info
+        title="Coordinación"
+        :count="1"
+        icon="user"
+        color="blue"
+        link="#"
     />
+
 </section>
 {{-- sections resumen --}}
 <section class="grid grid-cols-7 grid-rows-1 gap-4">
@@ -64,7 +68,7 @@
                         <polyline points="18,12 30,24 18,36"/>
                     </svg>
                 </div>
-            </div>    
+            </div>
         </a>
          <a href="{{ route('coordinacion.lista-alumnos') }}" class="bg-white h-[90px] flex justify-between rounded-xl shadow-sm mt-9">
             <div class="p-3">

@@ -12,4 +12,8 @@ class Cuatrimestre extends Model
 
     protected $table = 'cuatrimestre';
     protected $primaryKey = 'pk_cuatrimestre';
+
+    public function grupos(){
+        return $this->hasMany(Grupo::class, 'fk_carrera', 'pk_carrera');
+    }
 }

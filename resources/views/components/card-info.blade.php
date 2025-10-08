@@ -1,13 +1,19 @@
-@props(['title' => 'Título', 'count' => '0', 'icon' => 'users', 'color' => 'blue'])
+@props(['title', 'count', 'icon', 'color', 'link'])
 
 @php
+    $title = $title ?? 'Título';
+    $count = $count ?? '0';
+    $icon = $icon ?? 'users';
+    $color = $color ?? 'blue';
+    $link = $link ?? '#';
+
     $colorClasses = [
         'blue' => 'bg-blue-100 text-blue-600',
         'green' => 'bg-green-100 text-green-600',
         'teal' => 'bg-teal-100 text-teal-600',
         'gray' => 'bg-gray-100 text-gray-600',
     ];
-    
+
     $icons = [
         'users' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
         'user' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
@@ -17,7 +23,7 @@
     ];
 @endphp
 
-<div class="bg-white hover:bg-gray-100 rounded-xl shadow-sm p-6 transition">
+<a href="{{ $link }}" class="block bg-white hover:bg-gray-100 rounded-xl shadow-sm p-6 hover:shadow-md transition">
     <div class="flex items-center gap-4">
         <div class="w-12 h-12 {{ $colorClasses[$color] ?? $colorClasses['blue'] }} rounded-full flex items-center justify-center">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,4 +35,4 @@
             <p class="text-2xl font-bold text-gray-800">{{ $count }}</p>
         </div>
     </div>
-</div>
+</a>
