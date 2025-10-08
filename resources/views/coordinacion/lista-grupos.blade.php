@@ -11,7 +11,7 @@
         <span class="text-gray-500 font-light mt-2 block">Listado de Información de los grupos</span>
     </div>
     <div class="flex items-center justify-center gap-2">
-        <a href="{{ route('coordinacion.registro-docente') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Crear grupo</a>
+        <a href="{{ route('coordinacion.registro-grupo') }}" class="bg-teal-600 text-white m-3 p-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Crear grupo</a>
     </div>
 </section>
 {{-- Buscador y filtro --}}
