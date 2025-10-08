@@ -41,9 +41,7 @@ Route::prefix('coordinacion')->group(function(){
 
     Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docente');
 
-    Route::get('/lista-grupos', function () {
-        return view('coordinacion.lista-grupos');
-    })->name('coordinacion.lista-grupos');
+    Route::get('/lista-grupos', [CoordinadorController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
 
     Route::get('/registro-alumno', function () {
         $grupos = Grupo::with(['carrera', 'cuatrimestre'])->get();

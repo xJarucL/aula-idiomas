@@ -16,4 +16,14 @@ class CoordinadorController extends Controller
         return view('coordinacion.inicio', compact('gruposCount', 'docentesCount', 'alumnosCount'));
     }
 
+    public function listaGrupos(){
+        $grupos = Grupo::with([
+            'carrera',
+            'cuatrimestre'
+        ])
+        ->paginate(10);
+
+        return view('coordinacion.lista-grupos', compact('grupos'));
+    }
+
 }
