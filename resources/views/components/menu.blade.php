@@ -25,6 +25,8 @@
                     <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
                     <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
                     <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
+                    <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Coordinación</a>
+
                 </div>
             </div>
 
@@ -50,7 +52,7 @@
                 </button>
                 <!-- Menú desplegable -->
                 <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-sm shadow-lg z-50">
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-teal-50 rounded-lg">Perfil</a>
+                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
                     <form id="logout-form" method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
@@ -61,7 +63,7 @@
                                 data-swal-icon="warning"
                                 data-swal-confirm="Sí, cerrar sesión"
                                 data-swal-cancel="Cancelar"
-                                class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-500 hover:text-white rounded-b-sm">
+                                class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-500 hover:text-white rounded-b-sm cursor-pointer">
                             Cerrar sesión
                         </button>
                     </form>
