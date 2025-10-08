@@ -113,12 +113,8 @@
                     @endif
                 </tbody>
             </table>
-
-            {{-- Paginación --}}
-            <div class="flex justify-end items-center mt-3 gap-2 text-sm mr-2">
-                <a href="#" class="text-gray-500">Anterior</a>
-                <a href="#" class="bg-green-700 text-white rounded-full px-3 py-1">1</a>
-                <a href="#" class="text-gray-500">Siguiente</a>
+            <div class="mt-6">
+                {{ $alumnos->links() }}
             </div>
         </div>
     </section>
