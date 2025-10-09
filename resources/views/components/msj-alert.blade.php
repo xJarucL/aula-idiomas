@@ -1,9 +1,9 @@
 <style>
 #mensaje {
     position: fixed;
-    bottom: 20px; /* Aparece desde abajo */
+    bottom: 20px;
     left: 50%;
-    transform: translateX(-50%) translateY(100%); /* inicia fuera de la pantalla */
+    transform: translateX(-50%) translateY(100%);
     z-index: 9999;
     min-width: 280px;
     max-width: 90%;
@@ -51,12 +51,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     const mensaje = document.getElementById('mensaje');
     if (mensaje && !mensaje.classList.contains('hidden')) {
-        // Mantener visible 4 segundos y luego animar salida
         setTimeout(() => {
             mensaje.style.animation = 'slideDown 0.5s forwards';
             setTimeout(() => {
                 mensaje.style.display = 'none';
-            }, 500); // coincide con la duración de slideDown
+            }, 500);
         }, 4000);
     }
 });

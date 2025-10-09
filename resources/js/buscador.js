@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     const input = $('#buscador');
     const limpiar = $('#limpiar-busqueda');
-    const filters = $('select[data-filter]'); // asegúrate de que tus selects tengan data-filter
+    const filters = $('select[data-filter]');
 
     function getFilterValues() {
         let values = {};
@@ -29,7 +29,7 @@ $(document).ready(function () {
                 toggleLimpiar();
             },
             error: function(xhr) {
-                console.log(xhr.responseText); // para depuración
+                console.log(xhr.responseText);
                 $('#tabla-listado').html('<p class="text-center text-red-500">Error al buscar.</p>');
             }
         });

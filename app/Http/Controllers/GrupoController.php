@@ -13,7 +13,6 @@ class GrupoController extends Controller
     public function listaGrupos(Request $request){
         $query = Grupo::with(['carrera', 'cuatrimestre']);
 
-        // Filtro por búsqueda
         if ($request->filled('search')) {
             $search = $request->input('search');
 
@@ -31,12 +30,10 @@ class GrupoController extends Controller
             });
         }
 
-        // Filtro por select cuatrimestre
         if ($request->filled('cuatrimestre')) {
             $query->where('fk_cuatrimestre', $request->input('cuatrimestre'));
         }
 
-        // Filtro por select carrera
         if ($request->filled('carrera')) {
             $query->where('fk_carrera', $request->input('carrera'));
         }
