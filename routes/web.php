@@ -6,6 +6,7 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CoordinadorController;
+use App\Http\Controllers\GrupoController;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Cuatrimestre;
@@ -43,8 +44,6 @@ Route::prefix('coordinacion')->group(function(){
 
     Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docente');
 
-    Route::get('/lista-grupos', [CoordinadorController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
-
     Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
 
     Route::get('/registro-alumno', function () {
@@ -58,12 +57,17 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.registro-docente');
     Route::post('/guardar-docente', [CoordinadorController::class, 'store'])->name('coordinacion.guardar-docente');
 
+    // RUTAS DE GRUPOS
+    Route::get('/lista-grupos', [GrupoController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
+    Route::get('/lista-grupos/deshabilitados', [GrupoController::class, 'listaGruposDeshabilitados'])->name('coordinacion.lista-grupos-deshabilitados');
     Route::get('/registro-grupo', function () {
         $carreras = Carrera::all();
         $cuatrimestres = Cuatrimestre::all();
         return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres'));
     })->name('coordinacion.registro-grupo');
-    Route::post('/guardar-grupo', [CoordinadorController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
+    Route::post('/guardar-grupo', [GrupoController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
+    Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
+    Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
 
     Route::get('/registro-coordinador', function () {
         return view('coordinacion.registro-coordinador');
