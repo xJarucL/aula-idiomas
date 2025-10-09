@@ -25,7 +25,7 @@
         :count="$docentesCount"
         icon="user"
         color="green"
-        link="{{ route('coordinacion.lista-docente') }}"
+        link="{{ route('coordinacion.lista-docentes') }}"
     />
 
     <x-card-info
@@ -57,7 +57,7 @@
     {{-- Acceso rapido --}}
     <div class="col-span-2 col-start-6 row-start-1 mt-7">
         <h1 class="text-2xl font-bold text-black mb-3">Accesos Rapidos</h1>
-        <a href="{{ route('coordinacion.lista-docente') }}" class="bg-white h-[90px] flex justify-between rounded-xl shadow-sm">
+        <a href="{{ route('coordinacion.lista-docentes') }}" class="bg-white h-[90px] flex justify-between rounded-xl shadow-sm">
             <div class="p-3">
                 <h1 class="text-[20px] font-bold mt-1">Gestión de Docente</h1>
                 <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de docente</h4>

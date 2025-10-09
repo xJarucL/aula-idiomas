@@ -58,8 +58,6 @@ Route::prefix('coordinacion')->group(function(){
 
     Route::get('/lista-alumnos', [AlumnoController::class, 'listaAlumnos'])->name('coordinacion.lista-alumnos');
 
-    Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docente');
-
     Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
 
     Route::get('/registro-alumno', function () {
@@ -68,10 +66,16 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.registro-alumno');
     Route::post('/guardar-alumno', [AlumnoController::class, 'store'])->name('coordinacion.guardar-alumno');
 
+    // RUTAS DE DOCENTES
+    Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docentes');
+    Route::get('/lista-docente/deshabilitados', [DocenteController::class, 'listaDocentesDeshabilitados'])->name('coordinacion.lista-docentes-deshabilitados');
     Route::get('/registro-docente', function () {
         return view('coordinacion.registro-docente');
     })->name('coordinacion.registro-docente');
-    Route::post('/guardar-docente', [CoordinadorController::class, 'store'])->name('coordinacion.guardar-docente');
+    Route::post('/guardar-docente', [DocenteController::class, 'store'])->name('coordinacion.guardar-docente');
+    Route::delete('/docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente'])->name('docente.eliminar');
+    Route::post('/docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente'])->name('docente.restaurar');
+
 
     // RUTAS DE GRUPOS
     Route::get('/lista-grupos', [GrupoController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');

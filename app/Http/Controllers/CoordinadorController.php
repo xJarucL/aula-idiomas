@@ -23,57 +23,6 @@ class CoordinadorController extends Controller
         return view('coordinacion.inicio', compact('gruposCount', 'docentesCount', 'alumnosCount', 'coordinadoresCount'));
     }
 
-    public function store(Request $request){
-        try {
-            $validated = $request->validate([
-                'email' => 'required|unique:users',
-                'nombres' => 'required|string|max:100',
-                'ap_paterno' => 'required|string|max:100',
-                'ap_materno' => 'nullable|string|max:100',
-                'img_user' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            ]);
-
-            $imgPath = null;
-            if ($request->hasFile('img_user')) {
-                $imgPath = $request->file('img_user')->store('img_usuarios', 'public');
-            }
-
-            DB::beginTransaction();
-
-            $usuario = User::create([
-                'email' => $validated['email'],
-                'nombres' => $validated['nombres'],
-                'ap_paterno' => $validated['ap_paterno'],
-                'ap_materno' => $validated['ap_materno'] ?? '',
-                'password' => Hash::make($validated['email']),
-                'img_user' => $imgPath,
-                'fk_tipo_usuario' => 2,
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'mensaje' => 'Docente registrado correctamente.',
-                'ruta' => route('coordinacion.lista-docente'),
-                'class' => 'success'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'mensaje' => 'Error de validación.',
-                'errores' => $e->errors(),
-                'class' => 'error'
-            ], 422);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'mensaje' => 'Ocurrió un error al registrar al docente.',
-                'detalle' => $e->getMessage(),
-                'class' => 'error'
-            ], 500);
-        }
-    }
-
     public function listaCoordinadores(){
         $coordinadores = User::where('fk_tipo_usuario', '=', 3)->paginate(10);
 
