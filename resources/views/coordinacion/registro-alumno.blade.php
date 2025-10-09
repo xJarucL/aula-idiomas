@@ -40,7 +40,7 @@
                 <label class="text-gray-500 font-light">Matrícula:</label>
                 <input
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
-                    type="text" name="matricula" required
+                    type="text" name="matricula" required maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)"
                 >
 
             </div>

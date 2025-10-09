@@ -18,7 +18,8 @@
                     <input
                         class="bg-white w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="text" inputmode="numeric" pattern="[0-9]*" id="matricula" name="matricula"
-                        placeholder="Matrícula" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        placeholder="Matrícula" required maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)"
+                    >
                 </div>
                 <div>
                     <input
