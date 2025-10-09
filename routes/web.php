@@ -28,12 +28,28 @@ Route::prefix('alumno')->group(function(){
     Route::get('/inicio', function () {
         return view('alumno.inicio');
     })->name('alumno.inicio');
+
+    Route::get('/perfil', function () {
+        return view('alumno.perfil');
+    })->name('alumno.perfil');
+
+    Route::get('/editar-perfil', function () {
+        return view('alumno.editar-perfil');
+    })->name('alumno.editar-perfil');
 });
 
 Route::prefix('docente')->group(function(){
     Route::get('/inicio', function () {
         return view('docente.inicio');
     })->name('docente.inicio');
+
+    Route::get('/perfil', function () {
+        return view('docente.perfil');
+    })->name('docente.perfil');
+
+    Route::get('/editar-perfil', function () {
+        return view('docente.editar-perfil');
+    })->name('docente.editar-perfil');
 });
 
 Route::prefix('coordinacion')->group(function(){
@@ -70,6 +86,13 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.registro-coordinador');
     Route::post('/guardar-coordinador', [CoordinadorController::class, 'guardarCoordinador'])->name('coordinacion.guardar-coordinador');
 
+    Route::get('/perfil', function () {
+        return view('coordinacion.perfil');
+    })->name('coordinacion.perfil');
+
+    Route::get('/editar-perfil', function () {
+        return view('coordinacion.editar-perfil');
+    })->name('coordinacion.editar-perfil');
 });
 
 Route::get('/recuperar-contrasena', function (){
