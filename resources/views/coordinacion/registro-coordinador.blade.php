@@ -19,13 +19,13 @@
         <form id="form-insertar" data-url="{{ route('coordinacion.guardar-coordinador') }}" class="w-full gap-6" action="" method="post">
             @csrf
             <div class="flex flex-col gap-2">
-                <label class="text-gray-500 font-light">Nombre:</label>
+                <label class="text-gray-500 font-light">Nombre: *</label>
                 <input
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     type="text" name="nombres" required
                 >
 
-                <label class="text-gray-500 font-ligh">Apellido paterno:</label>
+                <label class="text-gray-500 font-ligh">Apellido paterno: *</label>
                 <input
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     type="text" name="ap_paterno" required
@@ -36,7 +36,7 @@
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     type="text" name="ap_materno"
                 >
-                <label class="text-gray-500 font-light">Correo electrónico:</label>
+                <label class="text-gray-500 font-light">Correo electrónico: *</label>
                 <input
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     type="email" name="email" required

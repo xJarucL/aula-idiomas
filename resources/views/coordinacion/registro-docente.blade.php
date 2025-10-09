@@ -12,7 +12,7 @@
                     <h1 class="text-3xl font-bold text-black">Registro de Docente</h1>
                     <span class="text-gray-500 font-light pt-2 block">Complete el siguiente formulario</span>
                 </div>
-                <a href="{{ route('coordinacion.lista-docente') }}"
+                <a href="{{ route('coordinacion.lista-docentes') }}"
                     class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 shadow">
                     Cancelar
                 </a>
@@ -21,12 +21,12 @@
                 method="post">
                 @csrf
                 <div class="flex flex-col gap-2">
-                    <label class="text-gray-500 font-light">Nombre:</label>
+                    <label class="text-gray-500 font-light">Nombre: *</label>
                     <input
                         class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="text" name="nombres" required>
 
-                    <label class="text-gray-500 font-ligh">Apellido paterno:</label>
+                    <label class="text-gray-500 font-ligh">Apellido paterno: *</label>
                     <input
                         class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="text" name="ap_paterno" required>
@@ -35,7 +35,7 @@
                     <input
                         class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="text" name="ap_materno">
-                    <label class="text-gray-500 font-light">Correo electrónico:</label>
+                    <label class="text-gray-500 font-light">Correo electrónico: *</label>
                     <input
                         class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="email" name="email" required>
