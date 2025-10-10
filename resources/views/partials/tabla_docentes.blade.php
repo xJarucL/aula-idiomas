@@ -33,7 +33,12 @@
                         </div>
                     </td>
                     <td class="py-2 px-2 md:px-4 border-b border-gray-200">{{$docente->email}}</td>
-                    <td class="py-2 px-2 md:px-4 border-b border-gray-200"> Docente </td>
+                    <td class="py-2 px-2 md:px-4 border-b border-gray-200">
+                        <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
+                            <option value="" >Docente</option>
+                            <option value="">Coordinador</option>
+                        </select>
+                    </td>
                     <td class="py-2 px-2 md:px-4 border-b border-gray-100">
                         <div class="flex items-center justify-center gap-2">
                             @if($docente->deleted_at)
