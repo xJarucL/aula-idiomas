@@ -18,7 +18,7 @@ class Alumno extends Model
     ];
 
     public function usuario(){
-        return $this->belongsTo(User::class, 'fk_usuario', 'pk_usuario');
+        return $this->belongsTo(User::class, 'fk_usuario')->withTrashed();
     }
 
     public function grupos(){

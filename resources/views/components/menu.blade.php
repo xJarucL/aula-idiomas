@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Aula de Inglés')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js', 'resources/js/estatus.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -26,15 +26,16 @@
                             <a href="{{route('alumno.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '2')
                             <a href="{{route('docente.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
+                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
+                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '3')
                             <a href="{{route('coordinacion.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
+                            <a href="{{route('coordinacion.lista-docentes')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
+                            <a href="{{route('coordinacion.lista-alumnos')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
+                            <a href="{{route('coordinacion.lista-grupos')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
+                            <a href="{{route('coordinacion.lista-coordinador')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Coordinación</a>
                         @endif
                     @endauth
-                    <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
-                    <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
-                    <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
-                    <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Coordinación</a>
-
                 </div>
             </div>
 
