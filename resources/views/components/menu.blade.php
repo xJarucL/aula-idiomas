@@ -7,6 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="bg-gray-200 min-h-screen">
    <nav class="bg-teal-600 text-white px-10 py-1 sticky top-0 z-50">
@@ -55,13 +56,24 @@
                 <!-- Icono de Usuario -->
                <div x-data="{ open: false }" class="relative">
                 <button @click="open = !open" class="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-teal-50 transition cursor-pointer" aria-label="Perfil">
-                    <svg class="w-8 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
+                    <img
+                        src="{{ Auth::user()->img_user ? asset('storage/' . Auth::user()->img_user) : asset('img/default.jpg') }}"
+                        alt="Perfil"
+                        class="w-12 h-12 rounded-full object-cover border"
+                    >
+                    </button>
                 </button>
                 <!-- Menú desplegable -->
                 <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white rounded-sm shadow-lg z-50">
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
+                    @auth
+                        @if(auth()->user()->fk_tipo_usuario == '1')
+                            <a href="{{route('alumno.perfil')}}" class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
+                        @elseif(auth()->user()->fk_tipo_usuario == '2')
+                            <a href="{{route('docente.perfil')}}" class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
+                        @elseif(auth()->user()->fk_tipo_usuario == '3')
+                            <a href="{{route('coordinador.perfil')}}" class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
+                        @endif
+                    @endauth
                     <form id="logout-form" method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"

@@ -39,9 +39,6 @@
                     <input
                         class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                         type="email" name="email" required>
-                    <label for="file-input" class="text-gray-500 font-light">Foto de perfil:</label>
-                    <input type="file" name="foto_perfil" id="file-input" accept="image/*"
-                        class="block w-full border border-gray-300 rounded-lg text-sm focus:z-10 focus:ring-2 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-300 dark:text-gray-400 file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4 dark:file:bg-teal-700 cursor-pointer">
                     <input type="hidden" name="fk_tipo_usuario" value="1">
                     <div class="flex justify-center mt-6">
                         <button class="bg-teal-600 text-white w-full px-6 py-2 rounded-lg hover:bg-teal-700 shadow"

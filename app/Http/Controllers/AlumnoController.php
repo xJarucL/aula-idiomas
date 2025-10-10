@@ -7,12 +7,17 @@ use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Carrera;
 use App\Models\Tipo_usuario;
+use App\Models\GrupoAlumno;
+use App\Models\Grupo;
+use App\Models\Calificaciones;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class AlumnoController extends Controller
 {
@@ -228,5 +233,132 @@ class AlumnoController extends Controller
                 ->with('error', 'Error al restaurar el alumno: ' . $e->getMessage());
         }
     }
+
+    public function perfilAlumno(){
+        $usuario = Auth::user();
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        $grupoAlumno = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+
+        $carrera = null;
+        if($grupoAlumno) {
+            $grupo = Grupo::find($grupoAlumno->fk_grupo);
+            if($grupo) {
+                $carrera = $grupo->carrera;
+            }
+        }
+
+        $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
+
+        return view('alumno.perfil', [
+            'usuario' => $usuario,
+            'carrera' => $carrera ? $carrera->nombre : 'Sin carrera',
+            'promedio' => $promedio ?? 'N/A'
+        ]);
+    }
+
+    public function actualizarPerfil(Request $request){
+        $usuario = Auth::user();
+
+        try {
+            $validated = $request->validate([
+                'img_user' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            ]);
+
+            DB::beginTransaction();
+
+            if ($request->hasFile('img_user')) {
+                $archivo = $request->file('img_user');
+                $nombreArchivo = Str::slug($usuario->nombres . '-' . time()) . '.' . $archivo->getClientOriginalExtension();
+
+                if ($usuario->img_user && Storage::disk('public')->exists($usuario->img_user)) {
+                    Storage::disk('public')->delete($usuario->img_user);
+                }
+
+                $path = $archivo->storeAs('perfiles', $nombreArchivo, 'public');
+                $usuario->img_user = $path;
+            }
+
+            $usuario->save();
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Foto de perfil actualizada correctamente.',
+                'ruta' => route('alumno.perfil'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error de validación.',
+                'errores' => $e->errors(),
+                'class' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar la foto de perfil.',
+                'detalle' => $e->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+    public function actualizarPassword(Request $request){
+        try {
+            $validated = $request->validate([
+                'password_antigua' => 'required',
+                'password_nueva' => 'required|min:6',
+                'password_confirmar' => 'required|min:6',
+            ]);
+
+            if ($request->password_nueva !== $request->password_confirmar) {
+                return response()->json([
+                    'mensaje' => 'Las contraseñas nuevas no coinciden.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            $user = Auth::user();
+
+            if (!Hash::check($request->password_antigua, $user->password)) {
+                return response()->json([
+                    'mensaje' => 'La contraseña actual es incorrecta.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            if (Hash::check($request->password_nueva, $user->password)) {
+                return response()->json([
+                    'mensaje' => 'La nueva contraseña no puede ser igual a la actual.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->password_nueva);
+            $user->save();
+
+            return response()->json([
+                'mensaje' => 'Contraseña actualizada correctamente.',
+                'class' => 'success'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error de validación. Verifique los campos.',
+                'errores' => $e->errors(),
+                'class' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar la contraseña.',
+                'detalle' => $e->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
 
 }

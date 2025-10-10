@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CoordinadorController extends Controller
 {
@@ -134,5 +135,69 @@ class CoordinadorController extends Controller
 
         return redirect()->route('coordinacion.lista-coordinador-deshabilitados')->with('success', 'Coordinador restaurado correctamente.');
     }
+
+    public function perfil(){
+        return view('coordinacion.perfil');
+    }
+
+    public function actualizarPerfil(Request $request)
+    {
+        $usuario = Auth::user();
+
+        try {
+            $validated = $request->validate([
+                'nombres' => 'required|string|max:100',
+                'ap_paterno' => 'required|string|max:100',
+                'ap_materno' => 'nullable|string|max:100',
+                'email' => 'required|email|unique:users,email,' . $usuario->pk_usuario . ',pk_usuario',
+                'img_user' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            ]);
+
+            DB::beginTransaction();
+
+            $usuario->nombres = $validated['nombres'];
+            $usuario->ap_paterno = $validated['ap_paterno'];
+            $usuario->ap_materno = $validated['ap_materno'] ?? '';
+            $usuario->email = $validated['email'];
+
+            if ($request->hasFile('img_user')) {
+                $archivo = $request->file('img_user');
+                $nombreArchivo = Str::slug($usuario->nombres . '-' . time()) . '.' . $archivo->getClientOriginalExtension();
+
+                if ($usuario->img_user && Storage::disk('public')->exists($usuario->img_user)) {
+                    Storage::disk('public')->delete($usuario->img_user);
+                }
+
+                $path = $archivo->storeAs('perfiles', $nombreArchivo, 'public');
+                $usuario->img_user = $path;
+            }
+
+            $usuario->save();
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Perfil actualizado correctamente.',
+                'ruta' => route('coordinador.perfil'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error de validación.',
+                'errores' => $e->errors(),
+                'class' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar el perfil.',
+                'detalle' => $e->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+
 
 }

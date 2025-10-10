@@ -31,13 +31,14 @@ Route::prefix('alumno')->group(function(){
         return view('alumno.inicio');
     })->name('alumno.inicio');
 
-    Route::get('/perfil', function () {
-        return view('alumno.perfil');
-    })->name('alumno.perfil');
-
+    // RUTAS DE PERFIL
+    Route::get('/perfil', [AlumnoController::class, 'perfilAlumno'])->name('alumno.perfil');
     Route::get('/editar-perfil', function () {
         return view('alumno.editar-perfil');
-    })->name('alumno.editar-perfil');
+    })->name('alumno.editar');
+    Route::post('/editando/perfil', [AlumnoController::class, 'actualizarPerfil'])->name('alumno.actualizar-perfil');
+    Route::post('/editando/password', [AlumnoController::class, 'actualizarPassword'])->name('alumno.actualizar-password');
+
 });
 
 Route::prefix('docente')->group(function(){
@@ -45,13 +46,14 @@ Route::prefix('docente')->group(function(){
         return view('docente.inicio');
     })->name('docente.inicio');
 
+    // RUTAS DE PERFIL
     Route::get('/perfil', function () {
         return view('docente.perfil');
     })->name('docente.perfil');
-
-    Route::get('/editar-perfil', function () {
+    Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
-    })->name('docente.editar-perfil');
+    })->name('docente.editar');
+    Route::put('/editando/perfil', [DocenteController::class, 'actualizarPerfil'])->name('docente.actualizar-perfil');
 });
 
 Route::prefix('coordinacion')->group(function(){
@@ -100,21 +102,19 @@ Route::prefix('coordinacion')->group(function(){
     Route::post('/guardar-coordinador', [CoordinadorController::class, 'guardarCoordinador'])->name('coordinacion.guardar-coordinador');
     Route::delete('/coordinador/eliminar/{id}', [CoordinadorController::class, 'eliminarCoordinador'])->name('coordinador.eliminar');
     Route::post('/coordinador/restaurar/{id}', [CoordinadorController::class, 'restaurarCoordinador'])->name('coordinador.restaurar');
-
     Route::get('/perfil', function () {
         return view('coordinacion.perfil');
-    })->name('coordinacion.perfil');
-
-    Route::get('/editar-perfil', function () {
+    })->name('coordinador.perfil');
+    Route::get('/editar/perfil', function () {
         return view('coordinacion.editar-perfil');
-    })->name('coordinacion.editar-perfil');
+    })->name('coordinador.editar');
+    Route::put('/editando/perfil', [CoordinadorController::class, 'actualizarPerfil'])->name('coordinador.actualizar-perfil');
+
 });
 
 // RUTAS PARA RECUPERAR CONTRASEÑA
-
 Route::get('/recuperar-contrasena', function (){
     return view('./reset/recuperar-contrasena');
 })->name('recuperar-contrasena');
-
 Route::post('/recuperar-password', [RecuperacionController::class, 'enviarSolicitud'])->name('recuperar.enviar');
 Route::get('/recuperar-password/restablecer/{usuario}', [RecuperacionController::class, 'restablecer'])->name('recuperar.restablecer');
