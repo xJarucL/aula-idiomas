@@ -113,10 +113,8 @@ Route::prefix('coordinacion')->group(function(){
 });
 
 // RUTAS PARA RECUPERAR CONTRASEÑA
-
 Route::get('/recuperar-contrasena', function (){
     return view('./reset/recuperar-contrasena');
 })->name('recuperar-contrasena');
-
 Route::post('/recuperar-password', [RecuperacionController::class, 'enviarSolicitud'])->name('recuperar.enviar');
 Route::get('/recuperar-password/restablecer/{usuario}', [RecuperacionController::class, 'restablecer'])->name('recuperar.restablecer');

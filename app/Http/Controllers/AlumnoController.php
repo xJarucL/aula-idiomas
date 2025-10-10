@@ -306,67 +306,59 @@ class AlumnoController extends Controller
         }
     }
 
-public function actualizarPassword(Request $request)
-{
-    try {
-        // Validaciones básicas
-        $validated = $request->validate([
-            'password_antigua' => 'required',
-            'password_nueva' => 'required|min:6',
-            'password_confirmar' => 'required|min:6',
-        ]);
+    public function actualizarPassword(Request $request){
+        try {
+            $validated = $request->validate([
+                'password_antigua' => 'required',
+                'password_nueva' => 'required|min:6',
+                'password_confirmar' => 'required|min:6',
+            ]);
 
-        // Verificar si las contraseñas nuevas coinciden
-        if ($request->password_nueva !== $request->password_confirmar) {
+            if ($request->password_nueva !== $request->password_confirmar) {
+                return response()->json([
+                    'mensaje' => 'Las contraseñas nuevas no coinciden.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            $user = Auth::user();
+
+            if (!Hash::check($request->password_antigua, $user->password)) {
+                return response()->json([
+                    'mensaje' => 'La contraseña actual es incorrecta.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            if (Hash::check($request->password_nueva, $user->password)) {
+                return response()->json([
+                    'mensaje' => 'La nueva contraseña no puede ser igual a la actual.',
+                    'class' => 'error'
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->password_nueva);
+            $user->save();
+
             return response()->json([
-                'mensaje' => 'Las contraseñas nuevas no coinciden.',
+                'mensaje' => 'Contraseña actualizada correctamente.',
+                'class' => 'success'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'mensaje' => 'Error de validación. Verifique los campos.',
+                'errores' => $e->errors(),
                 'class' => 'error'
             ], 422);
-        }
-
-        $user = Auth::user();
-
-        // Verificar contraseña actual
-        if (!Hash::check($request->password_antigua, $user->password)) {
+        } catch (\Exception $e) {
             return response()->json([
-                'mensaje' => 'La contraseña actual es incorrecta.',
+                'mensaje' => 'Ocurrió un error al actualizar la contraseña.',
+                'detalle' => $e->getMessage(),
                 'class' => 'error'
-            ], 422);
+            ], 500);
         }
-
-        // Verificar que la nueva no sea igual a la actual
-        if (Hash::check($request->password_nueva, $user->password)) {
-            return response()->json([
-                'mensaje' => 'La nueva contraseña no puede ser igual a la actual.',
-                'class' => 'error'
-            ], 422);
-        }
-
-        // Actualizar contraseña
-        $user->password = Hash::make($request->password_nueva);
-        $user->save();
-
-        return response()->json([
-            'mensaje' => 'Contraseña actualizada correctamente.',
-            'class' => 'success'
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        // Errores de validación (campos vacíos o formato incorrecto)
-        return response()->json([
-            'mensaje' => 'Error de validación. Verifique los campos.',
-            'errores' => $e->errors(),
-            'class' => 'error'
-        ], 422);
-    } catch (\Exception $e) {
-        // Errores inesperados
-        return response()->json([
-            'mensaje' => 'Ocurrió un error al actualizar la contraseña.',
-            'detalle' => $e->getMessage(),
-            'class' => 'error'
-        ], 500);
     }
-}
 
 
 }
