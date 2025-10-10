@@ -13,7 +13,6 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                // Mostrar mensaje de éxito
                 $('#mensaje')
                     .removeClass('error')
                     .addClass(response.class || 'success')
@@ -33,7 +32,6 @@ $(document).ready(function () {
                 let mensaje = '';
 
                 if (xhr.status === 422 && res.errores) {
-                    // 🔹 Concatenar errores de validación
                     mensaje += `<strong>${res.mensaje || 'Error de validación:'}</strong><br>`;
                     for (let campo in res.errores) {
                         res.errores[campo].forEach(function (error) {
@@ -41,7 +39,6 @@ $(document).ready(function () {
                         });
                     }
                 } else {
-                    // 🔹 Otros errores
                     mensaje = res?.mensaje || 'Ha ocurrido un error inesperado.';
                 }
 

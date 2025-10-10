@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mensaje = document.getElementById('mensaje');
     if (mensaje && !mensaje.classList.contains('hidden')) {
         setTimeout(() => {
-            mensaje.style.animation = 'slideDown 0.5s forwards';
+            mensaje.style.animation = 'slideDown 8s forwards';
             setTimeout(() => {
                 mensaje.style.display = 'none';
             }, 500);

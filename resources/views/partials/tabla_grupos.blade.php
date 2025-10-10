@@ -1,3 +1,4 @@
+@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
 
 <table class="min-w-full text-xs md:text-base">
     <thead>
