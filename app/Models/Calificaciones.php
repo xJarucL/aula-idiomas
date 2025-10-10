@@ -12,4 +12,9 @@ class Calificaciones extends Model
 
     protected $table = 'calificaciones';
     protected $primaryKey = 'pk_calificacion';
+
+    public function alumno() {
+        return $this->belongsTo(Alumno::class, 'fk_alumno', 'pk_alumno');
+    }
+
 }

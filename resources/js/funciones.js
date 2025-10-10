@@ -1,5 +1,11 @@
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
 $(document).ready(function () {
-    $('#form-insertar').on('submit', function (e) {
+    $('form[data-url]').on('submit', function (e) {
         e.preventDefault();
 
         let $form = $(this);
@@ -16,7 +22,7 @@ $(document).ready(function () {
                 $('#mensaje')
                     .removeClass('error')
                     .addClass(response.class || 'success')
-                    .html(response.mensaje)
+                    .html(response.mensaje || response.message || 'Operación exitosa.')
                     .fadeIn();
 
                 setTimeout(function () {
@@ -31,7 +37,7 @@ $(document).ready(function () {
                 let res = xhr.responseJSON;
                 let mensaje = '';
 
-                if (xhr.status === 422 && res.errores) {
+                if (xhr.status === 422 && res?.errores) {
                     mensaje += `<strong>${res.mensaje || 'Error de validación:'}</strong><br>`;
                     for (let campo in res.errores) {
                         res.errores[campo].forEach(function (error) {
@@ -39,7 +45,7 @@ $(document).ready(function () {
                         });
                     }
                 } else {
-                    mensaje = res?.mensaje || 'Ha ocurrido un error inesperado.';
+                    mensaje = res?.mensaje || res?.message || 'Ha ocurrido un error inesperado.';
                 }
 
                 $('#mensaje')
