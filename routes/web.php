@@ -11,12 +11,12 @@ use App\Http\Controllers\RecuperacionController;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Cuatrimestre;
-
+use App\Http\Middleware\RolMiddleware;
 
 
 Route::get('/', function () {
     return view('login');
-})->name('login');
+})->name('login')->middleware(\App\Http\Middleware\RedirectIfAuthenticated::class);
 
 Route::post('/iniciando_sesion', [UserController::class, 'login'])
     ->middleware('guest')
@@ -26,7 +26,10 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
-Route::prefix('alumno')->group(function(){
+Route::prefix('alumno')
+    ->middleware(['auth', RolMiddleware::class . ':1'])
+    ->group(function(){
+
     Route::get('/inicio', function () {
         return view('alumno.inicio');
     })->name('alumno.inicio');
@@ -41,7 +44,10 @@ Route::prefix('alumno')->group(function(){
 
 });
 
-Route::prefix('docente')->group(function(){
+Route::prefix('docente')
+    ->middleware(['auth', RolMiddleware::class . ':2'])
+    ->group(function(){
+
     Route::get('/inicio', function () {
         return view('docente.inicio');
     })->name('docente.inicio');
@@ -56,7 +62,10 @@ Route::prefix('docente')->group(function(){
     Route::put('/editando/perfil', [DocenteController::class, 'actualizarPerfil'])->name('docente.actualizar-perfil');
 });
 
-Route::prefix('coordinacion')->group(function(){
+Route::prefix('coordinacion')
+    ->middleware(['auth', RolMiddleware::class . ':3'])
+    ->group(function(){
+
     Route::get('/inicio', [CoordinadorController::class, 'inicio'])->name('coordinacion.inicio');
 
     // RUTAS DE ALUMNOS
