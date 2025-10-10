@@ -18,17 +18,23 @@
               <td style="padding: 30px;">
                 <p style="font-size: 16px; color: #333333;">Hola, Coordinador/a</p>
                 <p style="font-size: 16px; color: #333333;">El siguiente usuario ha solicitado una restauración de contraseña:</p>
+
                 <ul style="font-size: 16px; color: #333333; margin-top:7px; padding-left: 20px; margin-bottom: 30px;">
-                  <li><strong>Matrícula:</strong> 202200412</li>
-                  <li><strong>Nombre:</strong> Ariel Salazar Medina</li>
-                  <li><strong>Carrera:</strong> Ingeniería en Desarrollo y Gestión de Software (IDGS)</li>
-                  <li><strong>Grupo:</strong> 10mo</li>
+                  <li><strong>Matrícula:</strong> {{ $usuarioMatricula }}</li>
+                  <li><strong>Nombre:</strong> {{ $usuarioNombre }}</li>
+                  @if(isset($usuarioCarrera))
+                    <li><strong>Carrera:</strong> {{ $usuarioCarrera }}</li>
+                  @endif
+                  @if(isset($usuarioGrupo))
+                    <li><strong>Grupo:</strong> {{ $usuarioGrupo }}</li>
+                  @endif
                 </ul>
+
                 <p style="font-size: 16px; color: #333333;">Para autorizar esta solicitud, por favor haga clic en el siguiente botón:</p>
 
                 <p style="text-align: center; margin: 30px 0;">
                   <a
-                    href="{{ url('/reset-password?token=' . $token) }}"
+                    href="{{ $urlRestablecer }}"
                     style="padding: 12px 24px; background-color: #2E887B; color: #ffffff;
                     text-decoration: none; font-weight: bold; border-radius: 5px;"
                   >

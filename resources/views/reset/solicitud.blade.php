@@ -16,9 +16,9 @@
             <p class="text-xl font-light mt-2 mb-2 text-justify">Se ha enviado tu solicitud al coordinador. Se te informara cuando tu contraseña ya se haya restablecido.</p>
             <h3 class="flex justify-center text-xl md:text-3xl font-bold text-gray-800">¡Este Atento!</h3>
             <a
-                class="flex justify-center text-teal-800 mt-3" 
+                class="flex justify-center text-teal-800 mt-3"
                 href="{{ route('login') }}">
-                Volver e Iniciar seseion
+                Volver e Iniciar sesión
             </a>
         </div>
     </div>

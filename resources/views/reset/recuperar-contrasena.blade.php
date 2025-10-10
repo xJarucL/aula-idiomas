@@ -15,8 +15,9 @@
             <h1 class="flex justify-center text-xl md:text-3xl font-bold text-gray-800">Recuperar contraseña</h1>
             <p class="text-sm font-light mt-2 mb-2 text-justify">Para recuperar el acceso a tu cuenta, por favor ingresa tu matrícula en el campo correspondiente.</p>
             <p></p>
-            <form action="" method="POST">
-                <input 
+            <form action="{{ route('recuperar.enviar') }}" method="POST">
+                @csrf
+                <input
                     class="bg-white w-full mt-1 px-4 py-3 border border-gray-300 my-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     type="text" inputmode="numeric" pattern="[0-9]*" id="matricula" name="matricula"
                     placeholder="Matrícula" required oninput="this.value = this.value.replace(/[^0-9]/g, '')"
@@ -24,12 +25,12 @@
                 <input class="w-full bg-teal-600 text-white font-medium mt-1 py-3 rounded-lg hover:bg-teal-700 transition duration-200 shadow-md" type="submit" value="Enviar petición">
             </form>
             <a
-                class="flex justify-center text-teal-800 mt-3" 
+                class="flex justify-center text-teal-800 mt-3"
                 href="{{ route('login') }}">
-                Volver e Iniciar seseion
+                Volver e Iniciar Sesión
             </a>
         </div>
-       
+
     </div>
 </body>
 </html>

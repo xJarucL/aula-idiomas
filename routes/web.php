@@ -7,6 +7,7 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CoordinadorController;
 use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\RecuperacionController;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Cuatrimestre;
@@ -109,6 +110,11 @@ Route::prefix('coordinacion')->group(function(){
     })->name('coordinacion.editar-perfil');
 });
 
+// RUTAS PARA RECUPERAR CONTRASEÑA
+
 Route::get('/recuperar-contrasena', function (){
     return view('./reset/recuperar-contrasena');
 })->name('recuperar-contrasena');
+
+Route::post('/recuperar-password', [RecuperacionController::class, 'enviarSolicitud'])->name('recuperar.enviar');
+Route::get('/recuperar-password/restablecer/{usuario}', [RecuperacionController::class, 'restablecer'])->name('recuperar.restablecer');
