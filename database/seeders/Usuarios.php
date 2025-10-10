@@ -27,26 +27,6 @@ class Usuarios extends Seeder
         ]);
 
         User::create([
-            'nombres' => 'Roberto',
-            'ap_paterno' => 'Gonzales',
-            'ap_materno' => null,
-            'matricula' => null,
-            'email' => 'jarunyta1096@gmail.com',
-            'password' => Hash::make('roberto'),
-            'fk_tipo_usuario' => 2
-        ]);
-
-        User::create([
-            'nombres' => 'Sergio',
-            'ap_paterno' => 'Moles',
-            'ap_materno' => 'Montes',
-            'matricula' => '202200096',
-            'email' => null,
-            'password' => Hash::make('202200096'),
-            'fk_tipo_usuario' => 1
-        ]);
-
-        User::create([
             'nombres' => 'Ariel',
             'ap_paterno' => 'Salazar',
             'ap_materno' => null,
@@ -84,7 +64,7 @@ class Usuarios extends Seeder
             'ap_materno' => 'Montes',
             'matricula' => '202200096',
             'email' => null,
-            'password' => Hash::make('202200096'),
+            'password' => Hash::make('sergio'),
             'fk_tipo_usuario' => 1
         ]);
         User::create([
