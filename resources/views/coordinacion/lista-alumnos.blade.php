@@ -33,7 +33,6 @@
         <button id="btn-buscar" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 shadow text-sm md:text-base">Buscar</button>
         <div class="flex gap-2 w-full md:w-1/3">
             <select name="promedio" data-filter class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
-                <option value="">Filtrar por promedio</option>
                 <option value="0">Todos los promedios</option>
                 <option value="6">≥ 6.0</option>
                 <option value="7">≥ 7.0</option>
@@ -41,7 +40,6 @@
                 <option value="9">≥ 9.0</option>
             </select>
             <select name="carrera" data-filter class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
-                <option value="" selected>Filtrar por carrera</option>
                 <option value="">Todas las carreras</option>
                 @foreach($carreras as $c)
                     <option value="{{ $c->pk_carrera }}">{{ $c->nombre }}</option>
