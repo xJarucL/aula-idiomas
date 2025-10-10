@@ -56,8 +56,6 @@ Route::prefix('docente')->group(function(){
 Route::prefix('coordinacion')->group(function(){
     Route::get('/inicio', [CoordinadorController::class, 'inicio'])->name('coordinacion.inicio');
 
-    Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
-
     // RUTAS DE ALUMNOS
     Route::get('/registro-alumno', function () {
         $grupos = Grupo::with(['carrera', 'cuatrimestre'])->get();
@@ -92,10 +90,15 @@ Route::prefix('coordinacion')->group(function(){
     Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
     Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
 
+    // RUTSA DE COORDINADOR
+    Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
+    Route::get('/lista-coordinador/deshabilitados', [CoordinadorController::class, 'listaCoordinadoresDeshabilitados'])->name('coordinacion.lista-coordinador-deshabilitados');
     Route::get('/registro-coordinador', function () {
         return view('coordinacion.registro-coordinador');
     })->name('coordinacion.registro-coordinador');
     Route::post('/guardar-coordinador', [CoordinadorController::class, 'guardarCoordinador'])->name('coordinacion.guardar-coordinador');
+    Route::delete('/coordinador/eliminar/{id}', [CoordinadorController::class, 'eliminarCoordinador'])->name('coordinador.eliminar');
+    Route::post('/coordinador/restaurar/{id}', [CoordinadorController::class, 'restaurarCoordinador'])->name('coordinador.restaurar');
 
     Route::get('/perfil', function () {
         return view('coordinacion.perfil');

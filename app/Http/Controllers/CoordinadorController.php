@@ -23,8 +23,49 @@ class CoordinadorController extends Controller
         return view('coordinacion.inicio', compact('gruposCount', 'docentesCount', 'alumnosCount', 'coordinadoresCount'));
     }
 
-    public function listaCoordinadores(){
-        $coordinadores = User::where('fk_tipo_usuario', '=', 3)->paginate(10);
+    public function listaCoordinadores(Request $request){
+        $query = User::where('fk_tipo_usuario', 3);
+
+        if ($request->filled('search')) {
+            $search = str_replace(' ', '', $request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(nombres, ap_paterno, ap_materno, email), ' ', '') LIKE ?", ["%{$search}%"])
+                ->orWhere('nombres', 'like', "%{$search}%")
+                ->orWhere('ap_paterno', 'like', "%{$search}%")
+                ->orWhere('ap_materno', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $coordinadores = $query->paginate(10)->withQueryString();
+
+        if ($request->ajax()) {
+            return view('partials.tabla_coordinadores', compact('coordinadores'))->render();
+        }
+
+        return view('coordinacion.lista-coordinador', compact('coordinadores'));
+    }
+
+    public function listaCoordinadoresDeshabilitados(Request $request)
+    {
+        $query = User::onlyTrashed()->where('fk_tipo_usuario', 3);
+
+        if ($request->filled('search')) {
+            $search = str_replace(' ', '', $request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(nombres, ap_paterno, ap_materno, email), ' ', '') LIKE ?", ["%{$search}%"])
+                ->orWhere('nombres', 'like', "%{$search}%")
+                ->orWhere('ap_paterno', 'like', "%{$search}%")
+                ->orWhere('ap_materno', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $coordinadores = $query->paginate(10)->withQueryString();
+
+        if ($request->ajax()) {
+            return view('partials.tabla_coordinadores', compact('coordinadores'))->render();
+        }
 
         return view('coordinacion.lista-coordinador', compact('coordinadores'));
     }
@@ -78,6 +119,20 @@ class CoordinadorController extends Controller
                 'class' => 'error'
             ], 500);
         }
+    }
+
+    public function eliminarCoordinador($id){
+        $coordinador = User::findOrFail($id);
+        $coordinador->delete();
+
+        return redirect()->route('coordinacion.lista-coordinador')->with('success', 'Coordinador deshabilitado correctamente.');
+    }
+
+    public function restaurarCoordinador($id){
+        $coordinador = User::withTrashed()->findOrFail($id);
+        $coordinador->restore();
+
+        return redirect()->route('coordinacion.lista-coordinador-deshabilitados')->with('success', 'Coordinador restaurado correctamente.');
     }
 
 }

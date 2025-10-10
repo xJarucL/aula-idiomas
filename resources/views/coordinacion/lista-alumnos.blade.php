@@ -22,7 +22,7 @@
                 data-url="{{ Route::currentRouteName() == 'coordinacion.lista-alumnos' ? route('coordinacion.lista-alumnos') : route('coordinacion.lista-alumnos-deshabilitados') }}"
                 class="bg-white border border-gray-300 rounded-lg p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-teal-500 w-full shadow text-sm md:text-base"
                 type="text"
-                placeholder="Buscar nombre o correo electrónico..."
+                placeholder="Buscar..."
                 value="{{ request('search') }}"
             >
             <span id="limpiar-busqueda"
