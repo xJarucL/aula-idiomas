@@ -27,8 +27,8 @@
                             <a href="{{route('alumno.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '2')
                             <a href="{{route('docente.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
-                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
-                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
+                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis Grupos</a>
+                            <a href="#" class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Actividades</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '3')
                             <a href="{{route('coordinacion.inicio')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
                             <a href="{{route('coordinacion.lista-docentes')}}" class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
@@ -93,7 +93,7 @@
         </div>
     </nav>
 
-    <main class="p-10">
+    <main class="p-5 md:mr-20 md:ml-20">
         @yield('content')
     </main>
 
