@@ -56,6 +56,15 @@ Route::prefix('docente')
     Route::get('/perfil', function () {
         return view('docente.perfil');
     })->name('docente.perfil');
+    Route::get('/lista-actividades', function (){
+        return view('docente.lista-actividades');
+    })->name('docente.lista-actividades');
+    Route::get('/crear-actividad', function (){
+        return view('docente.crear-actividad');
+    })->name('docente.crear-actividad');
+    Route::get('/mis-grupos', function (){
+        return view('docente.mis-grupos');
+    })->name('docente.mis-grupos');
     Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
     })->name('docente.editar');
@@ -88,7 +97,6 @@ Route::prefix('coordinacion')
     Route::post('/guardar-docente', [DocenteController::class, 'store'])->name('coordinacion.guardar-docente');
     Route::delete('/docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente'])->name('docente.eliminar');
     Route::post('/docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente'])->name('docente.restaurar');
-
 
     // RUTAS DE GRUPOS
     Route::get('/lista-grupos', [GrupoController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
