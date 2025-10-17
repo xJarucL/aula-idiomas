@@ -58,7 +58,7 @@
                 <label class="text-gray-500 font-light">Año:</label>
                 <input
                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
-                    type="text" name="anio" required maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4)"
+                    type="text" name="año" required maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4)"
                 >
                 <div class="flex justify-center mt-6">
                     <button
