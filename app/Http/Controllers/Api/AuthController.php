@@ -62,6 +62,8 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $email)->first();
+            $token = $user->createToken('flutter_token')->plainTextToken;
+
 
             if (!$user) {
                 return response()->json([
@@ -82,6 +84,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso.',
+                'token' => $token,
                 'user' => [
                     'id' => $user->pk_usuario,
                     'nombre' => $user->nombres,

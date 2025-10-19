@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\DB;
+
+class DocenteController extends Controller
+{
+
+    public function guardarDocente(Request $request){
+        try {
+            $validated = $request->validate([
+                'email' => 'required|unique:users',
+                'nombres' => 'required|string|max:100',
+                'ap_paterno' => 'required|string|max:100',
+                'ap_materno' => 'nullable|string|max:100',
+                'img_user' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ],[
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.unique' => 'El correo electrónico ya está registrado.',
+
+                'nombres.required' => 'El nombre es obligatorio.',
+                'nombres.string' => 'El nombre debe ser texto.',
+                'nombres.max' => 'El nombre no puede exceder los 100 caracteres.',
+
+                'ap_paterno.required' => 'El apellido paterno es obligatorio.',
+                'ap_paterno.string' => 'El apellido paterno debe ser texto.',
+                'ap_paterno.max' => 'El apellido paterno no puede exceder los 100 caracteres.',
+
+                'ap_materno.string' => 'El apellido materno debe ser texto.',
+                'ap_materno.max' => 'El apellido materno no puede exceder los 100 caracteres.',
+
+                'img_user.image' => 'El archivo debe ser una imagen.',
+                'img_user.mimes' => 'La imagen debe estar en formato JPG, JPEG o PNG.',
+                'img_user.max' => 'La imagen no debe pesar más de 2 MB.',
+            ]);
+
+            $imgPath = null;
+            if ($request->hasFile('img_user')) {
+                $imgPath = $request->file('img_user')->store('img_usuarios', 'public');
+            }
+
+            DB::beginTransaction();
+
+            $usuario = User::create([
+                'email' => $validated['email'],
+                'nombres' => $validated['nombres'],
+                'ap_paterno' => $validated['ap_paterno'],
+                'ap_materno' => $validated['ap_materno'] ?? '',
+                'password' => Hash::make($validated['email']),
+                'img_user' => $imgPath,
+                'fk_tipo_usuario' => 2,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Docente guardado correctamente.'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+             return response()->json([
+                'success' => false,
+                'message' => $e->errors()
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()
+            ]);
+        }
+    }
+
+    public function listaDocentes(Request $request){
+        $query = User::where('fk_tipo_usuario', 2);
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("CONCAT(nombres, ' ', ap_paterno, ' ', IFNULL(ap_materno, '')) LIKE ?", ["%{$search}%"])
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $docentes = $query->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lista de docentes obtenida correctamente.',
+            'data' => $docentes->items(),
+            'pagination' => [
+                'total' => $docentes->total(),
+                'current_page' => $docentes->currentPage(),
+                'last_page' => $docentes->lastPage(),
+                'per_page' => $docentes->perPage(),
+            ],
+        ]);
+    }
+
+}
+
