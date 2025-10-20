@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DocenteController;
+use App\Http\Controllers\Api\AlumnoController;
+use App\Models\Grupo;
 
 // Ruta de prueba
 Route::get('/test', function() {
@@ -28,6 +30,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('docente-editar/{id}', [DocenteController::class, 'update']);
         Route::delete('docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente']);
         Route::put('docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente']);
+
+        // Rutas de gestión de alumnos
+        Route::get('formulario-alumno', function () {
+            $grupos = Grupo::with(['carrera', 'cuatrimestre'])->orderBy('created_at', 'desc')->get();
+
+            return response()->json(['data' => $grupos], 200);
+        });
+        Route::post('alumno/guardar', [AlumnoController::class, 'guardarAlumno']);
+        Route::get('lista-alumnos', [AlumnoController::class, 'listaAlumnos']);
 
     });
     Route::get('/user', function(Request $request){
