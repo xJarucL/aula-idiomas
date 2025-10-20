@@ -39,6 +39,8 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::post('alumno/guardar', [AlumnoController::class, 'guardarAlumno']);
         Route::get('lista-alumnos', [AlumnoController::class, 'listaAlumnos']);
+        Route::delete('alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno']);
+        Route::put('alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno']);
 
     });
     Route::get('/user', function(Request $request){

@@ -83,7 +83,7 @@ class AlumnoController extends Controller
     }
 
     public function listaAlumnos(Request $request){
-        $query = Alumno::with(['usuario', 'grupos.grupo.carrera', 'calificaciones'])->withTrashed();
+        $query = Alumno::with(['usuario', 'grupos.grupo.carrera', 'calificaciones'])->withTrashed()->orderBy('created_at', 'desc');
 
         if ($request->filled('search')) {
             $search = str_replace(' ', '', $request->input('search'));
@@ -136,6 +136,28 @@ class AlumnoController extends Controller
                 'per_page' => $alumnos->perPage(),
                 'total' => $alumnos->total(),
             ],
+        ]);
+    }
+
+    public function eliminarAlumno($id){
+        $alumno = User::findOrFail($id);
+        $alumno->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Alumno deshabilitado correctamente',
+            'data' => $alumno,
+        ]);
+    }
+
+    public function restaurarAlumno($id){
+        $alumno = User::withTrashed()->findOrFail($id);
+        $alumno->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Alumno restaurado correctamente',
+            'data' => $alumno,
         ]);
     }
 
