@@ -20,8 +20,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rutas de coordinacion
     Route::prefix('coordinacion')->group(function(){
-        Route::post('/guardar-docente', [DocenteController::class, 'guardarDocente']);
-        Route::get('/lista-docente', [DocenteController::class, 'listaDocentes']);
+
+        // Rutas de gestión de docentes
+        Route::post('guardar-docente', [DocenteController::class, 'guardarDocente']);
+        Route::get('lista-docente', [DocenteController::class, 'listaDocentes']);
+        Route::get('docente/{id}', [DocenteController::class, 'show']);
+        Route::put('docente-editar/{id}', [DocenteController::class, 'update']);
+        Route::delete('docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente']);
+        Route::put('docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente']);
+
     });
     Route::get('/user', function(Request $request){
         return $request->user();

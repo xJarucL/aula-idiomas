@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class DocenteController extends Controller
 {
@@ -80,7 +81,7 @@ class DocenteController extends Controller
     }
 
     public function listaDocentes(Request $request){
-        $query = User::where('fk_tipo_usuario', 2);
+        $query = User::where('fk_tipo_usuario', 2)->withTrashed() ->orderBy('created_at', 'desc');
 
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
@@ -105,5 +106,81 @@ class DocenteController extends Controller
         ]);
     }
 
+        public function show($id){
+        $docente = User::where('fk_tipo_usuario', 2)->find($id);
+
+        if (!$docente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Docente no encontrado',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Docente obtenido correctamente',
+            'data' => $docente,
+        ]);
+    }
+
+    public function update(Request $request, $id){
+        $docente = User::where('fk_tipo_usuario', 2)->find($id);
+
+        if (!$docente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Docente no encontrado',
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nombres' => 'required|string|max:255',
+            'ap_paterno' => 'required|string|max:255',
+            'ap_materno' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id. ',pk_usuario',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $docente->nombres = $request->input('nombres');
+        $docente->ap_paterno = $request->input('ap_paterno');
+        $docente->ap_materno = $request->input('ap_materno');
+        $docente->email = $request->input('email');
+        $docente->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Docente actualizado correctamente',
+            'data' => $docente,
+        ]);
+    }
+
+    public function eliminarDocente($id){
+        $docente = User::findOrFail($id);
+        $docente->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Docente deshabilitado correctamente',
+            'data' => $docente,
+        ]);
+    }
+
+    public function restaurarDocente($id){
+        $docente = User::withTrashed()->findOrFail($id);
+        $docente->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Docente restaurado correctamente',
+            'data' => $docente,
+        ]);
+    }
 }
 
