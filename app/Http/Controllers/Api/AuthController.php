@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Validator;
+
 
 class AuthController extends Controller
 {
@@ -100,6 +102,44 @@ class AuthController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function update(Request $request, $id){
+        $usuario = User::find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado',
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nombres' => 'required|string|max:255',
+            'ap_paterno' => 'required|string|max:255',
+            'ap_materno' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id. ',pk_usuario',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $usuario->nombres = $request->input('nombres');
+        $usuario->ap_paterno = $request->input('ap_paterno');
+        $usuario->ap_materno = $request->input('ap_materno');
+        $usuario->email = $request->input('email');
+        $usuario->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario actualizado correctamente',
+            'data' => $usuario,
+        ]);
     }
 }
 
