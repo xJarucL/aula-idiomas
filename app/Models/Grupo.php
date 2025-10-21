@@ -27,4 +27,16 @@ class Grupo extends Model
     public function cuatrimestre(){
         return $this->belongsTo(Cuatrimestre::class, 'fk_cuatrimestre', 'pk_cuatrimestre');
     }
+
+    public function actividades(){
+        return $this->belongsToMany(Actividades::class, 'actividad_grupo', 'fk_grupo', 'fk_actividad')
+                    ->withPivot(['fecha_inicio', 'fecha_fin'])
+                    ->withTimestamps();
+    }
+
+    public function alumnos(){
+        return $this->belongsToMany(Alumno::class, 'grupo_alumno', 'fk_grupo', 'fk_alumno');
+    }
+
+
 }

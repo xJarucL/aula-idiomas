@@ -29,4 +29,16 @@ class Alumno extends Model
         return $this->hasMany(Calificaciones::class, 'fk_alumno', 'pk_alumno');
     }
 
+    public function respuestas(){
+        return $this->hasMany(RespuestasAlumno::class, 'fk_alumno');
+    }
+
+    public function entregasPdf(){
+        return $this->hasMany(EntregaPDFAlumno::class, 'fk_alumno');
+    }
+
+    public function respuestasAuditivas(){
+        return $this->hasMany(RespuestaAuditivaAlumno::class, 'fk_alumno');
+    }
+
 }
