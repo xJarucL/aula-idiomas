@@ -58,27 +58,13 @@
                             <div class="flex flex-wrap justify-start gap-4">
                                 <div class="flex justify-between gap-4 w-full">
                                     <div class="w-1/2">
-                                        <label for="">Opcion A</label>
+                                        <label class="text-gray-500 font-light" for="">Opcion A</label>
                                         <input
                                             class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                                             type="text" required>
                                     </div>
                                     <div class="w-1/2">
-                                        <label for="">Opcion B</label>
-                                        <input
-                                            class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
-                                            type="text" required>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between gap-4 w-full">
-                                    <div class="w-1/2">
-                                        <label for="">Opcion C</label>
-                                        <input
-                                            class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
-                                            type="text" required>
-                                    </div>
-                                    <div class="w-1/2">
-                                        <label for="">Opcion D</label>
+                                        <label class="text-gray-500 font-light" for="">Opcion B</label>
                                         <input
                                             class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                                             type="text" required>
@@ -86,10 +72,25 @@
                                 </div>
                                 <div class="flex justify-between gap-4 w-full">
                                     <div class="w-1/2">
-                                        <label for="">Opción correcta:</label>
+                                        <label class="text-gray-500 font-light" for="">Opcion C</label>
+                                        <input
+                                            class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                                            type="text" required>
+                                    </div>
+                                    <div class="w-1/2">
+                                        <label class="text-gray-500 font-light" for="">Opcion D</label>
+                                        <input
+                                            class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                                            type="text" required>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between gap-4 w-full">
+                                    <div class="w-1/2">
+                                        <label for="" class="text-gray-500 font-light">Opción correcta:</label>
                                         <select name="" id=""
                                             class="p-2.5 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition">
-                                            <option value="">Seleciona la Opcion</option>
+                                            <option class="text-gray-500 font-light" value="">Seleciona la Opcion
+                                            </option>
                                             <option value="">A</option>
                                             <option value="">B</option>
                                             <option value="">C</option>
@@ -97,7 +98,7 @@
                                         </select>
                                     </div>
                                     <div class="w-1/2">
-                                        <label for="">Valor:</label>
+                                        <label for="" class="text-gray-500 font-light">Valor:</label>
                                         <input
                                             class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                                             type="text" required>
@@ -152,6 +153,48 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Configuración --}}
+                <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 mt-5">
+                    <div class="flex flex-col p-4">
+                        <h3 class="text-[18px] text-balck font-semibold">Configuración de actividad</h3>
+                        <div class="flex flex-wrap justify-start gap-4">
+                            <div class="flex justify-between gap-4 w-full">
+                                <div class="w-1/2">
+                                    <label class="text-gray-500 font-light" for="">Limite de tiempo</label>
+                                    <input
+                                        class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                                        type="text" required>
+                                </div>
+                                <div class="w-1/2">
+                                    <label class="text-gray-500 font-light" for="">Tiempo de entrega</label>
+                                    <input
+                                        class="p-2 w-full min-w-auto  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                                        type="text" required>
+                                </div>
+                            </div>
+                            <div class="flex flex-col md:flex-row justify-between gap-4 w-full">
+                                <div class="w-full md:w-1/2">
+                                    <label class="text-gray-500 font-light">Opción correcta:</label>
+                                    <select
+                                        class="p-2.5 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+                                        <option class="text-gray-500 font-light" value="">Selecciona la opción
+                                        </option>
+                                        <option value="">IDGS 10mo</option>
+                                        <option value="">Turismo</option>
+                                        <option value="">Mecatrónica</option>
+                                    </select>
+                                </div>
+                                <div class="w-full md:w-1/2 flex items-end">
+                                    <button type="submit"
+                                        class="bg-teal-600 text-white px-4 py-2 w-full rounded-lg hover:bg-teal-700 transition shadow">
+                                        Guardar Actividad
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
             {{-- Modal --}}
             <div data-dialog-backdrop="modal" data-dialog-backdrop-close="true"
@@ -187,7 +230,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
     </div>
     <script>
@@ -225,7 +267,7 @@
                 });
             }
 
-            // Botones del modal
+            // Formulario dinamico
             const botonesModal = backdrop.querySelectorAll('button[data-tipo-pregunta]');
 
             botonesModal.forEach(btn => {
