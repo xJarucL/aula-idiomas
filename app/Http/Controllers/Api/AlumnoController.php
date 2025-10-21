@@ -161,5 +161,32 @@ class AlumnoController extends Controller
         ]);
     }
 
+    public function perfilAlumno($id){
+
+        $usuario = User::where('fk_tipo_usuario', 1)->find($id);
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        $grupoAlumno = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+
+        $carrera = null;
+        if($grupoAlumno) {
+            $grupo = Grupo::find($grupoAlumno->fk_grupo);
+            if($grupo) {
+                $carrera = $grupo->carrera;
+            }
+        }
+
+        $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Alumno obtenido correctamente',
+            'usuario' => $usuario,
+            'carrera' => $carrera ? $carrera->nombre : 'Sin carrera',
+            'promedio' => $promedio ?? 'N/A',
+        ]);
+    }
+
 }
 
