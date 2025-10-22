@@ -221,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const tipo = btn.dataset.tipo;
             const clone = templates[tipo].cloneNode(true);
 
-            // Cambiar los [] por [preguntaIndex]
             clone.querySelectorAll('input, textarea, select').forEach(input => {
                 if (input.name.includes('preguntas[]')) {
                     input.name = input.name.replace('preguntas[]', `preguntas[${preguntaIndex}]`);
