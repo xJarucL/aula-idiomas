@@ -109,14 +109,14 @@
             </div>
         </template>
 
-        <template id="descriptiva">
+        <template id="abierta">
             <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                <input type="hidden" name="preguntas[][tipo]" value="descriptiva">
+                <input type="hidden" name="preguntas[][tipo]" value="abierta">
                 <div class="flex flex-col p-4 relative">
                     <div class="flex justify-between gap-4 mb-3">
                         <div>
                             <h3 class="text-[20px] text-black font-semibold">Pregunta</h3>
-                            <span class="text-gray-500 font-light">Descriptiva</span>
+                            <span class="text-gray-500 font-light">Abierta</span>
                         </div>
                         <button class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold" type="button">×</button>
                     </div>
@@ -173,7 +173,7 @@
                     <div class="border-t border-slate-200 py-4 text-slate-600 font-light">
                         <div class="flex flex-wrap justify-center gap-4">
                             <button type="button" data-tipo="opcionMultiple" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Opción múltiple</button>
-                            <button type="button" data-tipo="descriptiva" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Descriptiva</button>
+                            <button type="button" data-tipo="abierta" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">abierta</button>
                             <button type="button" data-tipo="verdaderoFalso" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Verdadero/Falso</button>
                         </div>
                     </div>
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const templates = {
         opcionMultiple: document.querySelector('#opcionMultiple').content,
-        descriptiva: document.querySelector('#descriptiva').content,
+        abierta: document.querySelector('#abierta').content,
         verdaderoFalso: document.querySelector('#verdaderoFalso').content
     };
 
