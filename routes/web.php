@@ -51,6 +51,9 @@ Route::prefix('docente')
     Route::get('/inicio', function () {
         return view('docente.inicio');
     })->name('docente.inicio');
+    Route::get('/asignar-actividad', function (){
+        return view('docente.asignar-actividad');
+    })->name('docente.asignar-actividad');
 
     // RUTAS DE PERFIL
     Route::get('/perfil', function () {

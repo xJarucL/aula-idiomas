@@ -28,7 +28,7 @@
                 <td class="py-2 px-1 border-b border-gray-100">
                     <div class="flex items-center justify-center gap-2">
 
-                        {{-- <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a> --}}
+                        <a href="{{route('docente.asignar-actividad')}}" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Asignar</a>
                         <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
 
                         <form action="" method="POST">
@@ -59,7 +59,7 @@
                 </td>
                 <td class="py-2 px-1 border-b border-gray-100">
                     <div class="flex items-center justify-center gap-2">
-                        {{-- <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a> --}}
+                        <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Asignar</a>
                         <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
 
                         <form action="" method="POST">
