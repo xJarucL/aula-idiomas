@@ -8,6 +8,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CoordinadorController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\RecuperacionController;
+use App\Http\Controllers\ActividadController;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Cuatrimestre;
@@ -62,9 +63,13 @@ Route::prefix('docente')
     Route::get('/lista-actividades', function (){
         return view('docente.lista-actividades');
     })->name('docente.lista-actividades');
+
+    // Rutas de actividades
     Route::get('/crear-actividad', function (){
         return view('docente.crear-actividad');
     })->name('docente.crear-actividad');
+    Route::post('actividad/guardar', [ActividadController::class, 'guardarActividadPreguntas'])->name('actividad.guardar');
+
     Route::get('/mis-grupos', function (){
         return view('docente.mis-grupos');
     })->name('docente.mis-grupos');
