@@ -29,8 +29,10 @@ class AuthController extends Controller
                 'success' => true,
                 'token' => $token,
                 'user' => [
-                    'id' => $usuario->id,
-                    'nombre' => $usuario->nombres,
+                    'id' => $usuario->pk_usuario,
+                    'nombres' => $usuario->nombres,
+                    'ap_paterno' => $usuario->ap_paterno,
+                    'ap_materno' => $usuario->ap_materno,
                     'rol' => $usuario->fk_tipo_usuario,
                 ]
             ]);

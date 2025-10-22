@@ -43,6 +43,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno']);
 
     });
+
+    // Rutas de alumnos
+    Route::prefix('alumno')->group(function(){
+
+        // Perfil de usuario
+        Route::get('perfil/{id}', [AlumnoController::class, 'perfilAlumno']);
+
+    });
+
     Route::get('/user', function(Request $request){
         return $request->user();
     });
