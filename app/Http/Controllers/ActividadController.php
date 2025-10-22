@@ -38,7 +38,8 @@ class ActividadController extends Controller
 
                     $pregunta = Preguntas::create([
                         'fk_actividad' => $actividad->pk_actividad,
-                        'pregunta' => $preg['titulo'] ?? $preg['descripcion'] ?? 'Pregunta sin título',
+                        'pregunta' => $preg['titulo'] ?? 'Pregunta sin título',
+                        'descripcion' => $preg['descripcion'] ?? null,
                         'tipo' => $tipo,
                     ]);
 

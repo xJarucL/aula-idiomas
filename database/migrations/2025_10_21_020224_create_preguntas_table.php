@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('pk_pregunta');
             $table->unsignedBigInteger('fk_actividad');
             $table->text('pregunta');
+            $table->text('descripcion')->nullable();
             $table->enum('tipo', ['opcion_multiple', 'abierta']);
             $table->timestamps();
             $table->softDeletes();

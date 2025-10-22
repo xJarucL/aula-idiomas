@@ -173,7 +173,7 @@
                     <div class="border-t border-slate-200 py-4 text-slate-600 font-light">
                         <div class="flex flex-wrap justify-center gap-4">
                             <button type="button" data-tipo="opcionMultiple" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Opción múltiple</button>
-                            <button type="button" data-tipo="abierta" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">abierta</button>
+                            <button type="button" data-tipo="abierta" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Abierta</button>
                             <button type="button" data-tipo="verdaderoFalso" class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Verdadero/Falso</button>
                         </div>
                     </div>
