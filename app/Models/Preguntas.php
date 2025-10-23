@@ -16,6 +16,7 @@ class Preguntas extends Model
     protected $fillable = [
         'fk_actividad',
         'pregunta',
+        'descripcion',
         'tipo'
     ];
 

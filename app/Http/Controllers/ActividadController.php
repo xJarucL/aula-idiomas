@@ -38,7 +38,8 @@ class ActividadController extends Controller
 
                     $pregunta = Preguntas::create([
                         'fk_actividad' => $actividad->pk_actividad,
-                        'pregunta' => $preg['titulo'] ?? $preg['descripcion'] ?? 'Pregunta sin título',
+                        'pregunta' => $preg['titulo'] ?? 'Pregunta sin título',
+                        'descripcion' => $preg['descripcion'] ?? null,
                         'tipo' => $tipo,
                     ]);
 
@@ -86,6 +87,113 @@ class ActividadController extends Controller
                     'es_correcta' => ($preg['respuesta_correcta'] ?? '') === strtoupper($letra),
                 ]);
             }
+        }
+    }
+
+    public function listaActividadesDocente(Request $request){
+        try {
+            $usuario = Auth::user();
+
+            $query = Actividades::where('fk_docente', $usuario->pk_usuario);
+
+            if ($request->filled('search')) {
+                $search = str_replace(' ', '', $request->input('search'));
+
+                $query->where(function ($q) use ($search) {
+                    $q->whereRaw("REPLACE(CONCAT(cod_actividad, nom_actividad, descripcion, tipo), ' ', '') LIKE ?", ["%{$search}%"])
+                    ->orWhere('cod_actividad', 'like', "%{$search}%")
+                    ->orWhere('nom_actividad', 'like', "%{$search}%")
+                    ->orWhere('descripcion', 'like', "%{$search}%")
+                    ->orWhere('tipo', 'like', "%{$search}%");
+                });
+            }
+
+            if ($request->filled('tipo')) {
+                $query->where('tipo', $request->tipo);
+            }
+
+            $actividades = $query->paginate(10);
+
+            if ($request->ajax()) {
+                return view('partials.tabla_actividades', compact('actividades'))->render();
+            }
+
+            return view('docente.lista-actividades', compact('actividades'));
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Algo salió mal...',
+                'error' => $th->getMessage(),
+            ]);
+        }
+    }
+
+    public function listaActividadesDocenteDeshabilitadas(Request $request){
+        try {
+            $usuario = Auth::user();
+
+            $query = Actividades::onlyTrashed()->where('fk_docente', $usuario->pk_usuario);
+
+            if ($request->filled('search')) {
+                $search = str_replace(' ', '', $request->input('search'));
+
+                $query->where(function ($q) use ($search) {
+                    $q->whereRaw("REPLACE(CONCAT(cod_actividad, nom_actividad, descripcion, tipo), ' ', '') LIKE ?", ["%{$search}%"])
+                    ->orWhere('cod_actividad', 'like', "%{$search}%")
+                    ->orWhere('nom_actividad', 'like', "%{$search}%")
+                    ->orWhere('descripcion', 'like', "%{$search}%")
+                    ->orWhere('tipo', 'like', "%{$search}%");
+                });
+            }
+
+            $actividades = $query->paginate(10);
+
+            if ($request->ajax()) {
+                return view('partials.tabla_actividades', compact('actividades'))->render();
+            }
+
+            return view('docente.lista-actividades', compact('actividades'));
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Algo salió mal...',
+                'error' => $th->getMessage(),
+            ]);
+        }
+    }
+
+
+
+    public function eliminarActividad($id){
+        try {
+            $actividad = Actividades::findOrFail($id);
+
+            $actividad->delete();
+
+            return redirect()
+                ->route('docente.lista-actividades')
+                ->with('success', 'Actividad deshabilitada correctamente.');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al deshabilitar la actividad: ' . $e->getMessage());
+        }
+    }
+
+    public function restaurarActividad($id){
+        try {
+            $actividad = Actividades::onlyTrashed()->findOrFail($id);
+
+            $actividad->restore();
+
+            return redirect()
+                ->route('docente.lista-actividades-deshabilitadas')
+                ->with('success', 'Actividad restaurada correctamente.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error al restaurar la actividad: ' . $e->getMessage());
         }
     }
 }
