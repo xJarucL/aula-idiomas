@@ -60,15 +60,16 @@ Route::prefix('docente')
     Route::get('/perfil', function () {
         return view('docente.perfil');
     })->name('docente.perfil');
-    Route::get('/lista-actividades', function (){
-        return view('docente.lista-actividades');
-    })->name('docente.lista-actividades');
 
     // Rutas de actividades
     Route::get('/crear-actividad', function (){
         return view('docente.crear-actividad');
     })->name('docente.crear-actividad');
     Route::post('actividad/guardar', [ActividadController::class, 'guardarActividadPreguntas'])->name('actividad.guardar');
+    Route::get('lista-actividades', [ActividadController::class, 'listaActividadesDocente'])->name('docente.lista-actividades');
+    Route::get('lista-actividades-deshabilitadas', [ActividadController::class, 'listaActividadesDocenteDeshabilitadas'])->name('docente.lista-actividades-deshabilitadas');
+    Route::delete('/actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');
+    Route::post('/actividad/restaurar/{id}', [ActividadController::class, 'restaurarActividad'])->name('actividad.restaurar');
 
     Route::get('/mis-grupos', function (){
         return view('docente.mis-grupos');

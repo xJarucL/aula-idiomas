@@ -1,84 +1,84 @@
-@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
-
 <table class="min-w-full text-xs md:text-base">
     <thead>
-        <tr class="bg-gray-100">
-            <th class="py-2 px-2 md:px-4 text-left">Actividad</th>
-            <th class="py-2 px-2 md:px-4 text-left">Grupo</th>
-            <th class="py-2 px-2 md:px-4 text-left">Fecha de entrega</th>
-            <th class="py-2 px-2 md:px-4 text-left">Estado</th>
-            <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
+        <tr class="bg-gray-100 text-left">
+            <th class="py-3 px-4">Código</th>
+            <th class="py-3 px-4">Nombre de Actividad</th>
+            <th class="py-3 px-4">Descripción</th>
+            <th class="py-3 px-4">Tipo</th>
+            <th class="py-3 px-4">Fecha de Creación</th>
+            <th class="py-3 px-4">Acciones</th>
         </tr>
     </thead>
-    <div class="">
-        <tbody>
+    <tbody>
+        @if($actividades->isEmpty())
             <tr>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    Past simple vs Past continuous
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    IDGS 10mo
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    05/12/2025
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    Pendiente
-                </td>
-                <td class="py-2 px-1 border-b border-gray-100">
-                    <div class="flex items-center justify-center gap-2">
-
-                        <a href="{{route('docente.asignar-actividad')}}" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Asignar</a>
-                        <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
-
-                        <form action="" method="POST">
-                            @csrf
-                            {{-- @method('DELETE') --}}
-                            <button type="submit" data-swal-form data-swal-title="¿Deshabilitar grupo?"
-                                data-swal-text="El grupo será deshabilitado y ya no aparecerá en la lista de activos"
-                                data-swal-icon="warning" data-swal-confirm="Sí, deshabilitar"
-                                class="text-red-500 hover:text-red-700">
-                                Deshabilitar
-                            </button>
-                        </form>
-                    </div>
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
+                    No hay actividades para mostrar
                 </td>
             </tr>
-            <tr>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    Past simple vs Past continuous
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    IDGS 10mo
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    05/12/2025
-                </td>
-                <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                    Pendiente
-                </td>
-                <td class="py-2 px-1 border-b border-gray-100">
-                    <div class="flex items-center justify-center gap-2">
-                        <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Asignar</a>
-                        <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
+        @else
+            @foreach ($actividades as $actividad)
+                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                    <td class="py-3 px-4 align-middle text-gray-800">
+                        {{ $actividad->cod_actividad ?? 'Sin código' }}
+                    </td>
+                    <td class="py-3 px-4 align-middle font-semibold text-gray-800">
+                        {{ $actividad->nom_actividad ?? 'Sin nombre'}}
+                    </td>
+                    <td class="py-3 px-4 align-middle text-gray-600">
+                        {{ Str::limit($actividad->descripcion, 60, '...') }}
+                    </td>
+                    <td class="py-3 px-4 align-middle text-gray-600">
+                        {{
+                            [
+                                'preguntas' => 'Preguntas',
+                                'pdf' => 'Carga de PDF',
+                                'auditiva' => 'Auditiva y Oral',
+                            ][$actividad->tipo] ?? 'Sin tipo'
+                        }}
+                    </td>
+                    <td class="py-3 px-4 align-middle text-gray-800">
+                        {{ $actividad->created_at->format('d/m/Y') }}
+                    </td>
+                    <td class="py-3 px-4 align-middle">
+                        <div class="flex items-center justify-center gap-2">
+                            @if($actividad->deleted_at)
+                                <form action="{{ route('actividad.restaurar', $actividad->pk_actividad) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                            data-swal-form
+                                            data-swal-title="¿Habilitar Actividad?"
+                                            data-swal-text="La actividad volverá a estar activa."
+                                            data-swal-icon="success"
+                                            data-swal-confirm="Sí, habilitar"
+                                            class="text-green-600 hover:text-green-800">
+                                        Habilitar
+                                    </button>
+                                </form>
+                            @else
+                                <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Asignar">Asignar</a>
 
-                        <form action="" method="POST">
-                            @csrf
-                            {{-- @method('DELETE') --}}
-                            <button type="submit" data-swal-form data-swal-title="¿Deshabilitar grupo?"
-                                data-swal-text="El grupo será deshabilitado y ya no aparecerá en la lista de activos"
-                                data-swal-icon="warning" data-swal-confirm="Sí, deshabilitar"
-                                class="text-red-500 hover:text-red-700">
-                                Deshabilitar
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </div>
+                                <form action="{{ route('actividad.eliminar', $actividad->pk_actividad) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            data-swal-form
+                                            data-swal-title="¿Deshabilitar actividad?"
+                                            data-swal-text="La actividad será deshabilitada temporalmente."
+                                            data-swal-icon="warning"
+                                            data-swal-confirm="Sí, deshabilitar"
+                                            class="text-red-500 hover:text-red-700">
+                                        Deshabilitar
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
+    </tbody>
 </table>
-
-{{-- <div class="mt-6">
-    {{ $grupos->links() }}
-</div> --}}
+<div class="mt-6">
+    {{ $actividades->links() }}
+</div>
