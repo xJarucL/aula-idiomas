@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DocenteController;
 use App\Http\Controllers\Api\AlumnoController;
+use App\Http\Controllers\Api\ActividadController;
 use App\Models\Grupo;
 
 // Ruta de prueba
@@ -49,6 +50,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Perfil de usuario
         Route::get('perfil/{id}', [AlumnoController::class, 'perfilAlumno']);
+
+    });
+
+    // Rutas de docentes
+    Route::prefix('docente')->group(function(){
+
+        // Rutas de gestión de actividades
+        Route::post('guardar-actividad-preguntas', [ActividadController::class, 'guardarActividadPreguntas']);
 
     });
 
