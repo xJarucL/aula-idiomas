@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DocenteController;
 use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\ActividadController;
+use App\Http\Controllers\Api\GrupoController;
 use App\Models\Grupo;
 
 // Ruta de prueba
@@ -61,6 +62,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('actividades', [ActividadController::class, 'listaActividadesDocente']);
         Route::put('actividad/habilitar/{id}', [ActividadController::class, 'habilitarActividad']);
         Route::delete('actividad/deshabilitar/{id}', [ActividadController::class, 'deshabilitarActividad']);
+
+        Route::get('grupos', [GrupoController::class, 'listaGruposDocente']);
 
     });
 
