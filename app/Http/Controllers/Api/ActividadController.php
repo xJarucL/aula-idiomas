@@ -72,8 +72,7 @@ class ActividadController extends Controller
         }
     }
 
-    private function inferirTipoPregunta(array $preg)
-    {
+    private function inferirTipoPregunta(array $preg){
         if (isset($preg['opcion_a']) && isset($preg['opcion_b'])) {
             return 'opcion_multiple';
         } elseif (isset($preg['respuesta_correcta']) && in_array($preg['respuesta_correcta'], ['Verdadero', 'Falso'])) {
@@ -83,8 +82,7 @@ class ActividadController extends Controller
         }
     }
 
-    private function guardarOpciones($pregunta, array $preg)
-    {
+    private function guardarOpciones($pregunta, array $preg){
         foreach (['a', 'b', 'c', 'd'] as $letra) {
             if (!empty($preg["opcion_{$letra}"])) {
                 OpcionesPregunta::create([
@@ -98,18 +96,18 @@ class ActividadController extends Controller
 
     public function listaActividadesDocente(Request $request){
         try {
+            $usuario = Auth::user();
 
-            $query = Actividades::where('fk_docente', $request->pk_usuario);
+            $query = Actividades::withTrashed()->where('fk_docente', $usuario->pk_usuario);
 
             if ($request->filled('search')) {
                 $search = str_replace(' ', '', $request->input('search'));
-
                 $query->where(function ($q) use ($search) {
                     $q->whereRaw("REPLACE(CONCAT(cod_actividad, nom_actividad, descripcion, tipo), ' ', '') LIKE ?", ["%{$search}%"])
-                    ->orWhere('cod_actividad', 'like', "%{$search}%")
-                    ->orWhere('nom_actividad', 'like', "%{$search}%")
-                    ->orWhere('descripcion', 'like', "%{$search}%")
-                    ->orWhere('tipo', 'like', "%{$search}%");
+                      ->orWhere('cod_actividad', 'like', "%{$search}%")
+                      ->orWhere('nom_actividad', 'like', "%{$search}%")
+                      ->orWhere('descripcion', 'like', "%{$search}%")
+                      ->orWhere('tipo', 'like', "%{$search}%");
                 });
             }
 
@@ -117,86 +115,66 @@ class ActividadController extends Controller
                 $query->where('tipo', $request->tipo);
             }
 
-            $actividades = $query->paginate(10);
+            $actividades = $query->orderBy('created_at', 'desc')->paginate(10);
 
-            if ($request->ajax()) {
-                return view('partials.tabla_actividades', compact('actividades'))->render();
-            }
+            $actividades->getCollection()->transform(function ($actividad) {
+                $actividad->fecha_formateada = $actividad->created_at->format('d/m/Y');
+                $actividad->is_active = $actividad->deleted_at === null;
+                return $actividad;
+            });
 
-            return view('docente.lista-actividades', compact('actividades'));
+            return response()->json([
+                'success' => true,
+                'data' => $actividades->items(),
+                'pagination' => [
+                    'current_page' => $actividades->currentPage(),
+                    'last_page' => $actividades->lastPage(),
+                    'per_page' => $actividades->perPage(),
+                    'total' => $actividades->total(),
+                ]
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => 'Algo salió mal...',
                 'error' => $th->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
-    public function listaActividadesDocenteDeshabilitadas(Request $request){
+    public function habilitarActividad($id){
         try {
-            $query = Actividades::onlyTrashed()->where('fk_docente', $request->pk_usuario);
-
-            if ($request->filled('search')) {
-                $search = str_replace(' ', '', $request->input('search'));
-
-                $query->where(function ($q) use ($search) {
-                    $q->whereRaw("REPLACE(CONCAT(cod_actividad, nom_actividad, descripcion, tipo), ' ', '') LIKE ?", ["%{$search}%"])
-                    ->orWhere('cod_actividad', 'like', "%{$search}%")
-                    ->orWhere('nom_actividad', 'like', "%{$search}%")
-                    ->orWhere('descripcion', 'like', "%{$search}%")
-                    ->orWhere('tipo', 'like', "%{$search}%");
-                });
-            }
-
-            $actividades = $query->paginate(10);
-
-            if ($request->ajax()) {
-                return view('partials.tabla_actividades', compact('actividades'))->render();
-            }
-
-            return view('docente.lista-actividades', compact('actividades'));
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Algo salió mal...',
-                'error' => $th->getMessage(),
-            ]);
-        }
-    }
-
-
-
-    public function eliminarActividad($id){
-        try {
-            $actividad = Actividades::findOrFail($id);
-
-            $actividad->delete();
-
-            return redirect()
-                ->route('docente.lista-actividades')
-                ->with('success', 'Actividad deshabilitada correctamente.');
-
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Error al deshabilitar la actividad: ' . $e->getMessage());
-        }
-    }
-
-    public function restaurarActividad($id){
-        try {
-            $actividad = Actividades::onlyTrashed()->findOrFail($id);
-
+            $actividad = Actividades::withTrashed()->findOrFail($id);
             $actividad->restore();
 
-            return redirect()
-                ->route('docente.lista-actividades-deshabilitadas')
-                ->with('success', 'Actividad restaurada correctamente.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Error al restaurar la actividad: ' . $e->getMessage());
+            return response()->json([
+                'success' => true,
+                'message' => 'Actividad habilitada correctamente',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudo habilitar la actividad',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deshabilitarActividad($id){
+        try {
+            $actividad = Actividades::findOrFail($id);
+            $actividad->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Actividad deshabilitada correctamente',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudo deshabilitar la actividad',
+                'error' => $th->getMessage(),
+            ], 500);
         }
     }
 }
