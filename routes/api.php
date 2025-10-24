@@ -58,6 +58,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Rutas de gestión de actividades
         Route::post('guardar-actividad-preguntas', [ActividadController::class, 'guardarActividadPreguntas']);
+        Route::get('actividades', [ActividadController::class, 'listaActividadesDocente']);
+        Route::put('actividad/habilitar/{id}', [ActividadController::class, 'habilitarActividad']);
+        Route::delete('actividad/deshabilitar/{id}', [ActividadController::class, 'deshabilitarActividad']);
 
     });
 
