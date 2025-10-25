@@ -72,6 +72,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);
         Route::get('detalle-actividad/{id}', [ActividadController::class, 'detalleActividad']);
 
+        // Rutas de alumnos
+        Route::get('detalle-alumno/{id}', [AlumnoController::class, 'detalleAlumno']);
+
     });
 
     Route::get('/user', function(Request $request){
