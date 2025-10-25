@@ -35,7 +35,7 @@
 </section>
     <section class="overflow-x-auto mt-5">
         <div class="border-2 border-gray-300 rounded-xl p-2 bg-white shadow" id="tabla-listado">
-            @include('partials.tabla_mi_grupo')
+            @include('partials.tabla_mi_grupo', ['grupos' => $grupos])
         </div>
 
     </section>

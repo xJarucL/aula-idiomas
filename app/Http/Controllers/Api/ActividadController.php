@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Actividades;
 use App\Models\Preguntas;
 use App\Models\OpcionesPregunta;
+use App\Models\Grupo;
+use App\Models\ActividadGrupo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -176,5 +178,38 @@ class ActividadController extends Controller
                 'error' => $th->getMessage(),
             ], 500);
         }
+    }
+
+    public function asignarActividad(Request $request){
+        $request->validate([
+            'fk_actividad' => 'required|exists:actividades,pk_actividad',
+            'grupos' => 'required|array',
+            'grupos.*' => 'exists:grupo,pk_grupo',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after:fecha_inicio',
+        ]);
+
+        foreach ($request->grupos as $grupoId) {
+            ActividadGrupo::create([
+                'fk_actividad' => $request->fk_actividad,
+                'fk_grupo' => $grupoId,
+                'fecha_inicio' => $request->fecha_inicio,
+                'fecha_fin' => $request->fecha_fin,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Actividad asignada correctamente a los grupos.',
+        ]);
+    }
+
+    public function obtenerGrupos(){
+        $grupos = Grupo::select('pk_grupo', 'nombre', 'año')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $grupos
+        ]);
     }
 }

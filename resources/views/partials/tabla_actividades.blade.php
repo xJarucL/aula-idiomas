@@ -56,7 +56,7 @@
                                     </button>
                                 </form>
                             @else
-                                <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Asignar">Asignar</a>
+                                <a href="{{route('docente.asignar-actividad')}}" class="text-cyan-600 hover:text-cyan-800" title="Asignar">Asignar</a>
 
                                 <form action="{{ route('actividad.eliminar', $actividad->pk_actividad) }}" method="POST">
                                     @csrf

@@ -11,6 +11,21 @@
             </tr>
         </thead>
         <tbody>
+            @if($grupos->isEmpty())
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">
+                        No hay grupos para mostrar
+                    </td>
+                </tr>
+            @else
+                @foreach ($grupos as $grupo)
+                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                        <td class="py-3 px-4 align-middle text-gray-800">
+                            {{ $grupo->grupo->nombre }}
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
             {{-- CONTENIDO PRINCIPAL --}}
             <tr class="cursor-pointer hover:bg-gray-50" onclick="toggleRow(this)">
                 <td class="py-2 px-2 md:px-4 border-b border-gray-200 font-medium">IDGS 10mo</td>

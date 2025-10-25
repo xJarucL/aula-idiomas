@@ -65,6 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('grupos', [GrupoController::class, 'listaGruposDocente']);
 
+        Route::post('asignar-actividad', [ActividadController::class, 'asignarActividad']);
+        Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);
+
     });
 
     Route::get('/user', function(Request $request){

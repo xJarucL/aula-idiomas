@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Grupo;
+use App\Models\GrupoMateria;
 use App\Models\Cuatrimestre;
 use App\Models\Carrera;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GrupoController extends Controller
 {
@@ -152,5 +154,21 @@ class GrupoController extends Controller
         $grupo->restore();
 
         return redirect()->route('coordinacion.lista-grupos-deshabilitados')->with('success', 'Grupo restaurado correctamente.');
+    }
+
+    public function listaGruposDocente(){
+
+        try {
+            $usuario = Auth::user();
+
+            $grupos = GrupoMateria::with(['grupo.carrera', 'materia'])
+                ->where('fk_docente', $usuario->pk_usuario)
+                ->get();
+
+            return view('docente.mis-grupos', compact('grupos'));
+        } catch (\Throwable $th) {
+            print($th);
+        }
+
     }
 }
