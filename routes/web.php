@@ -55,9 +55,9 @@ Route::prefix('docente')
     Route::get('/asignar-actividad', function (){
         return view('docente.asignar-actividad');
     })->name('docente.asignar-actividad');
-        Route::get('/mis-grupos', function (){
-        return view('docente.mis-grupos');
-    })->name('docente.mis-grupos');
+
+    Route::get('mis-grupos', [GrupoController::class, 'listaGruposDocente'])->name('docente.mis-grupos');
+
 
     // RUTAS DE PERFIL
     Route::get('/perfil', function () {
