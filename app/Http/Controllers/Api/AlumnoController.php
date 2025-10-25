@@ -11,6 +11,7 @@ use App\Models\Tipo_usuario;
 use App\Models\GrupoAlumno;
 use App\Models\Grupo;
 use App\Models\Calificaciones;
+use App\Models\RespuestasAlumno;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -187,6 +188,61 @@ class AlumnoController extends Controller
             'promedio' => $promedio ?? 'N/A',
         ]);
     }
+
+    public function detalleAlumno($id){
+        $alumno = Alumno::with([
+            'usuario',
+            'grupos.grupo.carrera',
+            'grupos.grupo.cuatrimestre',
+        ])->find($id);
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Alumno no encontrado'
+            ], 404);
+        }
+
+        $grupo = $alumno->grupos->first()?->grupo;
+
+        $actividadesGrupo = $grupo ? $grupo->actividades : collect();
+
+        $respuestas = RespuestasAlumno::where('fk_alumno', $alumno->pk_alumno)->get();
+
+        $actividades = $actividadesGrupo->map(function ($act) use ($respuestas) {
+            $entregado = $respuestas->where('fk_actividad', $act->pk_actividad)->isNotEmpty();
+
+            return [
+                'pk_actividad' => $act->pk_actividad,
+                'nom_actividad' => $act->nom_actividad,
+                'entregado' => $entregado,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'alumno' => [
+                    'pk_alumno' => $alumno->pk_alumno,
+                    'nombre_completo' => trim("{$alumno->usuario->nombres} {$alumno->usuario->ap_paterno} {$alumno->usuario->ap_materno}"),
+                    'nombres' => $alumno->usuario->nombres,
+                    'ap_paterno' => $alumno->usuario->ap_paterno,
+                    'ap_materno' => $alumno->usuario->ap_materno,
+                    'matricula' => $alumno->usuario->matricula,
+                    'email' => $alumno->usuario->email,
+                ],
+                'grupo' => [
+                    'pk_grupo' => $grupo->pk_grupo ?? null,
+                    'nombre' => $grupo->nombre ?? null,
+                    'año' => $grupo->año ?? null,
+                    'cuatrimestre' => $grupo->cuatrimestre ?? null,
+                    'carrera' => $grupo->carrera ?? null,
+                ],
+                'actividades' => $actividades,
+            ]
+        ]);
+    }
+
 
 }
 
