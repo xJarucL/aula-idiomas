@@ -238,7 +238,7 @@ class ActividadController extends Controller
         }
 
         $respuestas = RespuestasAlumno::where('fk_actividad', $actividad->pk_actividad)
-            ->with(['alumno.usuario'])
+            ->with(['alumno.usuario', 'pregunta'])
             ->get();
 
         $respuestasAgrupadas = $respuestas->groupBy('fk_alumno');
@@ -258,6 +258,7 @@ class ActividadController extends Controller
                         return [
                             'pk_respuesta' => $r->pk_respuesta,
                             'fk_pregunta' => $r->fk_pregunta,
+                            'pregunta' => $r->pregunta ? $r->pregunta->pregunta : null,
                             'respuesta' => $r->respuesta,
                             'es_correcta' => $r->es_correcta,
                             'created_at' => $r->created_at,
