@@ -63,11 +63,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('actividad/habilitar/{id}', [ActividadController::class, 'habilitarActividad']);
         Route::delete('actividad/deshabilitar/{id}', [ActividadController::class, 'deshabilitarActividad']);
 
+        // Rutas de grupos
         Route::get('grupos', [GrupoController::class, 'listaGruposDocente']);
         Route::get('detalle-grupo/{id}', [GrupoController::class, 'detalleGrupo']);
 
+        // Rutas de actividades
         Route::post('asignar-actividad', [ActividadController::class, 'asignarActividad']);
         Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);
+        Route::get('detalle-actividad/{id}', [ActividadController::class, 'detalleActividad']);
 
     });
 
