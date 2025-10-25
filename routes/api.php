@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('actividad/deshabilitar/{id}', [ActividadController::class, 'deshabilitarActividad']);
 
         Route::get('grupos', [GrupoController::class, 'listaGruposDocente']);
+        Route::get('detalle-grupo/{id}', [GrupoController::class, 'detalleGrupo']);
 
         Route::post('asignar-actividad', [ActividadController::class, 'asignarActividad']);
         Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);

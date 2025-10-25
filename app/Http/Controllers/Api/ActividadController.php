@@ -205,7 +205,7 @@ class ActividadController extends Controller
     }
 
     public function obtenerGrupos(){
-        $grupos = Grupo::select('pk_grupo', 'nombre', 'año')->get();
+        $grupos = Grupo::with('carrera')->get();
 
         return response()->json([
             'success' => true,

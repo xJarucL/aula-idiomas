@@ -35,8 +35,12 @@ class Grupo extends Model
     }
 
     public function alumnos(){
-        return $this->belongsToMany(Alumno::class, 'grupo_alumno', 'fk_grupo', 'fk_alumno');
+        return $this->belongsToMany(
+            Alumno::class,
+            'grupo_alumno',
+            'fk_grupo',
+            'fk_alumno'
+        )->with('usuario');
     }
-
 
 }
