@@ -9,6 +9,7 @@ use App\Models\Preguntas;
 use App\Models\OpcionesPregunta;
 use App\Models\Grupo;
 use App\Models\ActividadGrupo;
+use App\Models\RespuestasAlumno;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -212,4 +213,80 @@ class ActividadController extends Controller
             'data' => $grupos
         ]);
     }
+
+    public function detalleActividad($id){
+        $actividad = Actividades::with(['grupos.alumnos.usuario'])
+            ->find($id);
+
+        if (!$actividad) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Actividad no encontrada'
+            ], 404);
+        }
+
+        if ($actividad->tipo !== 'preguntas') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Solo se permiten actividades de tipo preguntas'
+            ], 400);
+        }
+
+        $alumnos = collect();
+        foreach ($actividad->grupos as $grupo) {
+            $alumnos = $alumnos->merge($grupo->alumnos);
+        }
+
+        $respuestas = RespuestasAlumno::where('fk_actividad', $actividad->pk_actividad)
+            ->with(['alumno.usuario'])
+            ->get();
+
+        $respuestasAgrupadas = $respuestas->groupBy('fk_alumno');
+
+        $entregas = [];
+        $noEntregados = [];
+
+        foreach ($alumnos as $alumno) {
+            if ($respuestasAgrupadas->has($alumno->pk_alumno)) {
+                $entregas[] = [
+                    'pk_alumno' => $alumno->pk_alumno,
+                    'nombre_completo' => trim(
+                        "{$alumno->usuario->nombres} {$alumno->usuario->ap_paterno} {$alumno->usuario->ap_materno}"
+                    ),
+                    'respondio' => true,
+                    'respuestas' => $respuestasAgrupadas[$alumno->pk_alumno]->map(function ($r) {
+                        return [
+                            'pk_respuesta' => $r->pk_respuesta,
+                            'fk_pregunta' => $r->fk_pregunta,
+                            'respuesta' => $r->respuesta,
+                            'es_correcta' => $r->es_correcta,
+                            'created_at' => $r->created_at,
+                        ];
+                    })->values(),
+                ];
+            } else {
+                $noEntregados[] = [
+                    'pk_alumno' => $alumno->pk_alumno,
+                    'nombre_completo' => trim(
+                        "{$alumno->usuario->nombres} {$alumno->usuario->ap_paterno} {$alumno->usuario->ap_materno}"
+                    ),
+                    'respondio' => false,
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'actividad' => [
+                    'pk_actividad' => $actividad->pk_actividad,
+                    'nom_actividad' => $actividad->nom_actividad,
+                    'tipo' => $actividad->tipo,
+                ],
+                'entregas' => $entregas,
+                'no_entregados' => $noEntregados,
+            ]
+        ]);
+    }
+
 }
