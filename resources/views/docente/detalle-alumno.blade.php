@@ -52,9 +52,9 @@
                     <p class="text-sm text-gray-600 mb-2">
                         Año: <span class="font-medium text-teal-800">{{ $grupo->año }}</span>
                     </p>
-                    <a href="{{ route('docente.detalle-grupo', $grupo->pk_grupo) }}"
-                        class="inline-block mt-2 bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
-                        Ver Detalles
+                   <a href="{{ route('docente.actividades-alumno', ['alumno' => $alumno->pk_alumno, 'grupo' => $grupo->pk_grupo]) }}"
+                        class="bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
+                        Ver Actividades
                     </a>
                 </div>
             @empty

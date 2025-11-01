@@ -10,6 +10,7 @@ use App\Models\Tipo_usuario;
 use App\Models\GrupoAlumno;
 use App\Models\Grupo;
 use App\Models\Calificaciones;
+use App\Models\RespuestasAlumno;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -378,10 +379,44 @@ class AlumnoController extends Controller
 
         return view('docente.detalle-alumno', [
             'usuario' => $usuario,
+            'alumno' => $alumno,
             'carrera' => $carrera?->nombre ?? 'Sin carrera',
             'promedio' => $promedio ?? 'N/A',
             'grupos' => $grupos
         ]);
     }
+
+    public function actividadesGrupo($alumnoId, $grupoId){
+        $alumno = Alumno::with('usuario')->findOrFail($alumnoId);
+        $grupo = Grupo::with('actividades')->findOrFail($grupoId);
+
+        $actividades = $grupo->actividades->map(function($actividad) use ($alumno) {
+
+            $entrega = RespuestasAlumno::where('fk_actividad', $actividad->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->first();
+
+            $estado = 'Pendiente';
+
+            if ($entrega) {
+                $estado = 'Entregada';
+            } elseif ($actividad->fecha_fin && now()->greaterThan($actividad->fecha_fin)) {
+                $estado = 'Caducada';
+            }
+
+            return [
+                'actividad' => $actividad,
+                'estado' => $estado,
+                'entrega' => $entrega
+            ];
+        });
+
+        return view('docente.actividades-alumno', [
+            'alumno' => $alumno,
+            'grupo' => $grupo,
+            'actividades' => $actividades
+        ]);
+    }
+
 
 }

@@ -62,6 +62,7 @@ Route::prefix('docente')
 
     // RUTAS DE INFORMACIÓN DE ALUMNO - DOCENTE
     Route::get('alumno/{id}', [AlumnoController::class, 'detalleAlumno'])->name('docente.detalle-alumno');
+    Route::get('alumno/{alumno}/grupo/{grupo}/actividades', [AlumnoController::class, 'actividadesGrupo'])->name('docente.actividades-alumno');
 
 
     // RUTAS DE PERFIL
