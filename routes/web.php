@@ -56,6 +56,7 @@ Route::prefix('docente')
         return view('docente.asignar-actividad');
     })->name('docente.asignar-actividad');
 
+    // RUTAS DE GRUPOS - DOCENTE
     Route::get('mis-grupos', [GrupoController::class, 'listaGruposDocente'])->name('docente.mis-grupos');
 
 
@@ -74,9 +75,6 @@ Route::prefix('docente')
     Route::delete('/actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');
     Route::post('/actividad/restaurar/{id}', [ActividadController::class, 'restaurarActividad'])->name('actividad.restaurar');
 
-    Route::get('/mis-grupos', function (){
-        return view('docente.mis-grupos');
-    })->name('docente.mis-grupos');
     Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
     })->name('docente.editar');
@@ -122,7 +120,7 @@ Route::prefix('coordinacion')
     Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
     Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
 
-    // RUTSA DE COORDINADOR
+    // RUTAS DE COORDINADOR
     Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
     Route::get('/lista-coordinador/deshabilitados', [CoordinadorController::class, 'listaCoordinadoresDeshabilitados'])->name('coordinacion.lista-coordinador-deshabilitados');
     Route::get('/registro-coordinador', function () {

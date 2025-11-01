@@ -156,19 +156,53 @@ class GrupoController extends Controller
         return redirect()->route('coordinacion.lista-grupos-deshabilitados')->with('success', 'Grupo restaurado correctamente.');
     }
 
-    public function listaGruposDocente(){
-
+    public function listaGruposDocente(Request $request){
         try {
             $usuario = Auth::user();
 
-            $grupos = GrupoMateria::with(['grupo.carrera', 'materia'])
-                ->where('fk_docente', $usuario->pk_usuario)
-                ->get();
+            $query = GrupoMateria::with(['grupo.carrera', 'materia'])
+                ->where('fk_docente', $usuario->pk_usuario);
 
-            return view('docente.mis-grupos', compact('grupos'));
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+                $query->whereHas('grupo', function ($q) use ($search) {
+                    $q->where('nombre', 'LIKE', "%{$search}%")
+                    ->orWhereHas('carrera', function ($sub) use ($search) {
+                        $sub->where('nombre', 'LIKE', "%{$search}%")
+                            ->orWhere('abreviatura', 'LIKE', "%{$search}%");
+                    });
+                });
+            }
+
+            if ($request->filled('fk_carrera') && $request->fk_carrera != 0) {
+                $query->whereHas('grupo', function ($q) use ($request) {
+                    $q->where('fk_carrera', $request->fk_carrera);
+                });
+            }
+
+            if ($request->filled('fk_cuatrimestre') && $request->fk_cuatrimestre != 0) {
+                $query->whereHas('grupo', function ($q) use ($request) {
+                    $q->where('fk_cuatrimestre', $request->fk_cuatrimestre);
+                });
+            }
+
+            if ($request->filled('año') && $request->año != 0) {
+                $query->whereHas('grupo', function ($q) use ($request) {
+                    $q->where('año', $request->año);
+                });
+            }
+
+            $grupos = $query->get();
+            $carreras = \App\Models\Carrera::orderBy('nombre')->get();
+
+            if ($request->ajax()) {
+                return view('partials.tabla_mi_grupo', compact('grupos'))->render();
+            }
+
+            return view('docente.mis-grupos', compact('grupos', 'carreras'));
         } catch (\Throwable $th) {
-            print($th);
+            return response()->json(['error' => $th->getMessage()], 500);
         }
-
     }
+
 }
