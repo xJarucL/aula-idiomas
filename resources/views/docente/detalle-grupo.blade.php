@@ -32,14 +32,16 @@
             </h2>
 
             @forelse ($grupo->alumnos as $alumno)
-                <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-3 flex items-center justify-between hover:shadow-lg transition">
-                    <div>
-                        <h3 class="text-gray-800 font-semibold">
-                            {{ $alumno->usuario->nombres ?? 'N/A' }} {{ $alumno->usuario->ap_paterno ?? '' }} {{ $alumno->usuario->ap_materno ?? '' }}
-                        </h3>
-                        <p class="text-gray-500 text-sm">{{ $alumno->usuario->matricula ?? 'Sin matrícula' }}</p>
+                <a href="{{ route('docente.detalle-alumno', $alumno->usuario->pk_usuario) }}">
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-3 flex items-center justify-between hover:shadow-lg transition">
+                        <div>
+                            <h3 class="text-gray-800 font-semibold">
+                                {{ $alumno->usuario->nombres ?? 'N/A' }} {{ $alumno->usuario->ap_paterno ?? '' }} {{ $alumno->usuario->ap_materno ?? '' }}
+                            </h3>
+                            <p class="text-gray-500 text-sm">{{ $alumno->usuario->matricula ?? 'Sin matrícula' }}</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <p class="text-gray-500 italic">No hay participantes registrados.</p>
             @endforelse

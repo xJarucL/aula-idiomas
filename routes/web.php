@@ -60,6 +60,9 @@ Route::prefix('docente')
     Route::get('mis-grupos', [GrupoController::class, 'listaGruposDocente'])->name('docente.mis-grupos');
     Route::get('grupo/{id}', [GrupoController::class, 'detalleGrupo'])->name('docente.detalle-grupo');
 
+    // RUTAS DE INFORMACIÓN DE ALUMNO - DOCENTE
+    Route::get('alumno/{id}', [AlumnoController::class, 'detalleAlumno'])->name('docente.detalle-alumno');
+
 
     // RUTAS DE PERFIL
     Route::get('/perfil', function () {

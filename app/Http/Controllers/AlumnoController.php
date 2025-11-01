@@ -360,5 +360,28 @@ class AlumnoController extends Controller
         }
     }
 
+    public function detalleAlumno($id){
+        $usuario = User::findOrFail($id);
+
+        $alumno = Alumno::where('fk_usuario', $id)->firstOrFail();
+
+        $grupos = Grupo::with('carrera')
+            ->whereHas('alumnos', function($q) use ($alumno) {
+                $q->where('fk_alumno', $alumno->pk_alumno);
+            })
+            ->get();
+
+
+        $carrera = $grupos->last()?->carrera;
+
+        $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
+
+        return view('docente.detalle-alumno', [
+            'usuario' => $usuario,
+            'carrera' => $carrera?->nombre ?? 'Sin carrera',
+            'promedio' => $promedio ?? 'N/A',
+            'grupos' => $grupos
+        ]);
+    }
 
 }
