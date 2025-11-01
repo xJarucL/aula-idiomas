@@ -25,7 +25,7 @@
                             {{ $grupo->grupo->fk_cuatrimestre }} {{ $grupo->grupo->nombre }} {{ $grupo->grupo->carrera->abreviatura }} {{ $grupo->grupo->año }}
                         </td>
                          <td class="py-3 px-4 align-middle text-gray-800">
-                            30
+                            {{ $grupo->grupo->alumnos_count ?? 0 }}
                         </td>
                         <td class="py-3 px-4 align-middle text-gray-800">
                             {{ $grupo->grupo->carrera->nombre }}
