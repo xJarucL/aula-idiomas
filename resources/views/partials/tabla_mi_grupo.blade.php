@@ -34,7 +34,7 @@
                             {{ $grupo->grupo->fk_cuatrimestre }}
                         </td>
                         <td class="py-3 px-4 align-middle text-gray-800">
-                            <a href="#">Ver detalles</a>
+                            <a href="{{ route('docente.detalle-grupo', $grupo->grupo->pk_grupo) }}">Ver detalles</a>
                         </td>
                     </tr>
                 @endforeach
