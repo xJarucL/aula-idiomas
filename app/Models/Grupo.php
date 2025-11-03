@@ -43,4 +43,8 @@ class Grupo extends Model
         )->with('usuario');
     }
 
+    public function grupoMaterias(){
+        return $this->hasMany(GrupoMateria::class, 'fk_grupo', 'pk_grupo');
+    }
+
 }

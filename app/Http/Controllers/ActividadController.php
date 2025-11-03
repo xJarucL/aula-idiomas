@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Actividades;
 use App\Models\Preguntas;
+use App\Models\Alumno;
+use App\Models\Grupo;
 use App\Models\OpcionesPregunta;
+use App\Models\RespuestasAlumno;
+use App\Models\ActividadGrupo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ActividadController extends Controller
 {
@@ -195,5 +200,109 @@ class ActividadController extends Controller
                 ->back()
                 ->with('error', 'Error al restaurar la actividad: ' . $e->getMessage());
         }
+    }
+
+    public function verRespuestasActividadAlumno($actividadId, $alumnoId){
+        $actividad = Actividades::with(['preguntas.opciones'])->findOrFail($actividadId);
+
+        $alumno = Alumno::find($alumnoId);
+        if (!$alumno) {
+            return back()->with('error', 'Alumno no encontrado.');
+        }
+
+        $respuestas = RespuestasAlumno::where('fk_actividad', $actividadId)
+            ->where('fk_alumno', $alumnoId)
+            ->get();
+
+        if ($respuestas->isEmpty()) {
+            return back()->with('error', 'El alumno no tiene respuestas registradas para esta actividad.');
+        }
+
+        $respuestasMap = $respuestas->keyBy('fk_pregunta');
+
+        $evaluacion = [];
+        $correctas = 0;
+        $totalPreguntas = $actividad->preguntas->count();
+
+        foreach ($actividad->preguntas as $pregunta) {
+            $opcionCorrecta = null;
+            if ($pregunta->tipo === 'opcion_multiple') {
+                $opcionCorrecta = $pregunta->opciones->firstWhere('es_correcta', true)?->texto_opcion;
+            }
+
+            $r = $respuestasMap->get($pregunta->pk_pregunta);
+            $respuestaAlumno = $r->respuesta ?? null;
+
+            $esCorrecta = false;
+            if ($respuestaAlumno !== null && $opcionCorrecta !== null) {
+                $esCorrecta = mb_strtolower(trim($respuestaAlumno)) === mb_strtolower(trim($opcionCorrecta));
+            } elseif ($pregunta->tipo === 'abierta') {
+                $esCorrecta = null;
+            }
+
+            if ($esCorrecta === true) {
+                $correctas++;
+            }
+
+            $evaluacion[] = [
+                'pregunta' => $pregunta->pregunta,
+                'tipo' => $pregunta->tipo,
+                'respuesta_alumno' => $respuestaAlumno ?? 'No respondida',
+                'respuesta_correcta' => $opcionCorrecta ?? 'N/A',
+                'es_correcta' => $esCorrecta,
+                'respuesta_model' => $r,
+            ];
+        }
+
+        $calificacion = $totalPreguntas > 0 ? round(($correctas / $totalPreguntas) * 100, 2) : 0;
+
+        return view('docente.actividad-respuesta', [
+            'actividad' => $actividad,
+            'alumno' => $alumno,
+            'evaluacion' => $evaluacion,
+            'correctas' => $correctas,
+            'totalPreguntas' => $totalPreguntas,
+            'calificacion' => $calificacion,
+        ]);
+    }
+
+    public function formAsignar($id){
+        $actividad = Actividades::findOrFail($id);
+        $docenteId = Auth::id();
+
+        $grupos = Grupo::whereHas('grupoMaterias', function ($query) use ($docenteId) {
+            $query->where('fk_docente', $docenteId);
+        })->orderBy('nombre')->get();
+
+        return view('docente.asignar-actividad', compact('actividad', 'grupos'));
+    }
+
+    public function asignarActividad(Request $request, $id){
+
+        $request->validate([
+            'grupos' => 'required|array|min:1',
+            'grupos.*' => 'exists:grupo,pk_grupo',
+            'fecha_entrega' => 'required|date|after_or_equal:today',
+        ], [
+            'grupos.required' => 'Debes seleccionar al menos un grupo.',
+            'fecha_entrega.after_or_equal' => 'La fecha de entrega no puede ser anterior a hoy.',
+        ]);
+
+        $fechaInicio = Carbon::now();
+
+        foreach ($request->grupos as $grupoId) {
+            ActividadGrupo::create([
+                'fk_actividad' => $id,
+                'fk_grupo' => $grupoId,
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $request->fecha_entrega,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Actividad asignada correctamente.',
+            'ruta' => route('docente.lista-actividades')
+        ]);
     }
 }
