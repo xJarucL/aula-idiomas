@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Actividades;
 use App\Models\Preguntas;
+use App\Models\Alumno;
 use App\Models\OpcionesPregunta;
+use App\Models\RespuestasAlumno;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -196,4 +198,69 @@ class ActividadController extends Controller
                 ->with('error', 'Error al restaurar la actividad: ' . $e->getMessage());
         }
     }
+
+    public function verRespuestasActividadAlumno($actividadId, $alumnoId){
+        $actividad = Actividades::with(['preguntas.opciones'])->findOrFail($actividadId);
+
+        $alumno = Alumno::find($alumnoId);
+        if (!$alumno) {
+            return back()->with('error', 'Alumno no encontrado.');
+        }
+
+        $respuestas = RespuestasAlumno::where('fk_actividad', $actividadId)
+            ->where('fk_alumno', $alumnoId)
+            ->get();
+
+        if ($respuestas->isEmpty()) {
+            return back()->with('error', 'El alumno no tiene respuestas registradas para esta actividad.');
+        }
+
+        $respuestasMap = $respuestas->keyBy('fk_pregunta');
+
+        $evaluacion = [];
+        $correctas = 0;
+        $totalPreguntas = $actividad->preguntas->count();
+
+        foreach ($actividad->preguntas as $pregunta) {
+            $opcionCorrecta = null;
+            if ($pregunta->tipo === 'opcion_multiple') {
+                $opcionCorrecta = $pregunta->opciones->firstWhere('es_correcta', true)?->texto_opcion;
+            }
+
+            $r = $respuestasMap->get($pregunta->pk_pregunta);
+            $respuestaAlumno = $r->respuesta ?? null;
+
+            $esCorrecta = false;
+            if ($respuestaAlumno !== null && $opcionCorrecta !== null) {
+                $esCorrecta = mb_strtolower(trim($respuestaAlumno)) === mb_strtolower(trim($opcionCorrecta));
+            } elseif ($pregunta->tipo === 'abierta') {
+                $esCorrecta = null;
+            }
+
+            if ($esCorrecta === true) {
+                $correctas++;
+            }
+
+            $evaluacion[] = [
+                'pregunta' => $pregunta->pregunta,
+                'tipo' => $pregunta->tipo,
+                'respuesta_alumno' => $respuestaAlumno ?? 'No respondida',
+                'respuesta_correcta' => $opcionCorrecta ?? 'N/A',
+                'es_correcta' => $esCorrecta,
+                'respuesta_model' => $r,
+            ];
+        }
+
+        $calificacion = $totalPreguntas > 0 ? round(($correctas / $totalPreguntas) * 100, 2) : 0;
+
+        return view('docente.actividad-respuesta', [
+            'actividad' => $actividad,
+            'alumno' => $alumno,
+            'evaluacion' => $evaluacion,
+            'correctas' => $correctas,
+            'totalPreguntas' => $totalPreguntas,
+            'calificacion' => $calificacion,
+        ]);
+    }
+
 }

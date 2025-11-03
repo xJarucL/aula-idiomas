@@ -19,12 +19,8 @@ class RespuestasAlumno extends Model
         'fk_actividad',
         'respuesta',
         'es_correcta',
-        'calificada'
+        'calificada',
     ];
-
-    public function pregunta(){
-        return $this->belongsTo(Preguntas::class, 'fk_pregunta');
-    }
 
     public function alumno(){
         return $this->belongsTo(Alumno::class, 'fk_alumno');
@@ -32,5 +28,10 @@ class RespuestasAlumno extends Model
 
     public function actividad(){
         return $this->belongsTo(Actividades::class, 'fk_actividad');
+    }
+
+    public function pregunta()
+    {
+        return $this->belongsTo(Preguntas::class, 'fk_pregunta');
     }
 }

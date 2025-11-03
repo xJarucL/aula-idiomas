@@ -10,7 +10,12 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @forelse($actividades as $item)
-            <div class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            @if($item['estado'] === 'Entregada' && $item['entrega'])
+                <a href="{{ route('actividad.respuestas', ['actividad' => $item['actividad']->pk_actividad, 'alumno' => $alumno->pk_alumno]) }}" class="relative block bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+            @else
+                <div class="relative bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            @endif
+
                 <div @class([
                     'absolute left-0 top-0 h-full w-1',
                     'bg-yellow-400' => $item['estado'] === 'Pendiente',
@@ -25,7 +30,7 @@
                     <div class="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
                         <span class="px-2 py-1 bg-gray-100 rounded-full">Tipo: {{ strtoupper($item['actividad']->tipo) }}</span>
                         @if($item['entrega'])
-                             <p class="text-gray-500 text-xs mt-0.5">
+                            <p class="text-gray-500 text-xs mt-0.5">
                                 Entregada el: <span class="font-medium">{{ $item['entrega']->created_at?->format('d/m/Y') ?? '-' }}</span>
                             </p>
                         @endif
@@ -48,7 +53,12 @@
                         @endif
                     </div>
                 </div>
-            </div>
+
+            @if($item['estado'] === 'Entregada' && $item['entrega'])
+                </a>
+            @else
+                </div>
+            @endif
         @empty
             <p class="col-span-2 text-gray-400 text-center">No hay actividades asignadas a este alumno.</p>
         @endforelse
