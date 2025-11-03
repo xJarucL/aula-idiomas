@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Actividades;
 use App\Models\Preguntas;
 use App\Models\Alumno;
+use App\Models\Grupo;
 use App\Models\OpcionesPregunta;
 use App\Models\RespuestasAlumno;
+use App\Models\ActividadGrupo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ActividadController extends Controller
 {
@@ -263,4 +266,43 @@ class ActividadController extends Controller
         ]);
     }
 
+    public function formAsignar($id){
+        $actividad = Actividades::findOrFail($id);
+        $docenteId = Auth::id();
+
+        $grupos = Grupo::whereHas('grupoMaterias', function ($query) use ($docenteId) {
+            $query->where('fk_docente', $docenteId);
+        })->orderBy('nombre')->get();
+
+        return view('docente.asignar-actividad', compact('actividad', 'grupos'));
+    }
+
+    public function asignarActividad(Request $request, $id){
+
+        $request->validate([
+            'grupos' => 'required|array|min:1',
+            'grupos.*' => 'exists:grupo,pk_grupo',
+            'fecha_entrega' => 'required|date|after_or_equal:today',
+        ], [
+            'grupos.required' => 'Debes seleccionar al menos un grupo.',
+            'fecha_entrega.after_or_equal' => 'La fecha de entrega no puede ser anterior a hoy.',
+        ]);
+
+        $fechaInicio = Carbon::now();
+
+        foreach ($request->grupos as $grupoId) {
+            ActividadGrupo::create([
+                'fk_actividad' => $id,
+                'fk_grupo' => $grupoId,
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $request->fecha_entrega,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Actividad asignada correctamente.',
+            'ruta' => route('docente.lista-actividades')
+        ]);
+    }
 }

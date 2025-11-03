@@ -52,9 +52,6 @@ Route::prefix('docente')
     Route::get('/inicio', function () {
         return view('docente.inicio');
     })->name('docente.inicio');
-    Route::get('/asignar-actividad', function (){
-        return view('docente.asignar-actividad');
-    })->name('docente.asignar-actividad');
 
     // RUTAS DE GRUPOS - DOCENTE
     Route::get('mis-grupos', [GrupoController::class, 'listaGruposDocente'])->name('docente.mis-grupos');
@@ -80,6 +77,8 @@ Route::prefix('docente')
     Route::delete('actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');
     Route::post('actividad/restaurar/{id}', [ActividadController::class, 'restaurarActividad'])->name('actividad.restaurar');
     Route::get('actividad/{actividad}/alumno/{alumno}/respuestas', [ActividadController::class, 'verRespuestasActividadAlumno'])->name('actividad.respuestas');
+    Route::get('actividad/{id}/asignar', [ActividadController::class, 'formAsignar'])->name('docente.asignar-actividad');
+    Route::post('actividad/{id}/asignando', [ActividadController::class, 'asignarActividad'])->name('docente.asignando-actividad');
 
     Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
