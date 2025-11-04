@@ -29,14 +29,14 @@
                 @csrf
                 <div class="bg-white p-5 rounded-2xl shadow-2xs border border-gray-300">
                     <div class="flex flex-col">
-                        <div class="flex justify-between gap-3 w-full">
-                            <div class="w-2/3">
+                        <div class="flex flex-col sm:flex-row sm:justify-between gap-3 w-full">
+                            <div class="w-full sm:w-2/3 ">
                                 <label class="text-gray-500 font-light mb-2">Nombre de la actividad</label>
                                 <input name="nom_actividad"
                                     class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
                                     type="text" placeholder="Ej: Past simple vs Past continuous" required>
                             </div>
-                            <div class="w-1/3">
+                            <div class="w-full sm:w-1/3">
                                 <label class="text-gray-500 font-light mb-2">Tipo de actividad:</label>
                                 <select name="tipo_actividad"
                                     class="p-2.5 w-full text-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
@@ -63,33 +63,9 @@
                     </button>
                 </div>
 
-                {{-- CARGAR PDF --}}
-                <div id="cargarPDF">
-                    <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                        <input type="" name="preguntas[][tipo]" value="cargarPDF">
-                        <div class="flex flex-col p-4 relative">
-                            <div class="flex justify-between gap-4 mb-3">
-                                <div>
-                                    <h3 class="text-[20px] text-black font-semibold">Cargar actividad</h3>
-                                    <span class="text-gray-500 font-light">Cargar PDF</span>
-                                </div>
-                                <button
-                                    class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
-                                    type="button">×</button>
-                            </div>
-                            <label class="text-gray-500 font-light mb-2">Nombre de la tarea:</label>
-                            <input class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500"
-                                type="text" required
-                            >
-                            <label class="text-gray-500 font-light mt-3 mb-2">Cargar actividad:</label>
-                        </div>
-                    </div>
-                    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-                </div>
-
-
                 <div id="preguntasContainer" class="flex flex-col gap-8 mt-5"></div>
             </form>
+
             {{-- FORMULARIO OPCION MULTIPLE --}}
             <template id="opcionMultiple">
                 <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
@@ -141,6 +117,7 @@
                     </div>
                 </div>
             </template>
+
             {{-- PREGUNTA ABIERTA --}}
             <template id="abierta">
                 <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
@@ -165,40 +142,76 @@
                 </div>
             </template>
 
-            {{-- FORMULARIO VERDAD O FALSO --}}
-            <template id="verdaderoFalso">
+            {{-- CARGAR PDF --}}
+            <template id="cargarPDF">
                 <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                    <input type="hidden" name="preguntas[][tipo]" value="verdadero_falso">
+                    <input type="hidden" name="preguntas[][tipo]" value="cargarPDF">
+
                     <div class="flex flex-col p-4 relative">
                         <div class="flex justify-between gap-4 mb-3">
                             <div>
-                                <h3 class="text-[20px] text-black font-semibold">Pregunta</h3>
-                                <span class="text-gray-500 font-light">Verdadero o Falso</span>
+                                <h3 class="text-[20px] text-black font-semibold"></h3>
+                                <span class="text-gray-500 font-light">Cargar PDF</span>
                             </div>
                             <button
                                 class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
                                 type="button">×</button>
                         </div>
-                        <label class="text-gray-500 font-light mb-2">Descripción:</label>
-                        <textarea name="preguntas[][descripcion]"
-                            class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500" style="height: 150px;"></textarea>
-                        <div class="flex justify-between gap-4 w-full mt-3">
-                            <div class="w-1/2">
-                                <label>Opción correcta:</label>
-                                <select name="preguntas[][respuesta_correcta]"
-                                    class="p-2.5 w-full text-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
-                                    <option value="">Selecciona opción correcta</option>
-                                    <option value="Verdadero">Verdadero</option>
-                                    <option value="Falso">Falso</option>
-                                </select>
-                            </div>
-                            <div class="w-1/2">
-                                <label>Valor:</label>
-                                <input name="preguntas[][valor]" type="number"
-                                    class="p-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-                                    required>
+
+                        <label class="text-gray-500 font-light mb-2">Descripcion:</label>
+                        <input class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500"
+                            type="text" name="" required>
+
+                        <!-- DROPZONE -->
+                        <label class="text-gray-500 font-light mt-3 mb-2">Cargar actividad "PDF":</label>
+                        <div id="dropzone"
+                            class="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-teal-500 transition bg-gray-50 text-center min-h-[150px]">
+                            <svg class="w-10 h-10 text-gray-400 mb-2 pointer-events-none" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M7 16V4m0 0L3 8m4-4l4 4M21 12v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6m16 0l-4 4m4-4l-4-4" />
+                            </svg>
+                            <p class="text-gray-500 text-sm">Arrastra o <span class="text-teal-600 font-semibold">haz
+                                    clic</span> para agregar PDFs</p>
+
+                            <input id="fileInput" type="file" accept="application/pdf" multiple class="hidden">
+
+                            <!-- LISTADO DE ARCHIVOS -->
+                            <div id="filePreview"
+                                class="absolute inset-0 flex flex-wrap gap-2 items-start justify-start p-4 overflow-y-auto pointer-events-none opacity-0 transition-opacity duration-300">
                             </div>
                         </div>
+                    </div>
+                </div>
+            </template>
+
+            {{-- AUTIVA --}}
+            <template id="auditiva">
+                <div class="bg-white p-4 rounded-2xl border border-gray-300 pregunta-item">
+                    <input type="hidden" name="preguntas[][tipo]" value="auditiva">
+                    <div class="flex flex-col relative">
+                        <div class="flex justify-between mb-3">
+                            <div>
+                                <h3 class="text-[20px] text-black font-semibold">Pregunta auditiva</h3>
+                                <span class="text-gray-500 font-light">Auditiva</span>
+                            </div>
+                            <button
+                                class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
+                                type="button">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="texto frase" class="text-gray-500 font-light">Descripcion breve:</label>
+                        <textarea
+                            class="h-[80px] text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                            name="" id="">
+                                </textarea>
+                        <label for="" class="text-gray-500 font-light ">Subir audio:</label>
+                        <input type="file"
+                            class="p-2 border text-gray-500 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                            required>
                     </div>
                 </div>
             </template>
@@ -226,8 +239,11 @@
                                     múltiple</button>
                                 <button type="button" data-tipo="abierta"
                                     class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Abierta</button>
-                                <button type="button" data-tipo="verdaderoFalso"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Verdadero/Falso</button>
+                                <button type="button" data-tipo="cargarPDF"
+                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Cargar
+                                    PDF</button>
+                                <button type="button" data-tipo="auditiva"
+                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Auditiva</button>
                             </div>
                         </div>
                     </div>
@@ -242,10 +258,18 @@
             const closeBtns = backdrop.querySelectorAll('[data-dialog-close="true"]');
             const container = document.querySelector('#preguntasContainer');
 
+            // VARIABLES DROPZONE
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            let allFiles = [];
+
             const templates = {
                 opcionMultiple: document.querySelector('#opcionMultiple').content,
                 abierta: document.querySelector('#abierta').content,
-                verdaderoFalso: document.querySelector('#verdaderoFalso').content
+                cargarPDF: document.querySelector('#cargarPDF').content,
+                auditiva: document.querySelector('#auditiva').content,
+
             };
 
             let preguntaIndex = 0;
@@ -286,6 +310,66 @@
                     preguntaIndex++;
                     reenumerar();
                     cerrarModal();
+
+                    if (tipo === 'cargarPDF') {
+                        const inserted = container.lastElementChild;
+                        const dropzone = inserted.querySelector('#dropzone');
+                        const fileInput = inserted.querySelector('#fileInput');
+                        const filePreview = inserted.querySelector('#filePreview');
+                        let allFiles = [];
+
+                        if (!dropzone || !fileInput || !filePreview) return;
+
+                        dropzone.addEventListener('click', () => fileInput.click());
+                        dropzone.addEventListener('dragover', e => {
+                            e.preventDefault();
+                            dropzone.classList.add('border-teal-500', 'bg-teal-50');
+                        });
+                        dropzone.addEventListener('dragleave', () => {
+                            dropzone.classList.remove('border-teal-500', 'bg-teal-50');
+                        });
+                        dropzone.addEventListener('drop', e => {
+                            e.preventDefault();
+                            dropzone.classList.remove('border-teal-500', 'bg-teal-50');
+                            handleFiles(e.dataTransfer.files);
+                        });
+
+                        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+                        function handleFiles(files) {
+                            const newFiles = Array.from(files).filter(f => f.type ===
+                                "application/pdf");
+                            allFiles = [...allFiles, ...newFiles];
+                            renderPreview();
+                        }
+
+                        function renderPreview() {
+                            if (allFiles.length === 0) {
+                                filePreview.innerHTML = "";
+                                filePreview.classList.add("opacity-0", "pointer-events-none");
+                                return;
+                            }
+                            filePreview.classList.remove("opacity-0", "pointer-events-none");
+                            filePreview.innerHTML = allFiles.map((file, i) => `
+                                <div class="bg-white border border-gray-300 rounded-md flex items-center gap-2 px-3 py-2 text-sm shadow-sm">
+                                    <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11V3m0 0L8 7m4-4l4 4M4 13v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
+                                    </svg>
+                                    <span class="truncate max-w-[150px]">${file.name}</span>
+                                    <button type="button" class="ml-auto text-gray-400 hover:text-red-600" data-index="${i}">×</button>
+                                </div>
+                            `).join('');
+
+                            filePreview.querySelectorAll('button').forEach(btn => {
+                                btn.addEventListener('click', e => {
+                                    e.stopPropagation();
+                                    const index = e.target.dataset.index;
+                                    allFiles.splice(index, 1);
+                                    renderPreview();
+                                });
+                            });
+                        }
+                    }
                 });
             });
 
@@ -295,6 +379,8 @@
                     reenumerar();
                 }
             });
+
+
         });
     </script>
 @endsection
