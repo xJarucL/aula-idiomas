@@ -44,12 +44,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno']);
         Route::put('alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno']);
 
-
         // Rutas de gestión de grupos
         Route::get('lista-grupos', [GrupoController::class, 'listaGruposCoordinador']);
         Route::put('grupo/{id}/deshabilitar', [GrupoController::class, 'deshabilitarGrupo']);
         Route::put('grupo/{id}/habilitar', [GrupoController::class, 'habilitarGrupo']);
-
+        Route::get('form-grupo', [GrupoController::class, 'formGrupo']);
+        Route::post('grupo/crear', [GrupoController::class, 'guardarGrupo']);
 
     });
 
