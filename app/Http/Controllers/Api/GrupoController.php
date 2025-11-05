@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\GrupoMateria;
 use App\Models\Grupo;
+
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class GrupoController extends Controller
 {
@@ -53,6 +58,19 @@ class GrupoController extends Controller
         return response()->json([
             'success' => true,
             'data' => $grupo
+        ]);
+    }
+
+    public function listaGruposCoordinador(Request $request){
+
+        $query = Grupo::with('carrera')->withTrashed()->orderBy('created_at', 'desc');
+
+        $grupos = $query->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Grupos cargados correctamente",
+            'data' => $grupos
         ]);
     }
 

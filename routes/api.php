@@ -44,6 +44,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno']);
         Route::put('alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno']);
 
+
+        // Rutas de gestión de grupos
+        Route::get('lista-grupos', [GrupoController::class, 'listaGruposCoordinador']);
+
     });
 
     // Rutas de alumnos
