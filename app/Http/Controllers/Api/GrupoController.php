@@ -74,4 +74,24 @@ class GrupoController extends Controller
         ]);
     }
 
+    public function deshabilitarGrupo($id){
+        $grupo = Grupo::findOrFail($id);
+        $grupo->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Grupo deshabilitado correctamente'
+        ]);
+    }
+
+    public function habilitarGrupo($id){
+        $grupo = Grupo::withTrashed()->findOrFail($id);
+        $grupo->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Grupo habilitado correctamente'
+        ]);
+    }
+
 }

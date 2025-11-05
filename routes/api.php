@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Rutas de gestión de grupos
         Route::get('lista-grupos', [GrupoController::class, 'listaGruposCoordinador']);
+        Route::put('grupo/{id}/deshabilitar', [GrupoController::class, 'deshabilitarGrupo']);
+        Route::put('grupo/{id}/habilitar', [GrupoController::class, 'habilitarGrupo']);
+
 
     });
 
