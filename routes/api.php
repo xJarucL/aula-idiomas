@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('actividades/{id}', [ActividadController::class, 'misActividades']);
         Route::get('actividad/{id}', [ActividadController::class, 'cargarActividad']);
         Route::post('responder', [ActividadController::class, 'guardarRespuesta']);
+        Route::get('entrega/{fkActividad}/{userId}', [ActividadController::class, 'detalleEntrega']);
 
     });
 
