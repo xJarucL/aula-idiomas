@@ -64,6 +64,11 @@ Route::middleware('auth:sanctum')->group(function () {
         // Grupos del alumno
         Route::get('inicio/{id}', [GrupoController::class, 'gruposActualesAlumno']);
 
+        // Rutas de actividades
+        Route::get('actividades/{id}', [ActividadController::class, 'misActividades']);
+        Route::get('actividad/{id}', [ActividadController::class, 'cargarActividad']);
+        Route::post('responder', [ActividadController::class, 'guardarRespuesta']);
+
     });
 
     // Rutas de docentes
@@ -82,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Rutas de actividades
         Route::post('asignar-actividad', [ActividadController::class, 'asignarActividad']);
         Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);
-        Route::get('detalle-actividad/{id}', [ActividadController::class, 'detalleActividad']);
+        Route::get('detalle-actividad/{id}', [ActividadController::class, 'cargarActividad']);
 
         // Rutas de alumnos
         Route::get('detalle-alumno/{id}', [AlumnoController::class, 'detalleAlumno']);

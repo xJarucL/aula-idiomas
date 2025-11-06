@@ -13,10 +13,13 @@ use App\Models\Carrera;
 use App\Models\Materia;
 use App\Models\User;
 use App\Models\Alumno;
+use App\Models\RespuestasAlumno;
+use App\Models\ActividadGrupo;
 
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class GrupoController extends Controller
 {
@@ -205,6 +208,8 @@ class GrupoController extends Controller
         }
     }
 
+
+
     function gruposActualesAlumno($id){
         $usuario = User::where('fk_tipo_usuario', 1)->find($id);
 
@@ -229,6 +234,46 @@ class GrupoController extends Controller
             ->where('fk_alumno', $alumno->pk_alumno)
             ->get();
 
+        $ahora = Carbon::now();
+
+        $grupos = $grupos->map(function ($grupoAlumno) use ($alumno, $ahora) {
+            $grupo = $grupoAlumno->grupo;
+            if (!$grupo) return $grupoAlumno;
+
+            $actividadesAsignadas = ActividadGrupo::where('fk_grupo', $grupo->pk_grupo)
+                ->with('actividad')
+                ->get();
+
+            $pendientes = 0;
+            $entregadas = 0;
+            $no_entregadas = 0;
+
+            foreach ($actividadesAsignadas as $asignacion) {
+                $actividad = $asignacion->actividad;
+                if (!$actividad) continue;
+
+                $tieneRespuestas = RespuestasAlumno::where('fk_actividad', $actividad->pk_actividad)
+                    ->where('fk_alumno', $alumno->pk_alumno)
+                    ->exists();
+
+                if ($tieneRespuestas) {
+                    $entregadas++;
+                } elseif ($ahora->lt(Carbon::parse($asignacion->fecha_fin))) {
+                    $pendientes++;
+                } else {
+                    $no_entregadas++;
+                }
+            }
+
+            $grupoAlumno->resumen_actividades = [
+                'pendientes' => $pendientes,
+                'entregadas' => $entregadas,
+                'no_entregadas' => $no_entregadas,
+            ];
+
+            return $grupoAlumno;
+        });
+
         return response()->json([
             'success' => true,
             'message' => 'Grupos obtenidos correctamente',
@@ -237,5 +282,6 @@ class GrupoController extends Controller
             'grupos' => $grupos,
         ]);
     }
+
 
 }
