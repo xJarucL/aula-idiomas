@@ -39,7 +39,7 @@
             </svg>
         </div>
         <div>
-            <p class="text-gray-600 text-sm">{{ $title }}</p>
+            <p class="text-gray-600 text-sm sm:text-lg">{{ $title }}</p>
             <p class="text-2xl font-bold text-gray-800">{{ $count }}</p>
         </div>
     </div>

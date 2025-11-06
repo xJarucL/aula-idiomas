@@ -30,10 +30,10 @@
                         @if (auth()->user()->fk_tipo_usuario == '1')
                             <a href="{{ route('alumno.inicio') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
-                            <a href="#"
+                            <a href="{{ route('alumno.lista-actividades') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
                                 actividades</a>
-                            <a href="#"
+                            <a href="{{ route('alumno.progreso') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '2')
                             <a href="{{ route('docente.inicio') }}"
@@ -142,81 +142,87 @@
                             x-transition:leave="transition ease-in duration-300"
                             x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
 
-                            <div class="p-4 rounded-l-full flex justify-between items-center">
-                                <h2 class="font-semibold text-lg text-white">Menú</h2>
-                                <button @click="openMenu = false"
-                                    class="text-white hover:text-red-500 text-2xl font-bold">×</button>
-                            </div>
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="p-4 rounded-l-full flex justify-between items-center">
+                                        <h2 class="font-semibold text-lg text-white">Menú</h2>
+                                        <button @click="openMenu = false"
+                                            class="text-white hover:text-red-500 text-2xl font-bold">×</button>
+                                    </div>
 
-                            {{-- ICONO PERFIL --}}
-                            <div>
-                                <div x-data="{ open: false }" class="flex justify-center items-center mt-3">
-                                    <button @click="open = !open"
-                                        class="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-teal-50 transition cursor-pointer"
-                                        aria-label="Perfil">
-                                        <img src="{{ Auth::user()->img_user ? asset('storage/' . Auth::user()->img_user) : asset('img/default.jpg') }}"
-                                            alt="Perfil" class="w-12 h-12 rounded-full object-cover border">
+                                    {{-- ICONO PERFIL --}}
+                                    <div>
+                                        <div x-data="{ open: false }" class="flex justify-center items-center mt-3">
+                                            <button @click="open = !open"
+                                                class="w-20 h-20 bg-white rounded-full flex items-center justify-center hover:bg-teal-50 transition cursor-pointer"
+                                                aria-label="Perfil">
+                                                <img src="{{ Auth::user()->img_user ? asset('storage/' . Auth::user()->img_user) : asset('img/default.jpg') }}"
+                                                    alt="Perfil" class="w-12 h-12 rounded-full object-cover border">
 
-                                    </button>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 flex flex-col gap-3">
+                                        {{-- BOTONES MENU --}}
+                                        @auth
+                                            @if (auth()->user()->fk_tipo_usuario == '1')
+                                                <a href="{{ route('alumno.inicio') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
+                                                <a href="{{ route('alumno.lista-actividades') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
+                                                    actividades</a>
+                                                <a href="{{ route('alumno.progreso') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
+                                            @elseif(auth()->user()->fk_tipo_usuario == '2')
+                                                <a href="{{ route('docente.inicio') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
+                                                <a href="{{ route('docente.mis-grupos') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
+                                                    Grupos</a>
+                                                <a href="{{ route('docente.lista-actividades') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Actividades</a>
+                                            @elseif(auth()->user()->fk_tipo_usuario == '3')
+                                                <a href="{{ route('coordinacion.inicio') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
+                                                <a href="{{ route('coordinacion.lista-docentes') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
+                                                <a href="{{ route('coordinacion.lista-alumnos') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
+                                                <a href="{{ route('coordinacion.lista-grupos') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
+                                                <a href="{{ route('coordinacion.lista-coordinador') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Coordinación</a>
+                                            @endif
+                                        @endauth
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="p-4 flex flex-col gap-3">
-                                {{-- BOTONES MENU --}}
-                                @auth
-                                    @if (auth()->user()->fk_tipo_usuario == '1')
-                                        <a href="{{ route('alumno.inicio') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
-                                        <a href="#"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
-                                            actividades</a>
-                                        <a href="#"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
-                                    @elseif(auth()->user()->fk_tipo_usuario == '2')
-                                        <a href="{{ route('docente.inicio') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
-                                        <a href="{{ route('docente.mis-grupos') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
-                                            Grupos</a>
-                                        <a href="{{ route('docente.lista-actividades') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Actividades</a>
-                                    @elseif(auth()->user()->fk_tipo_usuario == '3')
-                                        <a href="{{ route('coordinacion.inicio') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
-                                        <a href="{{ route('coordinacion.lista-docentes') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Docentes</a>
-                                        <a href="{{ route('coordinacion.lista-alumnos') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Alumnos</a>
-                                        <a href="{{ route('coordinacion.lista-grupos') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Grupos</a>
-                                        <a href="{{ route('coordinacion.lista-coordinador') }}"
-                                            class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Coordinación</a>
-                                    @endif
-                                @endauth
                                 {{-- PERFIL Y CERRAR SECION --}}
-                                @auth
-                                    @if (auth()->user()->fk_tipo_usuario == '1')
-                                        <a href="{{ route('alumno.perfil') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
-                                    @elseif(auth()->user()->fk_tipo_usuario == '2')
-                                        <a href="{{ route('docente.perfil') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
-                                    @elseif(auth()->user()->fk_tipo_usuario == '3')
-                                        <a href="{{ route('coordinador.perfil') }}"
-                                            class="block px-4 py-2 text-gray-700 hover:bg-teal-200 rounded-t">Perfil</a>
-                                    @endif
-                                @endauth
-                                <form id="logout-form" method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" data-swal-form data-target-form="logout-form"
-                                        data-swal-title="Cerrar sesión"
-                                        data-swal-text="¿Deseas cerrar tu sesión actualmente activa?"
-                                        data-swal-icon="warning" data-swal-confirm="Sí, cerrar sesión"
-                                        data-swal-cancel="Cancelar"
-                                        class="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-500 hover:text-white rounded-b-sm cursor-pointer">
-                                        Cerrar sesión
-                                    </button>
-                                </form>
+                                <div class="p-4 border-t">
+                                    @auth
+                                        @if (auth()->user()->fk_tipo_usuario == '1')
+                                            <a href="{{ route('alumno.perfil') }}"
+                                                class="block p-5 text-white hover:bg-teal-800 rounded-t">Perfil</a>
+                                        @elseif(auth()->user()->fk_tipo_usuario == '2')
+                                            <a href="{{ route('docente.perfil') }}"
+                                                class="block p-5 text-white hover:bg-teal-800 rounded-t">Perfil</a>
+                                        @elseif(auth()->user()->fk_tipo_usuario == '3')
+                                            <a href="{{ route('coordinador.perfil') }}"
+                                                class="block p-5 text-white hover:bg-teal-800 rounded-t">Perfil</a>
+                                        @endif
+                                    @endauth
+                                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" data-swal-form data-target-form="logout-form"
+                                            data-swal-title="Cerrar sesión"
+                                            data-swal-text="¿Deseas cerrar tu sesión actualmente activa?"
+                                            data-swal-icon="warning" data-swal-confirm="Sí, cerrar sesión"
+                                            data-swal-cancel="Cancelar"
+                                            class="w-full text-left p-5 text-white hover:bg-red-500 hover:text-white rounded-b-sm cursor-pointer">
+                                            Cerrar sesión
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </template>
