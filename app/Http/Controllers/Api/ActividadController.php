@@ -458,4 +458,54 @@ class ActividadController extends Controller
             ], 500);
         }
     }
+
+    public function detalleEntrega($fk_actividad, $fk_usuario){
+        try {
+            $alumno = Alumno::where('fk_usuario', $fk_usuario)->first();
+
+            if (!$alumno) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró un alumno asociado a este usuario.'
+                ], 404);
+            }
+
+            $respuestas = RespuestasAlumno::with('pregunta')
+                ->where('fk_actividad', $fk_actividad)
+                ->where('fk_alumno', $alumno->pk_alumno)
+                ->get();
+
+            if ($respuestas->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron respuestas para esta actividad.'
+                ]);
+            }
+
+            $todasCalificadas = $respuestas->every(fn($r) => $r->calificada == true);
+
+            $total = $respuestas->count();
+            $correctas = $respuestas->where('es_correcta', true)->count();
+            $calificacion = $total > 0 ? round(($correctas / $total) * 100, 2) : null;
+
+            $detalle = [
+                'calificacion' => $todasCalificadas ? $calificacion : null,
+                'comentarios' => $todasCalificadas ? 'Todas las respuestas fueron calificadas.' : 'Pendiente de calificación.',
+                'fecha_entrega' => $respuestas->first()->created_at->format('Y-m-d H:i'),
+                'respuestas' => $respuestas,
+                'todas_calificadas' => $todasCalificadas
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $detalle
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener detalle de entrega: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
