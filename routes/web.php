@@ -35,6 +35,14 @@ Route::prefix('alumno')
         return view('alumno.inicio');
     })->name('alumno.inicio');
 
+    Route::get('/lista-actividades', function () {
+        return view('alumno.lista-actividades');
+    })->name('alumno.lista-actividades');
+
+    Route::get('/progreso', function () {
+        return view('alumno.progreso');
+    })->name('alumno.progreso');
+    
     // RUTAS DE PERFIL
     Route::get('/perfil', [AlumnoController::class, 'perfilAlumno'])->name('alumno.perfil');
     Route::get('/editar-perfil', function () {

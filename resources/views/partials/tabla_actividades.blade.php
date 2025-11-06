@@ -1,6 +1,6 @@
 <table class="min-w-full text-xs md:text-base">
     <thead>
-        <tr class="bg-gray-100 text-left">
+        <tr class="bg-gray-100 text-left hidden sm:table-row">
             <th class="py-3 px-4">Código</th>
             <th class="py-3 px-4">Nombre de Actividad</th>
             <th class="py-3 px-4">Descripción</th>
@@ -18,7 +18,7 @@
             </tr>
         @else
             @foreach ($actividades as $actividad)
-                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                <tr class="flex flex-col sm:table-row sm:border-b border-gray-200 hover:bg-gray-50 transition">
                     <td class="py-3 px-4 align-middle text-gray-800">
                         {{ $actividad->cod_actividad ?? 'Sin código' }}
                     </td>

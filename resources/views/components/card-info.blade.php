@@ -33,13 +33,13 @@
 
 <a href="{{ $link }}" class="block bg-white hover:bg-gray-100 rounded-xl shadow-sm p-6 hover:shadow-md transition">
     <div class="flex items-center gap-4">
-        <div class="w-12 h-12 {{ $colorClasses[$color] ?? $colorClasses['blue'] }} rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-10 h-8 sm:w-12 sm:h-12 {{ $colorClasses[$color] ?? $colorClasses['blue'] }} rounded-full flex items-center justify-center">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $icons[$icon] ?? $icons['users'] }}"></path>
             </svg>
         </div>
         <div>
-            <p class="text-gray-600 text-sm">{{ $title }}</p>
+            <p class="text-gray-600 text-sm sm:text-lg">{{ $title }}</p>
             <p class="text-2xl font-bold text-gray-800">{{ $count }}</p>
         </div>
     </div>

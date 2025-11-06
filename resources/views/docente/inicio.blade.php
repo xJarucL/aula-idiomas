@@ -13,7 +13,7 @@
         </div>
     </section>
     {{-- Cartas de información --}}
-    <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-10">
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
         <x-card-info
             title="Actividades"
             {{-- :count="$gruposCount" --}}
@@ -45,6 +45,11 @@
             color="yellow"
             {{-- link="{{ route('docente.lista-actividades') }}" --}}
         />
+    </section>
+
+    {{--  --}}
+    <section>
+
     </section>
 
 @endsection
