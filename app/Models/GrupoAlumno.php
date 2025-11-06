@@ -13,6 +13,11 @@ class GrupoAlumno extends Model
     protected $table = 'grupo_alumno';
     protected $primaryKey = 'pk_grupo_alumno';
 
+    protected $fillable = [
+        'fk_alumno',
+        'fk_grupo',
+    ];
+
     public function alumno(){
         return $this->belongsTo(Alumno::class, 'fk_alumno', 'pk_alumno');
     }
