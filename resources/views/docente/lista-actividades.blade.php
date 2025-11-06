@@ -1,6 +1,6 @@
 @extends('components.menu')
 
-@section('title', 'Actividades')
+@section('title', 'Actividades | Aula idiomas')
 
 @section('content')
 <x-msj-alert />
@@ -18,7 +18,7 @@
 </section>
 
 <section class="flex flex-col md:flex-row justify-between mt-5 gap-5">
-    <div class="relative w-full">
+    <div class="flex justify-between sm:relative w-full">
         <input
             id="buscador"
             data-url="{{ Route::currentRouteName() == 'docente.lista-actividades' ? route('docente.lista-actividades') : route('docente.lista-actividades-deshabilitadas') }}"
