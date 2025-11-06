@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\Actividades;
 use App\Models\Preguntas;
 use App\Models\OpcionesPregunta;
 use App\Models\Grupo;
 use App\Models\ActividadGrupo;
 use App\Models\RespuestasAlumno;
+use App\Models\User;
+use App\Models\Alumno;
+use App\Models\GrupoAlumno;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ActividadController extends Controller
 {
@@ -290,4 +296,216 @@ class ActividadController extends Controller
         ]);
     }
 
+    public function misActividades($id){
+        $usuario = User::where('fk_tipo_usuario', 1)->find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $grupos = GrupoAlumno::withTrashed()->where('fk_alumno', $alumno->pk_alumno)->get();
+        $ahora = now();
+
+        $pendientes = [];
+        $entregadas = [];
+        $noEntregadas = [];
+
+        foreach ($grupos as $grupoAlumno) {
+            $actividades = DB::table('actividad_grupo')
+                ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
+                ->where('actividad_grupo.fk_grupo', $grupoAlumno->fk_grupo)
+                ->select(
+                    'actividades.pk_actividad',
+                    'actividades.nom_actividad',
+                    'actividades.descripcion',
+                    'actividad_grupo.fecha_inicio',
+                    'actividad_grupo.fecha_fin',
+                    'actividad_grupo.fk_grupo'
+                )
+                ->get();
+
+            foreach ($actividades as $act) {
+                $entregada = DB::table('respuestas_alumno')
+                    ->where('fk_actividad', $act->pk_actividad)
+                    ->where('fk_alumno', $alumno->pk_alumno)
+                    ->exists();
+
+                $fechaFin = Carbon::parse($act->fecha_fin);
+
+                if ($entregada) {
+                    $entregadas[] = $act;
+                } elseif ($ahora->lessThan($fechaFin)) {
+                    $pendientes[] = $act;
+                } else {
+                    $noEntregadas[] = $act;
+                }
+            }
+        }
+
+        $pendientes = collect($pendientes)->map(fn($a) => (array)$a)->values();
+        $entregadas = collect($entregadas)->map(fn($a) => (array)$a)->values();
+        $noEntregadas = collect($noEntregadas)->map(fn($a) => (array)$a)->values();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Actividades del alumno obtenidas correctamente',
+            'resumen' => [
+                'pendientes' => count($pendientes),
+                'entregadas' => count($entregadas),
+                'no_entregadas' => count($noEntregadas),
+            ],
+            'pendientes' => $pendientes,
+            'entregadas' => $entregadas,
+            'no_entregadas' => $noEntregadas,
+        ]);
+    }
+
+    public function cargarActividad($id){
+        try {
+            $actividad = Actividades::with(['preguntas.opciones'])
+                ->where('pk_actividad', $id)
+                ->first();
+
+            if (!$actividad) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Actividad no encontrada.'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Actividad cargada correctamente.',
+                'actividad' => $actividad
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar la actividad.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function guardarRespuesta(Request $request){
+        try {
+            $validated = $request->validate([
+                'fk_actividad' => 'required|exists:actividades,pk_actividad',
+                'fk_alumno' => 'required|integer',
+                'respuestas' => 'required|array',
+                'respuestas.*.fk_pregunta' => 'required|exists:preguntas,pk_pregunta',
+                'respuestas.*.respuesta' => 'nullable|string',
+            ]);
+
+            $alumno = Alumno::where('fk_usuario', $validated['fk_alumno'])->first();
+
+            if (!$alumno) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró un alumno asociado a este usuario.',
+                ], 404);
+            }
+
+            foreach ($validated['respuestas'] as $resp) {
+                $pregunta = Preguntas::find($resp['fk_pregunta']);
+                $esCorrecta = null;
+
+                if ($pregunta->tipo === 'opcion_multiple') {
+                    $opcionCorrecta = $pregunta->opciones()
+                        ->where('es_correcta', 1)
+                        ->first();
+
+                    if ($opcionCorrecta) {
+                        $esCorrecta = (trim(strtolower($opcionCorrecta->texto_opcion)) === trim(strtolower($resp['respuesta'])));
+                    } else {
+                        $esCorrecta = false;
+                    }
+                } else {
+                    $esCorrecta = false;
+                }
+
+                RespuestasAlumno::create([
+                    'fk_pregunta' => $resp['fk_pregunta'],
+                    'fk_alumno' => $alumno->pk_alumno,
+                    'fk_actividad' => $validated['fk_actividad'],
+                    'respuesta' => $resp['respuesta'],
+                    'es_correcta' => $esCorrecta,
+                    'calificada' => $pregunta->tipo === 'abierta' ? false : true,
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Respuestas guardadas correctamente.',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar respuestas: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function detalleEntrega($fk_actividad, $fk_usuario){
+        try {
+            $alumno = Alumno::where('fk_usuario', $fk_usuario)->first();
+
+            if (!$alumno) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró un alumno asociado a este usuario.'
+                ], 404);
+            }
+
+            $respuestas = RespuestasAlumno::with('pregunta')
+                ->where('fk_actividad', $fk_actividad)
+                ->where('fk_alumno', $alumno->pk_alumno)
+                ->get();
+
+            if ($respuestas->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron respuestas para esta actividad.'
+                ]);
+            }
+
+            $todasCalificadas = $respuestas->every(fn($r) => $r->calificada == true);
+
+            $total = $respuestas->count();
+            $correctas = $respuestas->where('es_correcta', true)->count();
+            $calificacion = $total > 0 ? round(($correctas / $total) * 100, 2) : null;
+
+            $detalle = [
+                'calificacion' => $todasCalificadas ? $calificacion : null,
+                'comentarios' => $todasCalificadas ? 'Todas las respuestas fueron calificadas.' : 'Pendiente de calificación.',
+                'fecha_entrega' => $respuestas->first()->created_at->format('Y-m-d H:i'),
+                'respuestas' => $respuestas,
+                'todas_calificadas' => $todasCalificadas
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $detalle
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener detalle de entrega: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
