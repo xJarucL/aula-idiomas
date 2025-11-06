@@ -243,6 +243,23 @@ class AlumnoController extends Controller
         ]);
     }
 
+    function obtenerAlumnos(){
+        try {
+            $alumnos = Alumno::with('usuario', 'grupos.grupo.carrera')->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $alumnos
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Algo salió mal al obtener los alumnos',
+                'error' => $th
+            ]);
+        }
+    }
+
 
 }
 

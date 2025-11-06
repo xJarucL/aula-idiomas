@@ -40,6 +40,10 @@ class User extends Authenticatable
         return $this->hasMany(Actividades::class, 'fk_docente');
     }
 
+    public function alumno(){
+        return $this->belongsTo(Alumno::class, 'fk_usuario', 'pk_usuario');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

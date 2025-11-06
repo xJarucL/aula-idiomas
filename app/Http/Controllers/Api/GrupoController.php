@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\GrupoMateria;
+use App\Models\GrupoAlumno;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Materia;
 use App\Models\User;
+use App\Models\Alumno;
 
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
@@ -158,5 +160,82 @@ class GrupoController extends Controller
         }
     }
 
+    public function asignarGrupoAlumno(Request $request){
+        try {
+            $validated = $request->validate([
+                'fk_grupo' => 'required|exists:grupo,pk_grupo',
+                'alumnos' => 'required|array',
+                'alumnos.*' => 'exists:users,pk_usuario',
+            ], [
+                'fk_grupo.required' => 'El identificador del grupo es obligatorio.',
+                'alumnos.required' => 'Seleccionar mínimo 1 alumno.',
+                'alumnos.array' => 'Los alumnos no se recibieron en el formato esperado.',
+            ]);
+
+            foreach ($request->alumnos as $alumnoId) {
+                $alumno = Alumno::where('fk_usuario', $alumnoId)->first();
+
+                if (!$alumno) continue;
+
+                $grupoExistente = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+
+                if ($grupoExistente) {
+                    if ($grupoExistente->fk_grupo == $request->fk_grupo) {
+                        continue;
+                    }
+                    $grupoExistente->delete();
+                }
+                GrupoAlumno::create([
+                    'fk_grupo' => $request->fk_grupo,
+                    'fk_alumno' => $alumno->pk_alumno,
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Alumnos asignados correctamente al grupo.',
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Algo salió mal durante la asignación del grupo.',
+                'error' => $th->getMessage(),
+            ]);
+        }
+    }
+
+    function gruposActualesAlumno($id){
+        $usuario = User::where('fk_tipo_usuario', 1)->find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $grupos = GrupoAlumno::with(['grupo.carrera'])
+            ->withTrashed()
+            ->where('fk_alumno', $alumno->pk_alumno)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Grupos obtenidos correctamente',
+            'usuario' => $usuario,
+            'alumno' => $alumno,
+            'grupos' => $grupos,
+        ]);
+    }
 
 }
