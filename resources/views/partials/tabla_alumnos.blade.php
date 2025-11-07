@@ -27,39 +27,43 @@
 
                         {{-- Nombre e imagen --}}
                         <td class="py-3 px-4 border-b border-gray-200 align-middle">
-                            <div class="flex items-center space-x-3">
+                            <div class="flex w-full sm:items-center space-x-3">
                                 <img src="{{ $alumno->usuario->img_user ? asset('storage/' . $alumno->usuario->img_user) : asset('img/default.jpg') }}"
-                                    alt="alumno" class="w-10 h-10 rounded-full object-cover border" />
-                                <span class="text-gray-800 font-medium">
-                                    {{ $alumno->usuario->nombres }}
-                                    {{ $alumno->usuario->ap_paterno }}
-                                    {{ $alumno->usuario->ap_materno }}
-                                </span>
-                                {{-- VISTA MOVIL MATRICULA --}}
-                                <div class="sm:hidden">
-                                    {{ $alumno->usuario->matricula }}
+                                    alt="alumno" class="w-13 h-13 sm:w-10 sm:h-10 rounded-full object-cover border" />
+                                <div class="flex sm:flex-none flex-col w-full">
+                                    <span class="text-gray-800 text-lg sm:text-[16px] font-medium">
+                                        {{ $alumno->usuario->nombres }}
+                                        {{ $alumno->usuario->ap_paterno }}
+                                        {{ $alumno->usuario->ap_materno }}
+                                    </span>
+                                    <div class="flex sm:flex-none justify-between">
+                                        {{-- VISTA MOVIL MATRICULA --}}
+                                        <div class="sm:hidden">
+                                            {{ $alumno->usuario->matricula }}
+                                        </div>
+                                        <span class="sm:hidden">|</span>
+                                        {{-- VISTA MOVIL CALIFICACION --}}
+                                        <div class="sm:hidden">
+                                            @if (is_numeric($alumno->promedio))
+                                                <span
+                                                    class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
+                                                    {{ $alumno->promedio }}
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-block bg-gray-200 text-gray-700 font-medium px-3 py-1 rounded-full">
+                                                    {{ $alumno->promedio }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                {{-- VISTA MOVIL CALIFICACION --}}
-                                <div class="sm:hidden">
-                                    @if (is_numeric($alumno->promedio))
-                                        <span
-                                            class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
-                                            {{ $alumno->promedio }}
-                                        </span>
-                                    @else
-                                        <span
-                                            class="inline-block bg-gray-200 text-gray-700 font-medium px-3 py-1 rounded-full">
-                                            {{ $alumno->promedio }}
-                                        </span>
-                                    @endif
-                                </div>
-
                             </div>
                         </td>
-                        <td class="py-3 px-4 border-b border-gray-200 align-middle text-gray-800">
+                        <td class="py-3 px-4 border-b text-justify border-gray-200 align-middle text-gray-800">
                             {{ $alumno->grupos->first()->grupo->carrera->nombre ?? 'Sin carrera' }}
                         </td>
-                        <td class="py-3 px-4 border-b border-gray-200 align-middle">
+                        <td class="py-3 px-4 border-b border-gray-200 align-middle hidden sm:table-cell">
                             @if (is_numeric($alumno->promedio))
                                 <span
                                     class="inline-block bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">
