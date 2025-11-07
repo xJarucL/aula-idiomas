@@ -508,4 +508,74 @@ class ActividadController extends Controller
             ], 500);
         }
     }
+
+    public function actividadesGrupo($idGrupo, $idUsuario){
+        $usuario = User::find($idUsuario);
+
+        if (!$usuario || $usuario->fk_tipo_usuario != 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $actividades = DB::table('actividad_grupo')
+            ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
+            ->where('actividad_grupo.fk_grupo', $idGrupo)
+            ->select(
+                'actividades.pk_actividad',
+                'actividades.nom_actividad',
+                'actividades.descripcion',
+                'actividad_grupo.fecha_inicio',
+                'actividad_grupo.fecha_fin',
+                'actividad_grupo.fk_grupo'
+            )
+            ->get();
+
+        $ahora = Carbon::now();
+        $pendientes = [];
+        $entregadas = [];
+        $noEntregadas = [];
+
+        foreach ($actividades as $act) {
+            $entregada = DB::table('respuestas_alumno')
+                ->where('fk_actividad', $act->pk_actividad)
+                ->where('fk_alumno', $alumno->pk_alumno)
+                ->exists();
+
+            $fechaFin = Carbon::parse($act->fecha_fin);
+
+            if ($entregada) {
+                $entregadas[] = $act;
+            } elseif ($ahora->lessThan($fechaFin)) {
+                $pendientes[] = $act;
+            } else {
+                $noEntregadas[] = $act;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Actividades del grupo obtenidas correctamente',
+            'data' => [
+                'resumen' => [
+                    'pendientes' => count($pendientes),
+                    'entregadas' => count($entregadas),
+                    'no_entregadas' => count($noEntregadas),
+                ],
+                'pendientes' => $pendientes,
+                'entregadas' => $entregadas,
+                'no_entregadas' => $noEntregadas,
+            ],
+        ]);
+    }
 }
