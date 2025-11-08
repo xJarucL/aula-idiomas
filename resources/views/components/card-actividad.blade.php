@@ -1,4 +1,4 @@
-@props(['nombreActividad', 'tipo', 'fecha', 'iconoA', 'iconoEntregable', 'color1', 'color2' ,'linkAccion'])
+@props(['nombreActividad', 'tipo', 'fecha', 'iconoA', 'iconoEntregable', 'color1', 'color2' ,'link'])
 
 @php
     $nombreActividad = $nombreActividad ?? 'Sin titulo de actividad';
@@ -8,7 +8,7 @@
     $iconoEntregable = $iconoEntregable ?? 'document';
     $color1 = $color1 ?? 'colorUT';
     $color2 = $color2 ?? 'blue';
-    $linkAccion= $linkAccion = '#';
+    $link = $link ?? '#';
 
     $colorClass = [
         'colorUT' => 'bg-teal-600 text-white',
@@ -79,12 +79,12 @@
             </div>
 
             {{-- ESCRITORIO --}}
-            <a href="{{ $linkAccion }}"
+            <a href="{{$link}}"
                 class="bg-teal-600 text-sm sm:text-lg p-1.5 sm:p-2.5 hidden sm:inline-flex text-white hover:bg-teal-800 rounded-lg">Responder
             </a>
 
             {{-- MOVIL --}}
-            <a href="{{ route('alumno.detalle-actividad') }}"
+            <a href="{{$link}}"
                 class="bg-teal-600 text-sm sm:text-lg p-1.5 sm:p-2.5 sm:hidden text-white hover:bg-teal-800 rounded-lg">
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">

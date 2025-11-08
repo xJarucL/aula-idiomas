@@ -89,7 +89,7 @@
                 <div class="max-h-79 sm:max-h-80 overflow-y-auto pr-1">
                     @for ($i = 1; $i <= 5; $i++)
                         <x-card-actividad iconoA="question" color1="blue" nombreActividad="Past simple vs Past continuous"
-                            tipo="Pregunta" fecha="15/12/2022" iconoEntregable="pending" color2="orange" 
+                            tipo="Pregunta" fecha="15/12/2022" iconoEntregable="pending" color2="orange" link="{{ route('alumno.detalle-actividad') }}"
                         />
                     @endfor
                 </div>

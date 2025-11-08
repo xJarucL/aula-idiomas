@@ -62,33 +62,7 @@
                         fecha="15/12/2022"
                         iconoEntregable="pending"
                         color2="orange"
-                    />
-                    <x-card-actividad
-                        iconoA="oral"
-                        color1="yellow"
-                        nombreActividad="Past simple vs Past continuous"
-                        tipo="Pregunta"
-                        fecha="15/12/2022"
-                        iconoEntregable="completed"
-                        color2="green"
-                    />
-                    <x-card-actividad
-                        iconoA="addActivity"
-                        color1="purple"
-                        nombreActividad="Past simple vs Past continuous"
-                        tipo="Pregunta"
-                        fecha="15/12/2022"
-                        iconoEntregable="closed"
-                        color2="red"
-                    />
-                    <x-card-actividad
-                        iconoA="auditory"
-                        color1="sky"
-                        nombreActividad="Past simple vs Past continuous"
-                        tipo="Pregunta"
-                        fecha="15/12/2022"
-                        iconoEntregable="completed"
-                        color2="green"
+                       link="{{ route('alumno.detalle-actividad') }}"
                     />
                 </div>
             </div>
