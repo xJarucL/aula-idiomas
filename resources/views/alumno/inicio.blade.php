@@ -5,13 +5,13 @@
 @section('content')
 
     <section>
-        <h1 class="text-3xl sm:text-4xl font-bold text-black">Panel del Alumno</h1>
+        <h1 class="text-3xl sm:text-5xl font-bold text-teal-700  ">Panel del Alumno</h1>
         <span class="text-sm sm:text-lg text-gray-500 sm:font-light mt-2">
             Bienvenido/a, Ángel Ariel Salazar Medina.
         </span>
     </section>
     {{-- CARTAS INFOR --}}
-    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 sm:mt-7">
         <x-card-info title="General" icon="activity" color="blue" />
 
         <x-card-info title="Escritura" icon="pending" color="purple" />
@@ -57,7 +57,8 @@
             <div class="flex justify-between items-center h-full gap-2">
                 <div class="flex w-full flex-col gap-1 justify-center h-full">
                     {{-- VISUALIZACION ESCRITORIO --}}
-                    <h3 class="text-sm sm:text-lg hidden sm:inline-block text-teal-700 font-medium">Actividades Pendientes</h3>
+                    <h3 class="text-sm sm:text-lg hidden sm:inline-block text-teal-700 font-medium">Actividades Pendientes
+                    </h3>
                     {{-- VISUALIZACION MOVIL --}}
                     <h3 class="text-sm sm:text-lg sm:hidden text-teal-700 font-medium">Act. pendientes</h3>
                     <span class="text-[20px] sm:text-2xl text-gray-700 font-bold">4</span>
@@ -69,7 +70,8 @@
         <div class="col-span-3 sm:col-span-2 bg-white p-3 border border-gray-200 rounded-lg shadow">
             <div class="flex justify-between items-center h-full w-full gap-2 ">
                 <div class="flex w-full flex-col gap-1 justify-center h-full ">
-                    <h3 class="text-sm sm:text-lg hidden sm:inline-block text-teal-700 font-medium">Actividades terminadas</h3>
+                    <h3 class="text-sm sm:text-lg hidden sm:inline-block text-teal-700 font-medium">Actividades terminadas
+                    </h3>
                     <h3 class="text-sm sm:text-lg sm:hidden text-teal-700 font-medium">Act. terminadas</h3>
 
                     <span class="text-[20px] sm:text-2xl text-gray-700 font-bold">3</span>
@@ -86,21 +88,9 @@
                 <h3 class="text-lg text-gray-700 mb-2 font-semibold">Actividades pendientes</h3>
                 <div class="max-h-79 sm:max-h-80 overflow-y-auto pr-1">
                     @for ($i = 1; $i <= 5; $i++)
-                        <div class="bg-white border border-gray-300 p-4 mb-2 rounded-lg shadow">
-                            <div class="flex justify-between">
-                                <div class="">
-                                    <h1 class="text-gray-800 font-semibold">Actividad {{ $i }}</h1>
-                                    <p class="text-gray-600 text-sm">Descripción de la actividad número {{ $i }}.
-                                    </p>
-                                </div>
-                                <div class="flex justify-center items-center">
-                                    <a href="#"
-                                        class="p-2 bg-teal-600 text-white hover:bg-teal-700 rounded-lg shadow">
-                                        Realizar actividad
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <x-card-actividad iconoA="question" color1="blue" nombreActividad="Past simple vs Past continuous"
+                            tipo="Pregunta" fecha="15/12/2022" iconoEntregable="pending" color2="orange" 
+                        />
                     @endfor
                 </div>
             </div>
@@ -140,16 +130,17 @@
                     </div>
                 </div>
                 {{-- PARTE DE ACCESO --}}
-                <a href="{{route('alumno.progreso')}}">
+                <a href="{{ route('alumno.progreso') }}">
                     <div class=" bg-white p-4 h-auto border border-gray-300 rounded-lg shadow">
                         <div class="flex justify-between">
                             <div class="w-5/6 text-justify">
                                 <h3 class="text-lg text-teal-700 font-semibold">Ver mi progreso</h3>
-                                <span class="text-sm text-gray-600 font-normal">Visualiza los avances que has logrado durante tu carrera</span>
+                                <span class="text-sm text-gray-600 font-normal">Visualiza los avances que has logrado
+                                    durante tu carrera</span>
                             </div>
                             <div class="flex justify-center items-center w-1/6 pl-1">
-                                <svg width="48" height="48" class="text-center" viewBox="0 0 48 48" fill="none" stroke="#2B877A"
-                                    stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="48" height="48" class="text-center" viewBox="0 0 48 48" fill="none"
+                                    stroke="#2B877A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="18,12 30,24 18,36" />
                                 </svg>
                             </div>

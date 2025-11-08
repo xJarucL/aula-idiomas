@@ -5,7 +5,7 @@
 @section('content')
     {{-- BUSCADOR --}}
     <section>
-        <h1 class="text-2xl sm:text-4xl font-bold text-teal-800">Listado de actividades</h1>
+        <h1 class="text-2xl sm:text-5xl font-bold text-teal-800">Listado de actividades</h1>
         <span class="text-sm sm:text-lg text-gray-500 text-justify sm:font-light mt-2 w-full">
             Consulta en este apartado todas las actividades asignadas.
         </span>
@@ -34,29 +34,62 @@
     </section>
     {{-- LISTADO --}}
     <section class="mt-8">
-        <div class="bg-white p-4 h-135 border border-gray-300 rounded-lg shadow">
+        <div class="bg-white p-4 h-140 sm:h-135 border border-gray-300 rounded-lg shadow">
             {{-- ENCABEZADO --}}
             <div class="flex justify-between p-2 gap-5 border-b border-gray-200">
                 <div class="flex justify-center items-center">
-                    <h2 class="text-[18px] sm:text-[22px] text-teal-600 font-semibold">Actividades</h2>
+                    <h2 class="text-[18px] sm:text-[28px] text-teal-700 font-semibold">Actividades</h2>
                 </div>
                 {{-- OPCIONES DE FILTRAR EL CONTENIDO --}}
-                <div class="flex justify-center items-center gap-5">
+                <div class="flex justify-center items-center gap-3 sm:gap-5">
                     <a href=""
-                        class="text-[15px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-600">Pendientes</a>
+                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">Pendientes</a>
                     <a href=""
-                        class="text-[15px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-600">Terminadas</a>
+                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">Terminadas</a>
+                    <a href=""
+                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">No
+                        entregadas</a>
                 </div>
             </div>
             <div class="mt-3">
                 {{-- CONTENIDO ACTIVIDADES --}}
-                <div class="overflow-auto pr-1 max-h-108">
-                    @for ($i = 1; $i <= 10; $i++)
-                        <div
-                            class="h-20 p-4 mb-2 border border-gray-200 rounded-lg shadow-sm hover:bg-teal-700 hover:text-white dark:text-shadow-2xs ">
-                            <h1>hola</h1>
-                        </div>
-                    @endfor
+                <div class="overflow-auto pr-1 sm:max-h-108">
+                    <x-card-actividad
+                        iconoA="question"
+                        color1="blue"
+                        nombreActividad="Past simple vs Past continuous"
+                        tipo="Pregunta"
+                        fecha="15/12/2022"
+                        iconoEntregable="pending"
+                        color2="orange"
+                    />
+                    <x-card-actividad
+                        iconoA="oral"
+                        color1="yellow"
+                        nombreActividad="Past simple vs Past continuous"
+                        tipo="Pregunta"
+                        fecha="15/12/2022"
+                        iconoEntregable="completed"
+                        color2="green"
+                    />
+                    <x-card-actividad
+                        iconoA="addActivity"
+                        color1="purple"
+                        nombreActividad="Past simple vs Past continuous"
+                        tipo="Pregunta"
+                        fecha="15/12/2022"
+                        iconoEntregable="closed"
+                        color2="red"
+                    />
+                    <x-card-actividad
+                        iconoA="auditory"
+                        color1="sky"
+                        nombreActividad="Past simple vs Past continuous"
+                        tipo="Pregunta"
+                        fecha="15/12/2022"
+                        iconoEntregable="completed"
+                        color2="green"
+                    />
                 </div>
             </div>
         </div>
