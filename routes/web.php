@@ -42,6 +42,10 @@ Route::prefix('alumno')
     Route::get('/progreso', function () {
         return view('alumno.progreso');
     })->name('alumno.progreso');
+
+    Route::get('/detalles-actividad', function () {
+        return view('alumno.detalle-actividad');
+    })->name('alumno.detalle-actividad');
     
     // RUTAS DE PERFIL
     Route::get('/perfil', [AlumnoController::class, 'perfilAlumno'])->name('alumno.perfil');
