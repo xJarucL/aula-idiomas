@@ -7,6 +7,8 @@ use App\Models\Grupo;
 use App\Models\GrupoMateria;
 use App\Models\Cuatrimestre;
 use App\Models\Carrera;
+use App\Models\Materia;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,53 +92,69 @@ class GrupoController extends Controller
     public function guardarGrupo(Request $request){
         try {
             $validated = $request->validate([
-                'nombre' => 'required|string|max:1',
-                'fk_carrera' => 'required|string|max:2',
-                'fk_cuatrimestre' => 'required|string|max:2',
+                'nombre' => 'required|string|max:255',
                 'año' => 'required|digits:4',
+                'fk_carrera' => 'required|integer|exists:carrera,pk_carrera',
+                'fk_cuatrimestre' => 'required|integer|exists:cuatrimestre,pk_cuatrimestre',
+                'fk_materia' => 'required|integer|exists:materia,pk_materia',
+                'fk_docente' => 'required|integer|exists:users,pk_usuario',
             ], [
                 'nombre.required' => 'El nombre del grupo es obligatorio.',
-                'nombre.string' => 'El nombre del grupo debe ser un texto válido.',
-                'nombre.max' => 'Ocurrió un error. ¡Contacta con el equipo de soporte!',
-
-                'fk_carrera.required' => 'Debe seleccionar una carrera.',
-                'fk_carrera.string' => 'El valor de la carrera no es válido.',
-                'fk_carrera.max' => 'Ocurrió un error. ¡Contacta con el equipo de soporte!',
-
-                'fk_cuatrimestre.required' => 'Debe seleccionar un cuatrimestre.',
-                'fk_cuatrimestre.string' => 'El valor del cuatrimestre no es válido.',
-                'fk_cuatrimestre.max' => 'Ocurrió un error. ¡Contacta con el equipo de soporte!',
-
                 'año.required' => 'El año es obligatorio.',
                 'año.digits' => 'El año debe contener exactamente 4 números.',
+                'fk_carrera.required' => 'Debe seleccionar una carrera.',
+                'fk_carrera.exists' => 'La carrera seleccionada no existe.',
+                'fk_cuatrimestre.required' => 'Debe seleccionar un cuatrimestre.',
+                'fk_cuatrimestre.exists' => 'El cuatrimestre seleccionado no existe.',
+                'fk_materia.required' => 'Debe seleccionar una materia.',
+                'fk_materia.exists' => 'La materia seleccionada no existe.',
+                'fk_docente.required' => 'Debe seleccionar un docente.',
+                'fk_docente.exists' => 'El docente seleccionado no existe.',
             ]);
 
-            $grupo = Grupo::create([
+            DB::beginTransaction();
+
+            $grupoId = DB::table('grupo')->insertGetId([
                 'nombre' => $validated['nombre'],
+                'año' => $validated['año'],
                 'fk_carrera' => $validated['fk_carrera'],
                 'fk_cuatrimestre' => $validated['fk_cuatrimestre'],
-                'año' => $validated['año']
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('grupo_materia')->insert([
+                'fk_materia' => $validated['fk_materia'],
+                'fk_grupo' => $grupoId,
+                'fk_docente' => $validated['fk_docente'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             DB::commit();
 
             return response()->json([
-                'mensaje' => 'Grupo registrado correctamente.',
+                'success' => true,
+                'message' => 'Grupo creado correctamente.',
                 'ruta' => route('coordinacion.lista-grupos'),
                 'class' => 'success'
-            ]);
+            ], 201);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+
             return response()->json([
-                'mensaje' => 'Error de validación.',
-                'errores' => $e->errors(),
+                'success' => false,
+                'message' => 'Error de validación.',
+                'errors' => $e->errors(),
                 'class' => 'error'
             ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
-                'mensaje' => 'Ocurrió un error al registrar el grupo.',
-                'detalle' => $e->getMessage(),
+                'success' => false,
+                'message' => 'Error al crear el grupo: ' . $e->getMessage(),
                 'class' => 'error'
             ], 500);
         }
@@ -233,6 +251,14 @@ class GrupoController extends Controller
         });
 
         return view('docente.detalle-grupo', compact('grupo'));
+    }
+
+    public function cargarRegistroGrupo(){
+        $carreras = Carrera::all();
+        $cuatrimestres = Cuatrimestre::all();
+        $materias = Materia::all();
+        $docentes = User::where('fk_tipo_usuario', 2)->get();
+        return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres', 'materias', 'docentes'));
     }
 
 }

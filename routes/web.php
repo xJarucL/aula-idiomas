@@ -137,11 +137,7 @@ Route::prefix('coordinacion')
     // RUTAS DE GRUPOS
     Route::get('/lista-grupos', [GrupoController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
     Route::get('/lista-grupos/deshabilitados', [GrupoController::class, 'listaGruposDeshabilitados'])->name('coordinacion.lista-grupos-deshabilitados');
-    Route::get('/registro-grupo', function () {
-        $carreras = Carrera::all();
-        $cuatrimestres = Cuatrimestre::all();
-        return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres'));
-    })->name('coordinacion.registro-grupo');
+    Route::get('/registro-grupo', [GrupoController::class, 'cargarRegistroGrupo'])->name('coordinacion.registro-grupo');
     Route::post('/guardar-grupo', [GrupoController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
     Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
     Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
