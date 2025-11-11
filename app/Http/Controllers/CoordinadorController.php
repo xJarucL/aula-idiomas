@@ -198,6 +198,10 @@ class CoordinadorController extends Controller
         }
     }
 
+    public function detalleCoordinador($id){
+        $coordinador = User::findOrFail($id);
+        return view('coordinacion.detalle-coordinador', compact('coordinador'));
+    }
 
 
 }

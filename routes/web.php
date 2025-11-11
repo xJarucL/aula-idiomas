@@ -162,6 +162,7 @@ Route::prefix('coordinacion')
         return view('coordinacion.editar-perfil');
     })->name('coordinador.editar');
     Route::put('/editando/perfil', [CoordinadorController::class, 'actualizarPerfil'])->name('coordinador.actualizar-perfil');
+    Route::get('/detalle-coordinador/{id}', [CoordinadorController::class, 'detalleCoordinador'])->name('coordinador.detalle');
 
 });
 
