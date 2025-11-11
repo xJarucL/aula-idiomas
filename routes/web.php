@@ -37,6 +37,9 @@ Route::prefix('alumno')
         return view('alumno.lista-actividades');
     })->name('alumno.lista-actividades');
 
+    Route::get('/lista-actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
+
+
     Route::get('/progreso', function () {
         return view('alumno.progreso');
     })->name('alumno.progreso');

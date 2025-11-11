@@ -42,28 +42,37 @@
                 </div>
                 {{-- OPCIONES DE FILTRAR EL CONTENIDO --}}
                 <div class="flex justify-center items-center gap-3 sm:gap-5">
-                    <a href=""
-                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">Pendientes</a>
-                    <a href=""
-                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">Terminadas</a>
-                    <a href=""
-                        class="text-[12px] sm:text-lg text-gray-700 font-medium hover:border-b hover:border-teal-700">No
-                        entregadas</a>
+                    <a href="{{ route('alumno.lista-actividades', ['filtro' => 'pendientes']) }}"
+                        class="text-[12px] sm:text-lg font-medium border-b-2 {{ $filtro == 'pendientes' ? 'border-teal-700 text-teal-700' : 'border-transparent text-gray-700 hover:border-teal-700' }}">
+                        Pendientes
+                    </a>
+                    <a href="{{ route('alumno.lista-actividades', ['filtro' => 'entregadas']) }}"
+                        class="text-[12px] sm:text-lg font-medium border-b-2 {{ $filtro == 'entregadas' ? 'border-teal-700 text-teal-700' : 'border-transparent text-gray-700 hover:border-teal-700' }}">
+                        Terminadas
+                    </a>
+                    <a href="{{ route('alumno.lista-actividades', ['filtro' => 'no_entregadas']) }}"
+                        class="text-[12px] sm:text-lg font-medium border-b-2 {{ $filtro == 'no_entregadas' ? 'border-teal-700 text-teal-700' : 'border-transparent text-gray-700 hover:border-teal-700' }}">
+                        No entregadas
+                    </a>
                 </div>
             </div>
             <div class="mt-3">
                 {{-- CONTENIDO ACTIVIDADES --}}
                 <div class="overflow-auto pr-1 sm:max-h-108">
-                    <x-card-actividad
-                        iconoA="question"
-                        color1="blue"
-                        nombreActividad="Past simple vs Past continuous"
-                        tipo="Pregunta"
-                        fecha="15/12/2022"
-                        iconoEntregable="pending"
-                        color2="orange"
-                       link="{{ route('alumno.detalle-actividad') }}"
-                    />
+                    @forelse ($actividadesFiltradas as $actividad)
+                        <x-card-actividad
+                            iconoA="question"
+                            color1="blue"
+                            nombreActividad="{{ $actividad->nom_actividad }}"
+                            tipo="{{$actividad->tipo}}"
+                            fecha="{{ \Carbon\Carbon::parse($actividad->fecha_fin)->format('d/m/Y') }}"
+                            iconoEntregable="{{ $filtro == 'entregadas' ? 'check' : ($filtro == 'no_entregadas' ? 'close' : 'pending') }}"
+                            color2="{{ $filtro == 'entregadas' ? 'green' : ($filtro == 'no_entregadas' ? 'red' : 'orange') }}"
+                            link="{{route('alumno.detalle-actividad', $actividad->pk_actividad)}}"
+                        />
+                    @empty
+                        <p class="text-center text-gray-500 mt-4">No hay actividades para mostrar.</p>
+                    @endforelse
                 </div>
             </div>
         </div>

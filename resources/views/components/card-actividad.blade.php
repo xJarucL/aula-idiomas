@@ -1,4 +1,4 @@
-@props(['nombreActividad', 'tipo', 'fecha', 'iconoA', 'iconoEntregable', 'color1', 'color2' ,'link'])
+@props(['nombreActividad', 'tipo', 'fecha', 'iconoA', 'iconoEntregable', 'color1', 'color2', 'link'])
 
 @php
     $nombreActividad = $nombreActividad ?? 'Sin titulo de actividad';
@@ -36,58 +36,60 @@
         'oral'=>'M19 9v3a5.006 5.006 0 0 1-5 5h-4a5.006 5.006 0 0 1-5-5V9m7 9v3m-3 0h6M11 3h2a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z',
         'auditory'=>'M20 16v-4a8 8 0 1 0-16 0v4m16 0v2a2 2 0 0 1-2 2h-2v-6h2a2 2 0 0 1 2 2ZM4 16v2a2 2 0 0 0 2 2h2v-6H6a2 2 0 0 0-2 2Z'
     ];
-
-
-
 @endphp
 
-<div class="p-4 mb-3 border border-gray-200 rounded-lg shadow-sm ">
+<div class="p-4 mb-3 border border-gray-200 rounded-lg shadow-sm">
     <div class="flex justify-between items-center">
         <div class="flex flex-row w-full gap-3">
             <div class="flex justify-center items-center mr-3">
                 <div
-                    class="flex justify-center items-center w-8 h-8 sm:w-13 sm:h-13 {{$colorClass[$color1] ?? $colorClass[colorUT]}} rounded-lg sm:rounded-2xl">
+                    class="flex justify-center items-center w-8 h-8 sm:w-13 sm:h-13 {{ $colorClass[$color1] ?? $colorClass['colorUT'] }} rounded-lg sm:rounded-2xl">
                     <svg class="w-6 h-6 sm:w-10 sm:h-10" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="{{$icono[$iconoA] ?? $icono[book]}}" />
+                            d="{{ $icono[$iconoA] ?? $icono['book'] }}" />
                     </svg>
-
                 </div>
             </div>
-            {{-- TITULOCION --}}
+
+            {{-- TÍTULO --}}
             <div class="flex flex-col w-full max-w-3/4 gap-3">
-                <h3 class="text-sm sm:text-xl text-teal-700 font-bold text-justify">{{$nombreActividad }}</h3>
+                <h3 class="text-sm sm:text-xl text-teal-700 font-bold text-justify">{{ $nombreActividad }}</h3>
                 <div class="flex flex-row gap-3">
-                    <h4 class="text-gray-700 text-[10px] sm:text-lg">Tipo de actividad: <span
-                            class="text-teal-700 text-[10px] sm:text-lg">{{$tipo}}</span></h4>
-                    <h4 class="text-gray-700 text-[10px] sm:text-lg">Fecha de entrega: <span
-                            class="text-teal-700 text-[10px] sm:text-lg">{{$fecha}}</span></h4>
+                    <h4 class="text-gray-700 text-[10px] sm:text-lg">Tipo de actividad:
+                        <span class="text-teal-700 text-[10px] sm:text-lg">{{ $tipo }}</span>
+                    </h4>
+                    <h4 class="text-gray-700 text-[10px] sm:text-lg">Fecha de entrega:
+                        <span class="text-teal-700 text-[10px] sm:text-lg">{{ $fecha }}</span>
+                    </h4>
                 </div>
             </div>
         </div>
-        {{-- BOTON --}}
+
+        {{-- BOTÓN --}}
         <div class="flex flex-row justify-center items-center gap-2 sm:gap-6">
             {{-- ICONO --}}
-            <div class="flex justify-center items-center {{$colorClass[$color2] ?? $colorClass[red]}}  w-8 h-8 sm:w-13 sm:h-13 rounded-full">
+            <div class="flex justify-center items-center {{ $colorClass[$color2] ?? $colorClass['red'] }} w-8 h-8 sm:w-13 sm:h-13 rounded-full">
                 <svg class="w-6 h-6 sm:w-10 sm:h-10" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="{{$icono[$iconoEntregable] ?? $icono[book]}}" />
+                        d="{{ $icono[$iconoEntregable] ?? $icono['book'] }}" />
                 </svg>
             </div>
 
             {{-- ESCRITORIO --}}
-            <a href="{{$link}}"
-                class="bg-teal-600 text-sm sm:text-lg p-1.5 sm:p-2.5 hidden sm:inline-flex text-white hover:bg-teal-800 rounded-lg">Responder
+            <a href="{{ $link }}"
+                class="bg-teal-600 text-sm sm:text-lg p-1.5 sm:p-2.5 hidden sm:inline-flex text-white hover:bg-teal-800 rounded-lg">
+                Detalles
             </a>
 
-            {{-- MOVIL --}}
-            <a href="{{$link}}"
+            {{-- MÓVIL --}}
+            <a href="{{ $link }}"
                 class="bg-teal-600 text-sm sm:text-lg p-1.5 sm:p-2.5 sm:hidden text-white hover:bg-teal-800 rounded-lg">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                    viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M18 5V4a1 1 0 0 0-1-1H8.914a1 1 0 0 0-.707.293L4.293 7.207A1 1 0 0 0 4 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5M9 3v4a1 1 0 0 1-1 1H4m11.383.772 2.745 2.746m1.215-3.906a2.089 2.089 0 0 1 0 2.953l-6.65 6.646L9 17.95l.739-3.692 6.646-6.646a2.087 2.087 0 0 1 2.958 0Z" />
                 </svg>
