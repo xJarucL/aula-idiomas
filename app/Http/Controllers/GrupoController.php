@@ -9,6 +9,7 @@ use App\Models\Cuatrimestre;
 use App\Models\Carrera;
 use App\Models\Materia;
 use App\Models\User;
+use App\Models\Alumno;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -260,5 +261,57 @@ class GrupoController extends Controller
         $docentes = User::where('fk_tipo_usuario', 2)->get();
         return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres', 'materias', 'docentes'));
     }
+
+    public function cargarAlumnos($id){
+       $grupo_origen = Grupo::with('carrera', 'cuatrimestre')->findOrFail($id);
+        $grupos_destino = Grupo::with('carrera')->where('pk_grupo', '!=', $id)->get();
+
+        return view('coordinacion.asignar-grupo', compact('grupo_origen', 'grupos_destino'));
+    }
+
+    public function asignarGrupo(Request $request){
+        try {
+            $validated = $request->validate([
+                'grupo_origen' => 'required|integer|exists:grupo,pk_grupo',
+                'grupo_destino' => 'required|integer|exists:grupo,pk_grupo',
+            ]);
+
+            DB::beginTransaction();
+
+            $alumnos = DB::table('grupo_alumno')
+                ->where('fk_grupo', $validated['grupo_origen'])
+                ->whereNull('deleted_at')
+                ->pluck('fk_alumno');
+
+            foreach ($alumnos as $alumno) {
+                DB::table('grupo_alumno')
+                    ->where('fk_alumno', $alumno)
+                    ->where('fk_grupo', $validated['grupo_origen'])
+                    ->update(['deleted_at' => now(), 'updated_at' => now()]);
+
+                DB::table('grupo_alumno')->insert([
+                    'fk_alumno' => $alumno,
+                    'fk_grupo' => $validated['grupo_destino'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            DB::table('grupo')
+                ->where('pk_grupo', $validated['grupo_origen'])
+                ->update(['deleted_at' => now(), 'updated_at' => now()]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('coordinacion.lista-grupos')
+                ->with('success', 'Los alumnos fueron reasignados correctamente y el grupo anterior fue desactivado.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Ocurrió un error al reasignar el grupo: ' . $e->getMessage());
+        }
+    }
+
 
 }

@@ -141,6 +141,8 @@ Route::prefix('coordinacion')
     Route::post('/guardar-grupo', [GrupoController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
     Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
     Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
+    Route::get('/asignar-grupo/{id}', [GrupoController::class, 'cargarAlumnos'])->name('coordinacion.asignar-grupo');
+    Route::post('/asignando/grupo', [GrupoController::class, 'asignarGrupo'])->name('coordinacion.guardar-asignacion-grupo');
 
     // RUTAS DE COORDINADOR
     Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
