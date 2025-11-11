@@ -115,6 +115,8 @@ Route::prefix('coordinacion')
     Route::delete('/alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno'])->name('alumno.eliminar');
     Route::post('/alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno'])->name('alumno.restaurar');
     Route::get('/detalle-alumno/{id}', [AlumnoController::class, 'cargarAlumno'])->name('coordinacion.alumno-detalle');
+    Route::get('/editar-alumno/{id}', [AlumnoController::class, 'loadAlumno'])->name('coordinacion.alumno-editar');
+    Route::put('/editando/alumno', [AlumnoController::class, 'editarAlumno'])->name('coordinacion.actualizar-alumno');
 
     // RUTAS DE DOCENTES
     Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docentes');

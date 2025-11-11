@@ -418,7 +418,7 @@ class AlumnoController extends Controller
         ]);
     }
 
-        public function cargarAlumno($id){
+    public function cargarAlumno($id){
         $usuario = User::findOrFail($id);
 
         $alumno = Alumno::where('fk_usuario', $id)->firstOrFail();
@@ -441,6 +441,51 @@ class AlumnoController extends Controller
             'promedio' => $promedio ?? 'N/A',
             'grupos' => $grupos
         ]);
+    }
+
+    public function loadAlumno($id){
+        $usuario = User::findOrFail($id);
+
+        return view('coordinacion.editar-alumno', compact('usuario'));
+    }
+
+    public function editarAlumno(Request $request){
+         try {
+            $validated = $request->validate([
+                'nombres' => 'required|string|max:100',
+                'ap_paterno' => 'required|string|max:100',
+                'ap_materno' => 'nullable|string|max:100',
+            ],[
+                'nombres.required' => 'El nombre es obligatorio.',
+                'ap_paterno.required' => 'El apellido paterno es obligatorio',
+            ]);
+
+            $usuario = User::findOrFail($request->pk_usuario);
+
+            DB::beginTransaction();
+
+            $usuario->nombres = $validated['nombres'];
+            $usuario->ap_paterno = $validated['ap_paterno'];
+            $usuario->ap_materno = $validated['ap_materno'];
+            $usuario->save();
+
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Alumno actualizado correctamente.',
+                'ruta' => route('coordinacion.lista-alumnos'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar al alumno.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
     }
 
 }

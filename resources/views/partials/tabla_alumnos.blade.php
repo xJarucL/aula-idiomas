@@ -90,7 +90,7 @@
                                 @else
                                     <a href="{{route('coordinacion.alumno-detalle', $alumno->usuario->pk_usuario)}}" class="text-cyan-600 hover:text-cyan-800"
                                         title="Detalles">Detalles</a>
-                                    <a href="#" class="text-green-600 hover:text-green-800"
+                                    <a href="{{route('coordinacion.alumno-editar', $alumno->usuario->pk_usuario)}}" class="text-green-600 hover:text-green-800"
                                         title="Editar">Editar</a>
 
                                     <form action="{{ route('alumno.eliminar', $alumno->pk_alumno) }}" method="POST">
