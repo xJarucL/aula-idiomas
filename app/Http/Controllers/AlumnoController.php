@@ -418,5 +418,29 @@ class AlumnoController extends Controller
         ]);
     }
 
+        public function cargarAlumno($id){
+        $usuario = User::findOrFail($id);
+
+        $alumno = Alumno::where('fk_usuario', $id)->firstOrFail();
+
+        $grupos = Grupo::with('carrera')
+            ->whereHas('alumnos', function($q) use ($alumno) {
+                $q->where('fk_alumno', $alumno->pk_alumno);
+            })
+            ->get();
+
+
+        $carrera = $grupos->last()?->carrera;
+
+        $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
+
+        return view('coordinacion.detalle-alumno', [
+            'usuario' => $usuario,
+            'alumno' => $alumno,
+            'carrera' => $carrera?->nombre ?? 'Sin carrera',
+            'promedio' => $promedio ?? 'N/A',
+            'grupos' => $grupos
+        ]);
+    }
 
 }
