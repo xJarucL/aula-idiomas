@@ -33,12 +33,7 @@ Route::prefix('alumno')
 
     Route::get('/inicio', [AlumnoController::class, 'cargarPanel'])->name('alumno.inicio');
 
-    Route::get('/lista-actividades', function () {
-        return view('alumno.lista-actividades');
-    })->name('alumno.lista-actividades');
-
-    Route::get('/lista-actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
-
+    Route::get('/actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
 
     Route::get('/progreso', function () {
         return view('alumno.progreso');

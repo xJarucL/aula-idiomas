@@ -699,6 +699,4 @@ class AlumnoController extends Controller
         ));
     }
 
-
-
 }
