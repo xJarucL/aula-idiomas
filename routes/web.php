@@ -126,6 +126,9 @@ Route::prefix('coordinacion')
     Route::delete('/docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente'])->name('docente.eliminar');
     Route::post('/docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente'])->name('docente.restaurar');
     Route::get('/detalle-docente/{id}', [DocenteController::class, 'detalleDocente'])->name('docente.detalle');
+    Route::get('/editar-docente/{id}', [DocenteController::class, 'cargarDocente'])->name('docente.cargar');
+    Route::put('/editando/docente', [DocenteController::class, 'actualizarCorreo'])->name('docente.actualizar-correo');
+
 
     Route::post('usuarios/cambiar-tipo', [UserController::class, 'cambiarTipo'])->name('usuarios.cambiarTipo');
 
