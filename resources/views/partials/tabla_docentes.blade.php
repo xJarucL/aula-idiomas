@@ -63,7 +63,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <a href="#" class="text-cyan-600 hover:text-cyan-800"
+                                    <a href="{{route('docente.detalle', $docente->pk_usuario)}}" class="text-cyan-600 hover:text-cyan-800"
                                         title="Detalles">Detalles</a>
                                     <a href="#" class="text-green-600 hover:text-green-800"
                                         title="Editar">Editar</a>

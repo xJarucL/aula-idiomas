@@ -125,6 +125,7 @@ Route::prefix('coordinacion')
     Route::post('/guardar-docente', [DocenteController::class, 'store'])->name('coordinacion.guardar-docente');
     Route::delete('/docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente'])->name('docente.eliminar');
     Route::post('/docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente'])->name('docente.restaurar');
+    Route::get('/detalle-docente/{id}', [DocenteController::class, 'detalleDocente'])->name('docente.detalle');
 
     Route::post('usuarios/cambiar-tipo', [UserController::class, 'cambiarTipo'])->name('usuarios.cambiarTipo');
 

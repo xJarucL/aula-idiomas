@@ -194,4 +194,16 @@ class DocenteController extends Controller
             ], 500);
         }
     }
+
+    public function detalleDocente($id){
+        $docente = User::with(['gruposAsignados.grupo.carrera', 'gruposAsignados.materia', 'gruposAsignados.grupo.alumnos'])->findOrFail($id);
+
+        $grupos_asignados = $docente->gruposAsignados->count();
+
+        $estudiantes = 0; // debo arreglar esto
+
+        $actividades = $docente->actividades->count() ?? 0;
+
+        return view('coordinacion.detalle-docente', compact('docente', 'grupos_asignados', 'estudiantes', 'actividades'));
+    }
 }
