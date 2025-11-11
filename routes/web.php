@@ -163,6 +163,8 @@ Route::prefix('coordinacion')
     })->name('coordinador.editar');
     Route::put('/editando/perfil', [CoordinadorController::class, 'actualizarPerfil'])->name('coordinador.actualizar-perfil');
     Route::get('/detalle-coordinador/{id}', [CoordinadorController::class, 'detalleCoordinador'])->name('coordinador.detalle');
+    Route::get('/editar-coordinador/{id}', [CoordinadorController::class, 'cargarCoordinador'])->name('coordinador.cargar');
+    Route::put('/editando/coordiandor', [CoordinadorController::class, 'actualizarCorreo'])->name('coordinador.actualizar-correo');
 
 });
 

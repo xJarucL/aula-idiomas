@@ -59,7 +59,7 @@
                                 </form>
                             @else
                                 <a href="{{route('coordinador.detalle', $coordinador->pk_usuario)}}" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a>
-                                <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
+                                <a href="{{route('coordinador.cargar', $coordinador->pk_usuario)}}" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
 
                                 <form action="{{ route('coordinador.eliminar', $coordinador->pk_usuario) }}" method="POST">
                                     @csrf
