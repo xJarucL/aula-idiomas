@@ -8,6 +8,7 @@ use App\Models\Alumno;
 use App\Models\Carrera;
 use App\Models\Tipo_usuario;
 use App\Models\GrupoAlumno;
+use App\Models\GrupoMateria;
 use App\Models\Grupo;
 use App\Models\Calificaciones;
 use App\Models\RespuestasAlumno;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 
 class AlumnoController extends Controller
 {
@@ -487,5 +488,136 @@ class AlumnoController extends Controller
             ], 500);
         }
     }
+
+    public function cargarPanel(){
+        $usuario = Auth::user();
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $promedio = round(Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion') ?? 0, 1);
+
+        $grupoActivo = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+
+        if (!$grupoActivo) {
+            return view('alumno.inicio', [
+                'pendientes' => collect(),
+                'entregadas' => collect(),
+                'noEntregadas' => collect(),
+                'count_pendientes' => 0,
+                'count_entregadas' => 0,
+                'count_no_entregadas' => 0,
+                'promedio' => $promedio,
+                'porcentaje_general' => 0,
+                'porcentaje_entregadas' => 0,
+                'porcentaje_pendientes' => 0,
+                'porcentaje_no_entregadas' => 0,
+                'materia' => null,
+            ]);
+        }
+
+        $grupo = Grupo::with('grupoMaterias.materia')
+            ->where('pk_grupo', $grupoActivo->fk_grupo)
+            ->first();
+
+        $materia = optional($grupo->grupoMaterias->first()->materia)->nombre ?? 'Sin materia asignada';
+
+        $ahora = now();
+
+        $pendientes = [];
+        $entregadas = [];
+        $noEntregadas = [];
+
+        $actividades = DB::table('actividad_grupo')
+            ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
+            ->where('actividad_grupo.fk_grupo', $grupoActivo->fk_grupo)
+            ->select(
+                'actividades.pk_actividad',
+                'actividades.nom_actividad',
+                'actividades.descripcion',
+                'actividades.tipo',
+                'actividad_grupo.pk_asignacion',
+                'actividad_grupo.fecha_inicio',
+                'actividad_grupo.fecha_fin',
+                'actividad_grupo.fk_grupo'
+            )
+            ->get();
+
+        foreach ($actividades as $act) {
+            $entregada = DB::table('respuestas_alumno')
+                ->where('fk_actividad', $act->pk_actividad)
+                ->where('fk_alumno', $alumno->pk_alumno)
+                ->exists();
+
+            $fechaFin = Carbon::parse($act->fecha_fin);
+
+            $actividadData = [
+                'pk_actividad' => $act->pk_actividad,
+                'nom_actividad' => $act->nom_actividad,
+                'descripcion' => $act->descripcion,
+                'tipo' => $act->tipo,
+                'fecha_inicio' => $act->fecha_inicio,
+                'fecha_fin' => $act->fecha_fin,
+                'fk_grupo' => $act->fk_grupo,
+                'pk_asignacion' => $act->pk_asignacion,
+            ];
+
+            if ($entregada) {
+                $entregadas[] = $actividadData;
+            } elseif ($ahora->lessThan($fechaFin)) {
+                $pendientes[] = $actividadData;
+            } else {
+                $noEntregadas[] = $actividadData;
+            }
+        }
+
+        $pendientes = collect($pendientes);
+        $entregadas = collect($entregadas);
+        $noEntregadas = collect($noEntregadas);
+
+        $count_pendientes = $pendientes->count();
+        $count_entregadas = $entregadas->count();
+        $count_no_entregadas = $noEntregadas->count();
+
+        $total_actividades = $count_pendientes + $count_entregadas + $count_no_entregadas;
+
+        if ($total_actividades > 0) {
+            $porcentaje_general = round(($count_entregadas / $total_actividades) * 100, 1);
+            $porcentaje_entregadas = round(($count_entregadas / $total_actividades) * 100, 1);
+            $porcentaje_pendientes = round(($count_pendientes / $total_actividades) * 100, 1);
+            $porcentaje_no_entregadas = round(($count_no_entregadas / $total_actividades) * 100, 1);
+        } else {
+            $porcentaje_general = $porcentaje_entregadas = $porcentaje_pendientes = $porcentaje_no_entregadas = 0;
+        }
+
+        return view('alumno.inicio', compact(
+            'pendientes',
+            'entregadas',
+            'noEntregadas',
+            'count_pendientes',
+            'count_entregadas',
+            'count_no_entregadas',
+            'promedio',
+            'porcentaje_general',
+            'porcentaje_entregadas',
+            'porcentaje_pendientes',
+            'porcentaje_no_entregadas',
+            'materia'
+        ));
+    }
+
 
 }

@@ -31,9 +31,7 @@ Route::prefix('alumno')
     ->middleware(['auth', RolMiddleware::class . ':1'])
     ->group(function(){
 
-    Route::get('/inicio', function () {
-        return view('alumno.inicio');
-    })->name('alumno.inicio');
+    Route::get('/inicio', [AlumnoController::class, 'cargarPanel'])->name('alumno.inicio');
 
     Route::get('/lista-actividades', function () {
         return view('alumno.lista-actividades');
@@ -43,7 +41,7 @@ Route::prefix('alumno')
         return view('alumno.progreso');
     })->name('alumno.progreso');
 
-    Route::get('/detalles-actividad', function () {
+    Route::get('/detalles-actividad/{id}', function () {
         return view('alumno.detalle-actividad');
     })->name('alumno.detalle-actividad');
 
