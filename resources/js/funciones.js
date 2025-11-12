@@ -61,3 +61,53 @@ $(document).ready(function () {
         });
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selects = document.querySelectorAll('.select-tipo-usuario');
+
+    selects.forEach(select => {
+        select.addEventListener('change', async (e) => {
+            const id = e.target.getAttribute('data-id');
+            const tipo = e.target.value;
+
+            try {
+                const response = await fetch('/coordinacion/usuarios/cambiar-tipo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ id, tipo })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Actualizado',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al actualizar el tipo de usuario.'
+                });
+            }
+        });
+    });
+});

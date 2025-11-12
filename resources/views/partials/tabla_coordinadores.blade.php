@@ -35,10 +35,12 @@
                         {{ $coordinador->email }}
                     </td>
                     <td class="py-2 px-2 md:px-4 border-b border-gray-200">
-                        <select name="filtro" id="filtro" class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base">
-                            <option value="" >Coordinador</option>
-                            <option value="">Docente</option>
-                        </select>
+                        <select name="tipo_usuario"
+                            class="select-tipo-usuario bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition w-full shadow text-sm md:text-base"
+                            data-id="{{ $coordinador->pk_usuario }}">
+                        <option value="2" {{ $coordinador->fk_tipo_usuario == 2 ? 'selected' : '' }}>Docente</option>
+                        <option value="3" {{ $coordinador->fk_tipo_usuario == 3 ? 'selected' : '' }}>Coordinador</option>
+                    </select>
                     </td>
                     <td class="py-2 px-2 md:px-4 border-b border-gray-100">
                         <div class="flex items-center justify-center gap-2">
@@ -56,8 +58,8 @@
                                     </button>
                                 </form>
                             @else
-                                <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a>
-                                <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
+                                <a href="{{route('coordinador.detalle', $coordinador->pk_usuario)}}" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a>
+                                <a href="{{route('coordinador.cargar', $coordinador->pk_usuario)}}" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
 
                                 <form action="{{ route('coordinador.eliminar', $coordinador->pk_usuario) }}" method="POST">
                                     @csrf

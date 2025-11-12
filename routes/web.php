@@ -31,22 +31,20 @@ Route::prefix('alumno')
     ->middleware(['auth', RolMiddleware::class . ':1'])
     ->group(function(){
 
-    Route::get('/inicio', function () {
-        return view('alumno.inicio');
-    })->name('alumno.inicio');
-
-    Route::get('/lista-actividades', function () {
-        return view('alumno.lista-actividades');
-    })->name('alumno.lista-actividades');
+    Route::get('/inicio', [AlumnoController::class, 'cargarPanel'])->name('alumno.inicio');
 
     Route::get('/progreso', function () {
         return view('alumno.progreso');
     })->name('alumno.progreso');
 
-    Route::get('/detalles-actividad', function () {
-        return view('alumno.detalle-actividad');
-    })->name('alumno.detalle-actividad');
-    
+    // RUTAS DE ACTIVIDADES
+    Route::get('/actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
+    Route::get('/detalles-actividad/{id}', [ActividadController::class, 'detalleActividadAlumno'])->name('alumno.detalle-actividad');
+    Route::get('/responder-actividad/{id}', [ActividadController::class, 'responderActividad'])->name('alumno.responder-actividad');
+    Route::post('/responder/{id}', [ActividadController::class, 'guardarRespuestas'])->name('alumno.guardar-respuesta');
+    Route::post('/responder/pdf/{id}', [ActividadController::class, 'guardarRespuestaPdf'])->name('alumno.subir-respuesta-pdf');
+    Route::post('/responder/auditiva/{id}', [ActividadController::class, 'guardarRespuestaAuditiva'])->name('alumno.guardar-respuesta-auditiva');
+
     // RUTAS DE PERFIL
     Route::get('/perfil', [AlumnoController::class, 'perfilAlumno'])->name('alumno.perfil');
     Route::get('/editar-perfil', function () {
@@ -83,7 +81,7 @@ Route::prefix('docente')
     Route::get('/crear-actividad', function (){
         return view('docente.crear-actividad');
     })->name('docente.crear-actividad');
-    Route::post('actividad/guardar', [ActividadController::class, 'guardarActividadPreguntas'])->name('actividad.guardar');
+    Route::post('actividad/guardar', [ActividadController::class, 'guardar'])->name('actividad.guardar');
     Route::get('lista-actividades', [ActividadController::class, 'listaActividadesDocente'])->name('docente.lista-actividades');
     Route::get('lista-actividades-deshabilitadas', [ActividadController::class, 'listaActividadesDocenteDeshabilitadas'])->name('docente.lista-actividades-deshabilitadas');
     Route::delete('actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');
@@ -114,6 +112,9 @@ Route::prefix('coordinacion')
     Route::get('/lista-alumnos/deshabilitados', [AlumnoController::class, 'listaAlumnosDeshabilitados'])->name('coordinacion.lista-alumnos-deshabilitados');
     Route::delete('/alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno'])->name('alumno.eliminar');
     Route::post('/alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno'])->name('alumno.restaurar');
+    Route::get('/detalle-alumno/{id}', [AlumnoController::class, 'cargarAlumno'])->name('coordinacion.alumno-detalle');
+    Route::get('/editar-alumno/{id}', [AlumnoController::class, 'loadAlumno'])->name('coordinacion.alumno-editar');
+    Route::put('/editando/alumno', [AlumnoController::class, 'editarAlumno'])->name('coordinacion.actualizar-alumno');
 
     // RUTAS DE DOCENTES
     Route::get('/lista-docente', [DocenteController::class, 'listaDocentes'])->name('coordinacion.lista-docentes');
@@ -124,18 +125,22 @@ Route::prefix('coordinacion')
     Route::post('/guardar-docente', [DocenteController::class, 'store'])->name('coordinacion.guardar-docente');
     Route::delete('/docente/eliminar/{id}', [DocenteController::class, 'eliminarDocente'])->name('docente.eliminar');
     Route::post('/docente/restaurar/{id}', [DocenteController::class, 'restaurarDocente'])->name('docente.restaurar');
+    Route::get('/detalle-docente/{id}', [DocenteController::class, 'detalleDocente'])->name('docente.detalle');
+    Route::get('/editar-docente/{id}', [DocenteController::class, 'cargarDocente'])->name('docente.cargar');
+    Route::put('/editando/docente', [DocenteController::class, 'actualizarCorreo'])->name('docente.actualizar-correo');
+
+
+    Route::post('usuarios/cambiar-tipo', [UserController::class, 'cambiarTipo'])->name('usuarios.cambiarTipo');
 
     // RUTAS DE GRUPOS
     Route::get('/lista-grupos', [GrupoController::class, 'listaGrupos'])->name('coordinacion.lista-grupos');
     Route::get('/lista-grupos/deshabilitados', [GrupoController::class, 'listaGruposDeshabilitados'])->name('coordinacion.lista-grupos-deshabilitados');
-    Route::get('/registro-grupo', function () {
-        $carreras = Carrera::all();
-        $cuatrimestres = Cuatrimestre::all();
-        return view('coordinacion.registro-grupo', compact('carreras', 'cuatrimestres'));
-    })->name('coordinacion.registro-grupo');
+    Route::get('/registro-grupo', [GrupoController::class, 'cargarRegistroGrupo'])->name('coordinacion.registro-grupo');
     Route::post('/guardar-grupo', [GrupoController::class, 'guardarGrupo'])->name('coordinacion.guardar-grupo');
     Route::delete('/grupo/eliminar/{id}', [GrupoController::class, 'eliminarGrupo'])->name('grupo.eliminar');
     Route::post('/grupo/restaurar/{id}', [GrupoController::class, 'restaurarGrupo'])->name('grupo.restaurar');
+    Route::get('/asignar-grupo/{id}', [GrupoController::class, 'cargarAlumnos'])->name('coordinacion.asignar-grupo');
+    Route::post('/asignando/grupo', [GrupoController::class, 'asignarGrupo'])->name('coordinacion.guardar-asignacion-grupo');
 
     // RUTAS DE COORDINADOR
     Route::get('/lista-coordinador', [CoordinadorController::class, 'listaCoordinadores'])->name('coordinacion.lista-coordinador');
@@ -153,6 +158,9 @@ Route::prefix('coordinacion')
         return view('coordinacion.editar-perfil');
     })->name('coordinador.editar');
     Route::put('/editando/perfil', [CoordinadorController::class, 'actualizarPerfil'])->name('coordinador.actualizar-perfil');
+    Route::get('/detalle-coordinador/{id}', [CoordinadorController::class, 'detalleCoordinador'])->name('coordinador.detalle');
+    Route::get('/editar-coordinador/{id}', [CoordinadorController::class, 'cargarCoordinador'])->name('coordinador.cargar');
+    Route::put('/editando/coordiandor', [CoordinadorController::class, 'actualizarCorreo'])->name('coordinador.actualizar-correo');
 
 });
 
