@@ -557,10 +557,30 @@ class AlumnoController extends Controller
             ->get();
 
         foreach ($actividades as $act) {
-            $entregada = DB::table('respuestas_alumno')
-                ->where('fk_actividad', $act->pk_actividad)
-                ->where('fk_alumno', $alumno->pk_alumno)
-                ->exists();
+            $entregada = false;
+
+            switch ($act->tipo) {
+                case 'preguntas':
+                    $entregada = DB::table('respuestas_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+
+                case 'pdf':
+                    $entregada = DB::table('entrega_pdf_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+
+                case 'auditiva':
+                    $entregada = DB::table('respuesta_auditiva_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+            }
 
             $fechaFin = Carbon::parse($act->fecha_fin);
 
@@ -661,12 +681,29 @@ class AlumnoController extends Controller
                 ->get();
 
             foreach ($actividades as $act) {
-                $entregada = DB::table('respuestas_alumno')
-                    ->where('fk_actividad', $act->pk_actividad)
-                    ->where('fk_alumno', $alumno->pk_alumno)
-                    ->exists();
-
                 $fechaFin = Carbon::parse($act->fecha_fin);
+                $entregada = false;
+
+                if ($act->tipo === 'preguntas') {
+                    $entregada = DB::table('respuestas_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
+
+                if ($act->tipo === 'pdf') {
+                    $entregada = DB::table('entrega_pdf_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
+
+                if ($act->tipo === 'auditiva') {
+                    $entregada = DB::table('respuesta_auditiva_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
 
                 if ($entregada) {
                     $entregadas[] = $act;
@@ -698,5 +735,6 @@ class AlumnoController extends Controller
             'filtro'
         ));
     }
+
 
 }
