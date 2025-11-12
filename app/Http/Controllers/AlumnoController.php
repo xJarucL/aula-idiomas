@@ -241,22 +241,30 @@ class AlumnoController extends Controller
 
         $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
 
-        $grupoAlumno = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+        $historialGrupos = GrupoAlumno::withTrashed()
+            ->with(['grupo' => function ($q) {
+                $q->withTrashed()
+                ->with(['carrera' => function ($c) {
+                    $c->withTrashed();
+                }]);
+            }])
+            ->where('fk_alumno', $alumno->pk_alumno)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $carrera = null;
-        if($grupoAlumno) {
-            $grupo = Grupo::find($grupoAlumno->fk_grupo);
-            if($grupo) {
-                $carrera = $grupo->carrera;
-            }
-        }
+        $grupoActual = $historialGrupos->first();
+
+        $carrera = $grupoActual && $grupoActual->grupo && $grupoActual->grupo->carrera
+            ? $grupoActual->grupo->carrera->nombre
+            : 'Sin carrera';
 
         $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
 
         return view('alumno.perfil', [
             'usuario' => $usuario,
-            'carrera' => $carrera ? $carrera->nombre : 'Sin carrera',
-            'promedio' => $promedio ?? 'N/A'
+            'carrera' => $carrera,
+            'promedio' => $promedio ?? 'N/A',
+            'historialGrupos' => $historialGrupos
         ]);
     }
 
