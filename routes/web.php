@@ -33,15 +33,17 @@ Route::prefix('alumno')
 
     Route::get('/inicio', [AlumnoController::class, 'cargarPanel'])->name('alumno.inicio');
 
-    Route::get('/actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
-
     Route::get('/progreso', function () {
         return view('alumno.progreso');
     })->name('alumno.progreso');
 
-    Route::get('/detalles-actividad/{id}', function () {
-        return view('alumno.detalle-actividad');
-    })->name('alumno.detalle-actividad');
+    // RUTAS DE ACTIVIDADES
+    Route::get('/actividades', [AlumnoController::class, 'misActividades'])->name('alumno.lista-actividades');
+    Route::get('/detalles-actividad/{id}', [ActividadController::class, 'detalleActividadAlumno'])->name('alumno.detalle-actividad');
+    Route::get('/responder-actividad/{id}', [ActividadController::class, 'responderActividad'])->name('alumno.responder-actividad');
+    Route::post('/responder/{id}', [ActividadController::class, 'guardarRespuestas'])->name('alumno.guardar-respuesta');
+    Route::post('/responder/pdf/{id}', [ActividadController::class, 'guardarRespuestaPdf'])->name('alumno.subir-respuesta-pdf');
+    Route::post('/responder/auditiva/{id}', [ActividadController::class, 'guardarRespuestaAuditiva'])->name('alumno.guardar-respuesta-auditiva');
 
     // RUTAS DE PERFIL
     Route::get('/perfil', [AlumnoController::class, 'perfilAlumno'])->name('alumno.perfil');

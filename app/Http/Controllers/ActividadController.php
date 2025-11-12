@@ -12,6 +12,8 @@ use App\Models\Grupo;
 use App\Models\OpcionesPregunta;
 use App\Models\RespuestasAlumno;
 use App\Models\ActividadGrupo;
+use App\Models\EntregaPDFAlumno;
+use App\Models\RespuestaAuditivaAlumno;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -310,4 +312,134 @@ class ActividadController extends Controller{
             'ruta' => route('docente.lista-actividades')
         ]);
     }
+
+    public function detalleActividadAlumno($id){
+        return view('alumno.detalle-actividad');
+    }
+
+    public function responderActividad($id){
+        $alumno = Auth::user();
+
+        $actividad = Actividades::findOrFail($id);
+
+        $tipo = $actividad->tipo;
+
+        $preguntas = [];
+        $pdf = null;
+        $auditiva = null;
+
+        if ($tipo === 'preguntas') {
+            $preguntas = Preguntas::with('opciones')->where('fk_actividad', $id)->get();
+        } elseif ($tipo === 'pdf') {
+            $pdf = ActividadPdf::where('fk_actividad', $id)->first();
+        } elseif ($tipo === 'auditiva') {
+            $auditiva = ActividadAuditivaFrases::where('fk_actividad', $id)->first();
+        }
+
+        return view('alumno.responder-actividad', compact('actividad', 'tipo', 'preguntas', 'pdf', 'auditiva'));
+    }
+
+    public function guardarRespuestas(Request $request, $id){
+        $usuario = Auth::user();
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+        $actividad = Actividades::findOrFail($id);
+        $preguntas = Preguntas::with('opciones')->where('fk_actividad', $id)->get();
+
+        foreach ($preguntas as $pregunta) {
+            if ($pregunta->tipo === 'opcion_multiple') {
+                $campo = 'respuestas_' . $pregunta->pk_pregunta;
+
+                if ($request->has($campo)) {
+                    $textoSeleccionado = $request->$campo;
+
+                    $opcion = OpcionesPregunta::where('fk_pregunta', $pregunta->pk_pregunta)
+                        ->where('texto_opcion', $textoSeleccionado)
+                        ->first();
+
+                    $esCorrecta = $opcion && $opcion->es_correcta ? 1 : 0;
+
+                    DB::table('respuestas_alumno')->insert([
+                        'fk_pregunta' => $pregunta->pk_pregunta,
+                        'fk_alumno' => $alumno->pk_alumno,
+                        'fk_actividad' => $actividad->pk_actividad,
+                        'respuesta' => $textoSeleccionado,
+                        'es_correcta' => $esCorrecta,
+                        'calificada' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+
+            } else {
+                $respuestas = $request->input('respuestas');
+
+                if (!empty($respuestas[$pregunta->pk_pregunta])) {
+                    DB::table('respuestas_alumno')->insert([
+                        'fk_pregunta' => $pregunta->pk_pregunta,
+                        'fk_alumno' => $alumno->pk_alumno,
+                        'fk_actividad' => $actividad->pk_actividad,
+                        'respuesta' => $respuestas[$pregunta->pk_pregunta],
+                        'es_correcta' => 0,
+                        'calificada' => 0,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
+        return redirect()
+            ->route('alumno.lista-actividades')
+            ->with('success', 'Tus respuestas fueron enviadas correctamente.');
+    }
+
+
+    public function guardarRespuestaPdf(Request $request, $id){
+        $request->validate([
+            'archivo_alumno' => 'required|mimes:pdf|max:10240',
+        ]);
+
+        $usuario = Auth::user();
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+        $actividad = Actividades::findOrFail($id);
+
+        $ruta = $request->file('archivo_alumno')->store('respuestas/pdf', 'public');
+
+        EntregaPDFAlumno::create([
+            'fk_actividad' => $actividad->pk_actividad,
+            'fk_alumno' => $alumno->pk_alumno,
+            'archivo_alumno' => $ruta,
+            'calificacion' => null,
+            'observaciones' => null,
+        ]);
+
+         return redirect()
+            ->route('alumno.lista-actividades')
+            ->with('success', 'Tus respuestas fueron enviadas correctamente.');
+    }
+
+    public function guardarRespuestaAuditiva(Request $request, $id){
+        $request->validate([
+            'archivo_respuesta' => 'required|mimes:mp3,wav,m4a|max:10240',
+        ]);
+
+        $usuario = Auth::user();
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+        $actividad = Actividades::findOrFail($id);
+
+        $ruta = $request->file('archivo_respuesta')->store('respuestas/auditivas', 'public');
+
+        RespuestaAuditivaAlumno::create([
+            'fk_actividad' => $actividad->pk_actividad,
+            'fk_alumno' => $alumno->pk_alumno,
+            'archivo_audio_alumno' => $ruta,
+            'calificacion' => null,
+            'observaciones' => null,
+        ]);
+
+        return redirect()
+            ->route('alumno.lista-actividades')
+            ->with('success', 'Tus respuestas fueron enviadas correctamente.');
+    }
+
 }

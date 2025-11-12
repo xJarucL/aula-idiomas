@@ -9,6 +9,7 @@
 </section>
 
 <section class="mt-5">
+    <x-msj-alert />
     <div class="flex flex-row justify-between gap-3 bg-white p-4 rounded-lg shadow-lg">
         <div class="w-3/4 sm:w-5/6 relative">
             <input id="buscador"
@@ -48,6 +49,17 @@
 
         <div class="mt-4 overflow-auto">
             @forelse ($actividadesFiltradas as $actividad)
+
+                @php
+                    if ($filtro === 'pendientes') {
+                        $accion = route('alumno.responder-actividad', $actividad->pk_actividad);
+                    } elseif ($filtro === 'entregadas') {
+                        $accion = route('alumno.detalle-actividad', $actividad->pk_actividad);
+                    } else {
+                        $accion = 'javascript:void(0)';
+                    }
+                @endphp
+
                 <x-card-actividad
                     iconoA="book"
                     color1="blue"
@@ -56,7 +68,8 @@
                     fecha="{{ \Carbon\Carbon::parse($actividad->fecha_fin)->format('d/m/Y') }}"
                     iconoEntregable="{{ $filtro == 'entregadas' ? 'check' : ($filtro == 'no_entregadas' ? 'close' : 'pending') }}"
                     color2="{{ $filtro == 'entregadas' ? 'green' : ($filtro == 'no_entregadas' ? 'red' : 'orange') }}"
-                    link="{{ route('alumno.detalle-actividad', $actividad->pk_actividad) }}"
+                    link="{{$accion}}"
+                    data-filtro="{{ $filtro }}"
                 />
             @empty
                 <p class="text-center text-gray-500 mt-4">No hay actividades para mostrar.</p>
@@ -64,6 +77,25 @@
         </div>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('[data-card-actividad]').forEach(card => {
+    card.addEventListener('click', (e) => {
+        const filtro = card.getAttribute('data-filtro');
+        if (filtro === 'no_entregadas') {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Actividad no entregada',
+                text: 'Esta actividad no se realizó en los tiempos establecidos.',
+                confirmButtonColor: '#0d9488'
+            });
+        }
+    });
+});
+</script>
+
 @endsection
 
 @section('scripts')
