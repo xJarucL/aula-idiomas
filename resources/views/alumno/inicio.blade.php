@@ -91,7 +91,7 @@
                 <div class="max-h-79 sm:max-h-80 overflow-y-auto pr-1">
                     @foreach($pendientes as $actividad)
                         <x-card-actividad iconoA="question" color1="blue" nombreActividad="{{ $actividad['nom_actividad'] }}"
-                            tipo="{{ $actividad['tipo'] }}" fecha="{{ $actividad['fecha_inicio'] }}" iconoEntregable="pending" color2="orange" link="{{ route('alumno.detalle-actividad', $actividad['pk_actividad']) }}"
+                            tipo="{{ $actividad['tipo'] }}" fecha="{{ $actividad['fecha_fin'] }}" iconoEntregable="pending" color2="orange" link="{{ route('alumno.detalle-actividad', $actividad['pk_actividad']) }}"
                         />
                     @endforeach
                 </div>
