@@ -1,4 +1,14 @@
-@props(['nombreActividad', 'tipo', 'fecha', 'iconoA', 'iconoEntregable', 'color1', 'color2', 'link'])
+@props([
+    'nombreActividad',
+    'tipo',
+    'fecha',
+    'iconoA',
+    'iconoEntregable',
+    'color1',
+    'color2',
+    'link',
+    'dataFiltro' => null
+])
 
 @php
     $nombreActividad = $nombreActividad ?? 'Sin título de actividad';
@@ -28,40 +38,47 @@
         'check' => 'M5 13l4 4L19 7',
         'close' => 'M6 18L18 6M6 6l12 12'
     ];
+
+    $estadoClass = match($dataFiltro) {
+        'entregadas' => 'hover:border-green-400 hover:shadow-green-100',
+        'pendientes' => 'hover:border-orange-400 hover:shadow-orange-100',
+        'no_entregadas' => 'opacity-80 hover:opacity-100 hover:border-red-400 hover:shadow-red-100',
+        default => ''
+    };
 @endphp
 
-<div data-card-actividad class="p-4 mb-3 border border-gray-200 rounded-lg shadow-sm bg-white">
-    <div class="flex justify-between items-center">
-        <div class="flex flex-row w-full gap-3">
-            <div class="flex justify-center items-center">
-                <div class="flex justify-center items-center w-10 h-10 {{ $colorClass[$color1] ?? $colorClass['colorUT'] }} rounded-lg">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="{{ $icono[$iconoA] ?? $icono['book'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
+<div data-card-actividad data-filtro="{{ $dataFiltro }}"
+     class="p-5 mb-4 border border-gray-200 rounded-2xl shadow-sm bg-white transition transform hover:-translate-y-1 hover:shadow-lg {{ $estadoClass }}">
+
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-4 w-full">
+            <div class="flex justify-center items-center w-12 h-12 {{ $colorClass[$color1] ?? $colorClass['colorUT'] }} rounded-xl shadow-sm">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="{{ $icono[$iconoA] ?? $icono['book'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
 
-            <div class="flex flex-col justify-center">
+            <div class="flex flex-col">
                 <h3 data-nombre-actividad class="text-teal-700 font-bold text-lg">{{ $nombreActividad }}</h3>
-                <p class="text-gray-700 text-sm">
-                    Tipo: <span data-tipo-actividad class="text-teal-700">{{ $tipo }}</span>
+                <p class="text-gray-600 text-sm">
+                    Tipo: <span data-tipo-actividad class="text-teal-700 font-medium">{{ ucfirst($tipo) }}</span>
                 </p>
-                <p class="text-gray-700 text-sm">
-                    Fecha de entrega: <span class="text-teal-700">{{ $fecha }}</span>
+                <p class="text-gray-500 text-xs">
+                    Fecha de entrega: <span class="text-teal-600">{{ $fecha }}</span>
                 </p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <div class="flex justify-center items-center {{ $colorClass[$color2] ?? $colorClass['red'] }} w-10 h-10 rounded-full">
+            <div class="flex justify-center items-center {{ $colorClass[$color2] ?? $colorClass['red'] }} w-10 h-10 rounded-full shadow-sm">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="{{ $icono[$iconoEntregable] ?? $icono['document'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
 
             <a href="{{ $link }}"
-               class="bg-teal-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-teal-800 transition">
-               Detalles
+               class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-teal-700 transition-all shadow-md hover:shadow-lg">
+               Ver Detalles
             </a>
         </div>
     </div>

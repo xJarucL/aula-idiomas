@@ -314,7 +314,75 @@ class ActividadController extends Controller{
     }
 
     public function detalleActividadAlumno($id){
-        return view('alumno.detalle-actividad');
+        $usuario = Auth::user();
+
+        if (!$usuario) {
+            return redirect()->route('login')->with('error', 'Usuario no autenticado.');
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return redirect()->back()->with('error', 'No se encontró el registro del alumno.');
+        }
+
+        $actividad = DB::table('actividades')->where('pk_actividad', $id)->first();
+
+        if (!$actividad) {
+            return redirect()->back()->with('error', 'Actividad no encontrada.');
+        }
+
+        $preguntas = collect();
+        $pdfs = collect();
+        $audios = collect();
+
+        switch ($actividad->tipo) {
+            case 'preguntas':
+                $preguntas = DB::table('respuestas_alumno as ra')
+                    ->join('preguntas as p', 'ra.fk_pregunta', '=', 'p.pk_pregunta')
+                    ->select(
+                        'p.pregunta',
+                        'p.tipo as tipo_pregunta',
+                        'ra.respuesta',
+                        'ra.es_correcta',
+                        'ra.calificada'
+                    )
+                    ->where('ra.fk_actividad', $id)
+                    ->where('ra.fk_alumno', $alumno->pk_alumno)
+                    ->get();
+                break;
+
+            case 'pdf':
+                $pdfs = DB::table('entrega_pdf_alumno')
+                    ->where('fk_actividad', $id)
+                    ->where('fk_alumno', $alumno->pk_alumno)
+                    ->select(
+                        'archivo_alumno as ruta_archivo',
+                        DB::raw("SUBSTRING_INDEX(archivo_alumno, '/', -1) as nombre_archivo"),
+                        'calificacion',
+                        'observaciones as retroalimentacion'
+                    )
+                    ->get();
+                break;
+
+            case 'auditiva':
+                $audios = DB::table('respuesta_auditiva_alumno')
+                    ->where('fk_actividad', $id)
+                    ->where('fk_alumno', $alumno->pk_alumno)
+                    ->select(
+                        'archivo_audio_alumno as ruta_archivo',
+                        DB::raw("SUBSTRING_INDEX(archivo_audio_alumno, '/', -1) as nombre_archivo"),
+                        'calificacion',
+                        'observaciones as retroalimentacion'
+                    )
+                    ->get();
+                break;
+
+            default:
+                return redirect()->back()->with('error', 'Tipo de actividad desconocido.');
+        }
+
+        return view('alumno.detalle-actividad', compact('actividad', 'preguntas', 'pdfs', 'audios'));
     }
 
     public function responderActividad($id){

@@ -86,10 +86,24 @@ document.querySelectorAll('[data-card-actividad]').forEach(card => {
         if (filtro === 'no_entregadas') {
             e.preventDefault();
             Swal.fire({
-                icon: 'warning',
-                title: 'Actividad no entregada',
-                text: 'Esta actividad no se realizó en los tiempos establecidos.',
-                confirmButtonColor: '#0d9488'
+                icon: 'error',
+                title: '⚠️ Actividad no entregada',
+                html: `
+                    <p style="font-size:16px; color:#555;">
+                        Esta actividad <strong>no fue entregada</strong> en los tiempos establecidos.<br>
+                        Consulta con tu docente para más información.
+                    </p>
+                `,
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#0d9488',
+                background: '#fff',
+                color: '#333',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
             });
         }
     });
