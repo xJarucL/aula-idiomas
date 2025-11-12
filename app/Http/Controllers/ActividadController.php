@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Actividades;
+use App\Models\ActividadPDF;
+use App\Models\ActividadAuditivaFrases;
 use App\Models\Preguntas;
 use App\Models\Alumno;
 use App\Models\Grupo;
@@ -15,83 +17,86 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class ActividadController extends Controller
-{
-    public function guardarActividadPreguntas(Request $request)
-    {
+class ActividadController extends Controller{
+
+    public function guardar(Request $request){
         $request->validate([
             'nom_actividad' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'tipo_actividad' => 'required|string|in:preguntas,pdf,auditiva',
-            'preguntas' => 'sometimes|array',
-            'preguntas.*.tipo' => 'sometimes|string|in:abierta,opcion_multiple,verdadero_falso',
+            'descripcion'   => 'required|string',
+            'tipo'          => 'required|in:preguntas,pdf,auditiva',
         ]);
 
         DB::beginTransaction();
+
         try {
-            $actividad = Actividades::create([
-                'cod_actividad' => 'ACT-' . Str::upper(Str::random(6)),
-                'nom_actividad' => $request->nom_actividad,
-                'descripcion' => $request->descripcion,
-                'tipo' => $request->tipo_actividad,
-                'fk_docente' => Auth::user()->pk_usuario
-            ]);
+            $codigo = 'ACT-' . date('Ymd') . '-' . strtoupper(Str::random(4));
 
-            if ($request->has('preguntas')) {
+            $actividad = new Actividades();
+            $actividad->cod_actividad = $codigo;
+            $actividad->nom_actividad = $request->nom_actividad;
+            $actividad->descripcion = $request->descripcion;
+            $actividad->tipo = $request->tipo;
+            $actividad->fk_docente = Auth::id();
+            $actividad->save();
+
+            if ($request->tipo === 'preguntas' && $request->has('preguntas')) {
                 foreach ($request->preguntas as $preg) {
-                    $tipo = $preg['tipo'] ?? $this->inferirTipoPregunta($preg);
+                    $pregunta = new Preguntas();
+                    $pregunta->fk_actividad = $actividad->pk_actividad;
+                    $pregunta->pregunta = $preg['pregunta'] ?? '';
+                    $pregunta->descripcion = $preg['descripcion'] ?? '';
+                    $pregunta->tipo = $preg['tipo'] ?? 'abierta';
+                    $pregunta->save();
 
-                    $pregunta = Preguntas::create([
-                        'fk_actividad' => $actividad->pk_actividad,
-                        'pregunta' => $preg['titulo'] ?? 'Pregunta sin título',
-                        'descripcion' => $preg['descripcion'] ?? null,
-                        'tipo' => $tipo,
-                    ]);
-
-                    if ($tipo === 'opcion_multiple') {
-                        $this->guardarOpciones($pregunta, $preg);
+                    if ($pregunta->tipo === 'opcion_multiple' && isset($preg['opciones'])) {
+                        foreach ($preg['opciones'] as $op) {
+                            $opcion = new OpcionesPregunta();
+                            $opcion->fk_pregunta = $pregunta->pk_pregunta;
+                            $opcion->texto_opcion = $op['texto_opcion'] ?? '';
+                            $opcion->es_correcta = isset($op['es_correcta']) ? 1 : 0;
+                            $opcion->save();
+                        }
                     }
                 }
             }
 
+            if ($request->tipo === 'pdf' && $request->hasFile('archivo_docente')) {
+                $file = $request->file('archivo_docente');
+                $nombre = time() . '_' . $file->getClientOriginalName();
+                $ruta = $file->storeAs('actividades/pdf', $nombre, 'public');
+
+                $pdf = new ActividadPdf();
+                $pdf->fk_actividad = $actividad->pk_actividad;
+                $pdf->archivo_docente = $ruta;
+                $pdf->save();
+            }
+
+            if ($request->tipo === 'auditiva') {
+                $auditiva = new ActividadAuditivaFrases();
+                $auditiva->fk_actividad = $actividad->pk_actividad;
+                $auditiva->texto_frase = $request->texto_frase ?? '';
+
+                if ($request->hasFile('archivo_audio_docente')) {
+                    $audio = $request->file('archivo_audio_docente');
+                    $nombreAudio = time() . '_' . $audio->getClientOriginalName();
+                    $rutaAudio = $audio->storeAs('actividades/auditiva', $nombreAudio, 'public');
+                    $auditiva->archivo_audio_docente = $rutaAudio;
+                }
+
+                $auditiva->save();
+            }
+
             DB::commit();
             return response()->json([
-                'success' => true,
-                'message' => 'Actividad registrada correctamente.',
+                'mensaje' => 'Actividad guardada correctamente.',
                 'ruta' => route('docente.lista-actividades'),
-                'actividad' => $actividad
+                'class' => 'success'
             ]);
         } catch (\Throwable $e) {
-            DB::rollBack();
             return response()->json([
-                'success' => false,
-                'message' => 'Error al registrar actividad.',
-                'error' => $e->getMessage()
+                'mensaje' => 'Ocurrió un error al guardar la actividad'. $e->getMessage(),
+                'class' => 'error'
             ], 500);
-        }
-    }
-
-    private function inferirTipoPregunta(array $preg)
-    {
-        if (isset($preg['opcion_a']) && isset($preg['opcion_b'])) {
-            return 'opcion_multiple';
-        } elseif (isset($preg['respuesta_correcta']) && in_array($preg['respuesta_correcta'], ['Verdadero', 'Falso'])) {
-            return 'verdadero_falso';
-        } else {
-            return 'abierta';
-        }
-    }
-
-    private function guardarOpciones($pregunta, array $preg)
-    {
-        foreach (['a', 'b', 'c', 'd'] as $letra) {
-            if (!empty($preg["opcion_{$letra}"])) {
-                OpcionesPregunta::create([
-                    'fk_pregunta' => $pregunta->pk_pregunta,
-                    'texto_opcion' => $preg["opcion_{$letra}"],
-                    'es_correcta' => ($preg['respuesta_correcta'] ?? '') === strtoupper($letra),
-                ]);
-            }
         }
     }
 

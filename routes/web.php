@@ -79,7 +79,7 @@ Route::prefix('docente')
     Route::get('/crear-actividad', function (){
         return view('docente.crear-actividad');
     })->name('docente.crear-actividad');
-    Route::post('actividad/guardar', [ActividadController::class, 'guardarActividadPreguntas'])->name('actividad.guardar');
+    Route::post('actividad/guardar', [ActividadController::class, 'guardar'])->name('actividad.guardar');
     Route::get('lista-actividades', [ActividadController::class, 'listaActividadesDocente'])->name('docente.lista-actividades');
     Route::get('lista-actividades-deshabilitadas', [ActividadController::class, 'listaActividadesDocenteDeshabilitadas'])->name('docente.lista-actividades-deshabilitadas');
     Route::delete('actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');

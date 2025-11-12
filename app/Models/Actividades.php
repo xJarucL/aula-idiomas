@@ -36,11 +36,11 @@ class Actividades extends Model
         return $this->hasMany(Preguntas::class, 'fk_actividad');
     }
 
-    public function actividadPdf(){
+    public function pdf(){
         return $this->hasOne(ActividadPDF::class, 'fk_actividad');
     }
 
-    public function frasesAuditivas(){
+    public function auditiva(){
         return $this->hasMany(ActividadAuditivaFrases::class, 'fk_actividad');
     }
 
