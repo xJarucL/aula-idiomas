@@ -198,6 +198,51 @@ class CoordinadorController extends Controller
         }
     }
 
+    public function detalleCoordinador($id){
+        $coordinador = User::findOrFail($id);
+        return view('coordinacion.detalle-coordinador', compact('coordinador'));
+    }
 
+    public function cargarCoordinador($id){
+        $coordinador = User::findOrFail($id);
+        return view('coordinacion.editar-coordinador', compact('coordinador'));
+    }
+
+    public function actualizarCorreo(Request $request){
+        try {
+            $validated = $request->validate([
+                'pk_usuario' => 'required|integer',
+                'email' => 'required|email|unique:users,email,' . $request->pk_usuario . ',pk_usuario',
+            ], [
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El formato del correo no es válido.',
+                'email.unique' => 'El correo electrónico ya está registrado.',
+            ]);
+
+            $usuario = User::findOrFail($request->pk_usuario);
+
+            DB::beginTransaction();
+
+            $usuario->email = $validated['email'];
+            $usuario->save();
+
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Coordinador actualizado correctamente.',
+                'ruta' => route('coordinacion.lista-coordinador'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar al coordinador.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
 
 }

@@ -53,5 +53,18 @@ class UserController extends Controller
 
     }
 
+    public function cambiarTipo(Request $request){
+        $user = User::find($request->id);
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Usuario no encontrado.']);
+        }
+
+        $user->fk_tipo_usuario = $request->tipo;
+        $user->save();
+
+        return response()->json(['success' => true, 'message' => 'Tipo de usuario actualizado correctamente.']);
+    }
+
 
 }

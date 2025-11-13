@@ -194,4 +194,59 @@ class DocenteController extends Controller
             ], 500);
         }
     }
+
+    public function detalleDocente($id){
+        $docente = User::with(['gruposAsignados.grupo.carrera', 'gruposAsignados.materia', 'gruposAsignados.grupo.alumnos'])->findOrFail($id);
+
+        $grupos_asignados = $docente->gruposAsignados->count();
+
+        $estudiantes = 0; // debo arreglar esto
+
+        $actividades = $docente->actividades->count() ?? 0;
+
+        return view('coordinacion.detalle-docente', compact('docente', 'grupos_asignados', 'estudiantes', 'actividades'));
+    }
+
+    public function cargarDocente($id){
+        $docente = User::findOrFail($id);
+        return view('coordinacion.editar-docente', compact('docente'));
+    }
+
+    public function actualizarCorreo(Request $request){
+        try {
+            $validated = $request->validate([
+                'pk_usuario' => 'required|integer',
+                'email' => 'required|email|unique:users,email,' . $request->pk_usuario . ',pk_usuario',
+            ], [
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El formato del correo no es válido.',
+                'email.unique' => 'El correo electrónico ya está registrado.',
+            ]);
+
+            $usuario = User::findOrFail($request->pk_usuario);
+
+            DB::beginTransaction();
+
+            $usuario->email = $validated['email'];
+            $usuario->save();
+
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Docente actualizado correctamente.',
+                'ruta' => route('coordinacion.lista-docentes'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar al docente.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
 }

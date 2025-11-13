@@ -52,7 +52,7 @@
                                 </form>
                             @else
                                 <a href="#" class="text-cyan-600 hover:text-cyan-800" title="Detalles">Detalles</a>
-                                <a href="#" class="text-green-600 hover:text-green-800" title="Editar">Editar</a>
+                                <a href="{{route('coordinacion.asignar-grupo', $grupo->pk_grupo)}}" class="text-green-600 hover:text-green-800" title="Asignar">Asignar</a>
 
                                 <form action="{{ route('grupo.eliminar', $grupo->pk_grupo) }}" method="POST">
                                     @csrf

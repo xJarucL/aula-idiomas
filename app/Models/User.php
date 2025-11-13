@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->belongsTo(Alumno::class, 'fk_usuario', 'pk_usuario');
     }
 
+    public function gruposAsignados(){
+        return $this->hasMany(GrupoMateria::class, 'fk_docente', 'pk_usuario');
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

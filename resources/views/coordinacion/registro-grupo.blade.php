@@ -44,7 +44,7 @@
                         </option>
                     @endforeach
                 </select>
-                 <label class="text-gray-500 font-light">Cuatrimestre:</label>
+                <label class="text-gray-500 font-light">Cuatrimestre:</label>
                 <select
                 class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
                     name="fk_cuatrimestre" id="">
@@ -52,6 +52,28 @@
                     @foreach ($cuatrimestres as $cuatrimestre)
                         <option value="{{ $cuatrimestre->pk_cuatrimestre }}">
                             {{ $cuatrimestre->num_cuatri}}
+                        </option>
+                    @endforeach
+                </select>
+                <label class="text-gray-500 font-light">Materia:</label>
+                <select
+                class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                    name="fk_materia" id="">
+                    <option value="">Seleccione una materia</option>
+                    @foreach ($materias as $materia)
+                        <option value="{{ $materia->pk_materia }}">
+                            {{ $materia->nombre}}
+                        </option>
+                    @endforeach
+                </select>
+                <label class="text-gray-500 font-light">Asignar docente:</label>
+                <select
+                class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
+                    name="fk_docente" id="">
+                    <option value="">Seleccione un docente</option>
+                    @foreach ($docentes as $docente)
+                        <option value="{{ $docente->pk_usuario }}">
+                            {{ $docente->nombres}} {{ $docente->ap_paterno}} {{ $docente->ap_materno ?? ''}}
                         </option>
                     @endforeach
                 </select>

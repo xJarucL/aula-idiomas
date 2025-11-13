@@ -1,386 +1,166 @@
 @extends('components.menu')
 
-@section('title', 'Lista de actividades | Aula de idiomas')
+@section('title', 'Registrar Actividad')
 
 @section('content')
-    <div class="p-2 md:ml-20 md:mr-20">
-        <x-msj-alert />
-        <section class="flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div>
-                <h1 class="text-2xl md:text-4xl font-bold text-black">Crear Nueva Actividad</h1>
-                <span class="text-gray-500 font-light mt-2">
-                    Completa el siguiente formulario para crear una nueva actividad.
-                </span>
-            </div>
-            <div class="flex justify-between gap-2">
-                <a href="{{ route('docente.lista-actividades') }}"
-                    class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition">
-                    Volver
-                </a>
-                <button form="form-insertar" type="submit"
-                    class="bg-teal-600 text-white px-4 py-2 w-full rounded-lg hover:bg-teal-700 transition shadow">
-                    Guardar Actividad
+<div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 mx-auto mt-10 max-w-4xl">
+    <x-msj-alert />
+    <h1 class="text-3xl font-bold text-teal-700 mb-8">Registrar nueva actividad</h1>
+
+    <form id="form-actividad" method="POST" data-url="{{ route('actividad.guardar') }}" action="" enctype="multipart/form-data"
+          x-data="{ tipo: 'preguntas' }">
+        @csrf
+
+        <div class="mb-6">
+            <label for="nom_actividad" class="block text-gray-700 font-semibold mb-2">Nombre de la actividad</label>
+            <input type="text" name="nom_actividad" id="nom_actividad" required
+                   class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm placeholder-gray-400">
+        </div>
+
+        <div class="mb-6">
+            <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción</label>
+            <textarea name="descripcion" id="descripcion" rows="3" required
+                      class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm placeholder-gray-400"></textarea>
+        </div>
+
+        <div class="mb-6">
+            <label for="tipo" class="block text-gray-700 font-semibold mb-2">Tipo de actividad</label>
+            <select name="tipo" id="tipo" x-model="tipo"
+                    class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm cursor-pointer">
+                <option value="preguntas">Preguntas</option>
+                <option value="pdf">PDF</option>
+                <option value="auditiva">Auditiva</option>
+            </select>
+        </div>
+
+        <div x-show="tipo === 'preguntas'" x-transition class="space-y-5 mt-8">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-teal-700">Preguntas</h2>
+                <button type="button" id="btn-agregar-pregunta"
+                        class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition shadow">
+                    + Agregar pregunta
                 </button>
             </div>
-        </section>
 
-        <section class="mt-8">
-            <form id="form-insertar" data-url="{{ route('actividad.guardar') }}" class="md:pl-15 md:pr-15" method="POST">
-                @csrf
-                <div class="bg-white p-5 rounded-2xl shadow-2xs border border-gray-300">
-                    <div class="flex flex-col">
-                        <div class="flex flex-col sm:flex-row sm:justify-between gap-3 w-full">
-                            <div class="w-full sm:w-2/3 ">
-                                <label class="text-gray-500 font-light mb-2">Nombre de la actividad</label>
-                                <input name="nom_actividad"
-                                    class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                                    type="text" placeholder="Ej: Past simple vs Past continuous" required>
-                            </div>
-                            <div class="w-full sm:w-1/3">
-                                <label class="text-gray-500 font-light mb-2">Tipo de actividad:</label>
-                                <select name="tipo_actividad"
-                                    class="p-2.5 w-full text-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
-                                    <option value="">Selecciona la opción</option>
-                                    <option value="preguntas">Preguntas</option>
-                                    <option value="pdf">Cargar PDF</option>
-                                    <option value="auditiva">Auditiva y oral</option>
-                                </select>
-                            </div>
-                        </div>
+            <div id="contenedor-preguntas" class="space-y-6"></div>
+        </div>
 
-                        <label class="text-gray-500 font-light mb-2">Descripción de la actividad</label>
-                        <textarea name="descripcion"
-                            class="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                            required style="height: 132px;"></textarea>
-                    </div>
-                </div>
-
-                <div class="flex justify-between mt-5">
-                    <h3 class="text-2xl font-semibold">Preguntas Agregadas</h3>
-                    <button id="modalPreguntas" type="button" data-dialog-target="modal"
-                        class="bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-700 transition">
-                        Agregar pregunta
-                    </button>
-                </div>
-
-                <div id="preguntasContainer" class="flex flex-col gap-8 mt-5"></div>
-            </form>
-
-            {{-- FORMULARIO OPCION MULTIPLE --}}
-            <template id="opcionMultiple">
-                <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                    <input type="hidden" name="preguntas[][tipo]" value="opcion_multiple">
-                    <div class="flex flex-col p-4 relative">
-                        <div class="flex justify-between gap-4 mb-3">
-                            <div>
-                                <h3 class="text-[20px] text-black font-semibold">Pregunta</h3>
-                                <span class="text-gray-500 font-light">Opción Múltiple</span>
-                            </div>
-                            <button
-                                class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
-                                type="button">×</button>
-                        </div>
-                        <label class="text-gray-500 font-light mb-2">Título:</label>
-                        <input name="preguntas[][titulo]" type="text"
-                            class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500" required>
-
-                        <div class="flex flex-wrap gap-4 mt-3">
-                            @foreach (['A', 'B', 'C', 'D'] as $op)
-                                <div class="w-1/2">
-                                    <label class="text-gray-500 font-light">Opción {{ $op }}</label>
-                                    <input name="preguntas[][opcion_{{ strtolower($op) }}]"
-                                        class="p-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-                                        type="text" required>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="flex justify-between gap-4 w-full mt-3">
-                            <div class="w-1/2">
-                                <label>Opción correcta:</label>
-                                <select name="preguntas[][respuesta_correcta]"
-                                    class="p-2.5 w-full text-gray-500 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
-                                    <option value="">Selecciona la opción</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                </select>
-                            </div>
-                            <div class="w-1/2">
-                                <label>Valor:</label>
-                                <input name="preguntas[][valor]" type="number"
-                                    class="p-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-                                    required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-
-            {{-- PREGUNTA ABIERTA --}}
-            <template id="abierta">
-                <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                    <input type="hidden" name="preguntas[][tipo]" value="abierta">
-                    <div class="flex flex-col p-4 relative">
-                        <div class="flex justify-between gap-4 mb-3">
-                            <div>
-                                <h3 class="text-[20px] text-black font-semibold">Pregunta</h3>
-                                <span class="text-gray-500 font-light">Abierta</span>
-                            </div>
-                            <button
-                                class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
-                                type="button">×</button>
-                        </div>
-                        <label class="text-gray-500 font-light mb-2">Título:</label>
-                        <input name="preguntas[][titulo]" type="text"
-                            class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500" required>
-                        <label class="text-gray-500 font-light mb-2 mt-2">Descripción:</label>
-                        <textarea name="preguntas[][descripcion]"
-                            class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500" style="height: 132px;"></textarea>
-                    </div>
-                </div>
-            </template>
-
-            {{-- CARGAR PDF --}}
-            <template id="cargarPDF">
-                <div class="bg-white rounded-2xl shadow-2xs border border-gray-300 pregunta-item">
-                    <input type="hidden" name="preguntas[][tipo]" value="cargarPDF">
-
-                    <div class="flex flex-col p-4 relative">
-                        <div class="flex justify-between gap-4 mb-3">
-                            <div>
-                                <h3 class="text-[20px] text-black font-semibold"></h3>
-                                <span class="text-gray-500 font-light">Cargar PDF</span>
-                            </div>
-                            <button
-                                class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
-                                type="button">×</button>
-                        </div>
-
-                        <label class="text-gray-500 font-light mb-2">Descripcion:</label>
-                        <input class="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-teal-500"
-                            type="text" name="" required>
-
-                        <!-- DROPZONE -->
-                        <label class="text-gray-500 font-light mt-3 mb-2">Cargar actividad "PDF":</label>
-                        <div id="dropzone"
-                            class="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-teal-500 transition bg-gray-50 text-center min-h-[150px]">
-                            <svg class="w-10 h-10 text-gray-400 mb-2 pointer-events-none" fill="none"
-                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4m0 0L3 8m4-4l4 4M21 12v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6m16 0l-4 4m4-4l-4-4" />
-                            </svg>
-                            <p class="text-gray-500 text-sm">Arrastra o <span class="text-teal-600 font-semibold">haz
-                                    clic</span> para agregar PDFs</p>
-
-                            <input id="fileInput" type="file" accept="application/pdf" multiple class="hidden">
-
-                            <!-- LISTADO DE ARCHIVOS -->
-                            <div id="filePreview"
-                                class="absolute inset-0 flex flex-wrap gap-2 items-start justify-start p-4 overflow-y-auto pointer-events-none opacity-0 transition-opacity duration-300">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-
-            {{-- AUTIVA --}}
-            <template id="auditiva">
-                <div class="bg-white p-4 rounded-2xl border border-gray-300 pregunta-item">
-                    <input type="hidden" name="preguntas[][tipo]" value="auditiva">
-                    <div class="flex flex-col relative">
-                        <div class="flex justify-between mb-3">
-                            <div>
-                                <h3 class="text-[20px] text-black font-semibold">Pregunta auditiva</h3>
-                                <span class="text-gray-500 font-light">Auditiva</span>
-                            </div>
-                            <button
-                                class="btn-eliminar-pregunta text-gray-400 hover:text-red-500 transition text-[30px] font-bold"
-                                type="button">
-                                ×
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="texto frase" class="text-gray-500 font-light">Descripcion breve:</label>
-                        <textarea
-                            class="h-[80px] text-gray-600 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                            name="" id="">
-                                </textarea>
-                        <label for="" class="text-gray-500 font-light ">Subir audio:</label>
-                        <input type="file"
-                            class="p-2 border text-gray-500 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                            required>
-                    </div>
-                </div>
-            </template>
-
-            {{-- MODAL AGREGAR PREGUNTAS --}}
-            <div data-dialog-backdrop="modal"
-                class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black/40 opacity-0 transition-opacity duration-300">
-                <div class="flex justify-center items-center px-6 sm:px-0">
-                    <div data-dialog="modal"
-                        class="relative w-full max-w-md mx-4 sm:mx-auto p-4 rounded-lg bg-white shadow-sm">
-                        <div class="flex justify-between">
-                            <div class="pb-4 text-xl font-medium text-slate-800">Agregar Preguntas</div>
-                            <button data-dialog-close="true"
-                                class="absolute top-4 right-4 text-slate-500 hover:text-slate-800">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="border-t border-slate-200 py-4 text-slate-600 font-light">
-                            <div class="flex flex-wrap justify-center gap-4">
-                                <button type="button" data-tipo="opcionMultiple"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Opción
-                                    múltiple</button>
-                                <button type="button" data-tipo="abierta"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Abierta</button>
-                                <button type="button" data-tipo="cargarPDF"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Cargar
-                                    PDF</button>
-                                <button type="button" data-tipo="auditiva"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">Auditiva</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div x-show="tipo === 'pdf'" x-transition class="mt-8">
+            <h2 class="text-xl font-semibold text-teal-700 mb-2">Cargar documento PDF</h2>
+            <div class="border-2 border-dashed border-teal-300 rounded-xl p-5 text-center bg-gray-50 hover:bg-gray-100 transition">
+                <input type="file" name="archivo_docente" accept="application/pdf"
+                       class="w-full text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                              file:text-sm file:font-semibold file:bg-teal-100 file:text-teal-700 hover:file:bg-teal-200 cursor-pointer">
+                <p class="text-sm text-gray-500 mt-2">Arrastra o selecciona un archivo PDF.</p>
             </div>
-        </section>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const openBtn = document.querySelector('#modalPreguntas');
-            const backdrop = document.querySelector('[data-dialog-backdrop="modal"]');
-            const closeBtns = backdrop.querySelectorAll('[data-dialog-close="true"]');
-            const container = document.querySelector('#preguntasContainer');
+        </div>
 
-            // VARIABLES DROPZONE
-            const dropzone = document.getElementById('dropzone');
-            const fileInput = document.getElementById('fileInput');
-            const filePreview = document.getElementById('filePreview');
-            let allFiles = [];
+        <div x-show="tipo === 'auditiva'" x-transition class="mt-8 space-y-5">
+            <h2 class="text-xl font-semibold text-teal-700">Actividad auditiva y oral</h2>
 
-            const templates = {
-                opcionMultiple: document.querySelector('#opcionMultiple').content,
-                abierta: document.querySelector('#abierta').content,
-                cargarPDF: document.querySelector('#cargarPDF').content,
-                auditiva: document.querySelector('#auditiva').content,
+            <div>
+                <label for="texto_frase" class="block text-gray-700 font-semibold mb-2">Frase o texto</label>
+                <textarea name="texto_frase" id="texto_frase" rows="3"
+                          class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm"></textarea>
+            </div>
 
-            };
+            <div>
+                <label for="archivo_audio_docente" class="block text-gray-700 font-semibold mb-2">Archivo de audio (MP3 o WAV)</label>
+                <input type="file" name="archivo_audio_docente" accept="audio/*"
+                       class="w-full text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                              file:text-sm file:font-semibold file:bg-teal-100 file:text-teal-700 hover:file:bg-teal-200 cursor-pointer">
+            </div>
+        </div>
 
-            let preguntaIndex = 0;
-
-            function reenumerar() {
-                container.querySelectorAll('.pregunta-item').forEach((p, i) => {
-                    const h3 = p.querySelector('h3');
-                    if (h3) h3.textContent = `Pregunta ${i + 1}`;
-                });
-            }
-
-            function cerrarModal() {
-                backdrop.classList.add('opacity-0', 'pointer-events-none');
-            }
-
-            openBtn.addEventListener('click', () => {
-                backdrop.classList.remove('opacity-0', 'pointer-events-none');
-            });
-
-            closeBtns.forEach(btn => btn.addEventListener('click', cerrarModal));
-            backdrop.addEventListener('click', e => {
-                if (e.target === backdrop) cerrarModal();
-            });
-
-            backdrop.querySelectorAll('button[data-tipo]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tipo = btn.dataset.tipo;
-                    const clone = templates[tipo].cloneNode(true);
-
-                    clone.querySelectorAll('input, textarea, select').forEach(input => {
-                        if (input.name.includes('preguntas[]')) {
-                            input.name = input.name.replace('preguntas[]',
-                                `preguntas[${preguntaIndex}]`);
-                        }
-                    });
-
-                    container.appendChild(clone);
-                    preguntaIndex++;
-                    reenumerar();
-                    cerrarModal();
-
-                    if (tipo === 'cargarPDF') {
-                        const inserted = container.lastElementChild;
-                        const dropzone = inserted.querySelector('#dropzone');
-                        const fileInput = inserted.querySelector('#fileInput');
-                        const filePreview = inserted.querySelector('#filePreview');
-                        let allFiles = [];
-
-                        if (!dropzone || !fileInput || !filePreview) return;
-
-                        dropzone.addEventListener('click', () => fileInput.click());
-                        dropzone.addEventListener('dragover', e => {
-                            e.preventDefault();
-                            dropzone.classList.add('border-teal-500', 'bg-teal-50');
-                        });
-                        dropzone.addEventListener('dragleave', () => {
-                            dropzone.classList.remove('border-teal-500', 'bg-teal-50');
-                        });
-                        dropzone.addEventListener('drop', e => {
-                            e.preventDefault();
-                            dropzone.classList.remove('border-teal-500', 'bg-teal-50');
-                            handleFiles(e.dataTransfer.files);
-                        });
-
-                        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-
-                        function handleFiles(files) {
-                            const newFiles = Array.from(files).filter(f => f.type ===
-                                "application/pdf");
-                            allFiles = [...allFiles, ...newFiles];
-                            renderPreview();
-                        }
-
-                        function renderPreview() {
-                            if (allFiles.length === 0) {
-                                filePreview.innerHTML = "";
-                                filePreview.classList.add("opacity-0", "pointer-events-none");
-                                return;
-                            }
-                            filePreview.classList.remove("opacity-0", "pointer-events-none");
-                            filePreview.innerHTML = allFiles.map((file, i) => `
-                                <div class="bg-white border border-gray-300 rounded-md flex items-center gap-2 px-3 py-2 text-sm shadow-sm">
-                                    <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11V3m0 0L8 7m4-4l4 4M4 13v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
-                                    </svg>
-                                    <span class="truncate max-w-[150px]">${file.name}</span>
-                                    <button type="button" class="ml-auto text-gray-400 hover:text-red-600" data-index="${i}">×</button>
-                                </div>
-                            `).join('');
-
-                            filePreview.querySelectorAll('button').forEach(btn => {
-                                btn.addEventListener('click', e => {
-                                    e.stopPropagation();
-                                    const index = e.target.dataset.index;
-                                    allFiles.splice(index, 1);
-                                    renderPreview();
-                                });
-                            });
-                        }
-                    }
-                });
-            });
-
-            container.addEventListener('click', e => {
-                if (e.target.classList.contains('btn-eliminar-pregunta')) {
-                    e.target.closest('.pregunta-item').remove();
-                    reenumerar();
-                }
-            });
+        <div class="mt-10 flex justify-end">
+            <button type="submit"
+                    class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition">
+                Guardar actividad
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
 
 
-        });
-    </script>
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const contenedorPreguntas = document.getElementById('contenedor-preguntas');
+    const btnAgregar = document.getElementById('btn-agregar-pregunta');
+    let contadorPreguntas = 0;
+
+    btnAgregar.addEventListener('click', () => {
+        contadorPreguntas++;
+        const preguntaHTML = `
+        <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-sm pregunta" data-index="${contadorPreguntas}">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-semibold text-teal-700">Pregunta ${contadorPreguntas}</h3>
+                <button type="button" class="text-red-600 hover:text-red-800 eliminar-pregunta text-sm font-medium">Eliminar</button>
+            </div>
+
+            <label class="block text-gray-700 font-medium mb-1">Texto de la pregunta</label>
+            <input type="text" name="preguntas[${contadorPreguntas}][pregunta]" required
+                   class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm">
+
+            <label class="block text-gray-700 font-medium mb-1">Descripción / Instrucción</label>
+            <textarea name="preguntas[${contadorPreguntas}][descripcion]" rows="2"
+                      class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm"></textarea>
+
+            <label class="block text-gray-700 font-medium mb-1">Tipo de pregunta</label>
+            <select name="preguntas[${contadorPreguntas}][tipo]" class="tipo-pregunta bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm">
+                <option value="opcion_multiple">Opción múltiple</option>
+                <option value="abierta">Abierta</option>
+            </select>
+
+            <!-- Contenedor de opciones -->
+            <div class="opciones space-y-2">
+                <div class="flex justify-between items-center">
+                    <h4 class="font-semibold text-teal-600">Opciones</h4>
+                    <button type="button" class="agregar-opcion bg-teal-500 text-white px-3 py-1 rounded-md hover:bg-teal-600 text-sm">+ Opción</button>
+                </div>
+                <div class="lista-opciones mt-2"></div>
+            </div>
+        </div>`;
+        contenedorPreguntas.insertAdjacentHTML('beforeend', preguntaHTML);
+    });
+
+    contenedorPreguntas.addEventListener('click', (e) => {
+        if (e.target.classList.contains('eliminar-pregunta')) {
+            e.target.closest('.pregunta').remove();
+        }
+
+        if (e.target.classList.contains('agregar-opcion')) {
+            const pregunta = e.target.closest('.pregunta');
+            const listaOpciones = pregunta.querySelector('.lista-opciones');
+            const index = pregunta.dataset.index;
+            const totalOpciones = listaOpciones.children.length + 1;
+
+            const opcionHTML = `
+            <div class="flex items-center gap-2 bg-white border border-gray-200 p-2 rounded-lg shadow-sm">
+                <input type="text" name="preguntas[${index}][opciones][${totalOpciones}][texto_opcion]"
+                       placeholder="Texto de opción"
+                       class="flex-1 bg-gray-50 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-teal-400 focus:border-teal-500">
+                <label class="flex items-center gap-1 text-sm text-gray-700">
+                    <input type="checkbox" name="preguntas[${index}][opciones][${totalOpciones}][es_correcta]" value="1">
+                    Correcta
+                </label>
+                <button type="button" class="eliminar-opcion text-red-600 hover:text-red-800 text-xs font-bold">✕</button>
+            </div>`;
+            listaOpciones.insertAdjacentHTML('beforeend', opcionHTML);
+        }
+
+        if (e.target.classList.contains('eliminar-opcion')) {
+            e.target.closest('div').remove();
+        }
+    });
+
+    contenedorPreguntas.addEventListener('change', (e) => {
+        if (e.target.classList.contains('tipo-pregunta')) {
+            const opciones = e.target.closest('.pregunta').querySelector('.opciones');
+            opciones.style.display = e.target.value === 'opcion_multiple' ? 'block' : 'none';
+        }
+    });
+});
+</script>
 @endsection

@@ -21,7 +21,7 @@ class Grupo extends Model
     ];
 
     public function carrera(){
-        return $this->belongsTo(Carrera::class, 'fk_carrera', 'pk_carrera');
+        return $this->belongsTo(Carrera::class, 'fk_carrera', 'pk_carrera')->withTrashed();
     }
 
     public function cuatrimestre(){

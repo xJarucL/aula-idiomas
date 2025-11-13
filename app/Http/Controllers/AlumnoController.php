@@ -8,6 +8,7 @@ use App\Models\Alumno;
 use App\Models\Carrera;
 use App\Models\Tipo_usuario;
 use App\Models\GrupoAlumno;
+use App\Models\GrupoMateria;
 use App\Models\Grupo;
 use App\Models\Calificaciones;
 use App\Models\RespuestasAlumno;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 
 class AlumnoController extends Controller
 {
@@ -240,22 +241,30 @@ class AlumnoController extends Controller
 
         $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
 
-        $grupoAlumno = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+        $historialGrupos = GrupoAlumno::withTrashed()
+            ->with(['grupo' => function ($q) {
+                $q->withTrashed()
+                ->with(['carrera' => function ($c) {
+                    $c->withTrashed();
+                }]);
+            }])
+            ->where('fk_alumno', $alumno->pk_alumno)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $carrera = null;
-        if($grupoAlumno) {
-            $grupo = Grupo::find($grupoAlumno->fk_grupo);
-            if($grupo) {
-                $carrera = $grupo->carrera;
-            }
-        }
+        $grupoActual = $historialGrupos->first();
+
+        $carrera = $grupoActual && $grupoActual->grupo && $grupoActual->grupo->carrera
+            ? $grupoActual->grupo->carrera->nombre
+            : 'Sin carrera';
 
         $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
 
         return view('alumno.perfil', [
             'usuario' => $usuario,
-            'carrera' => $carrera ? $carrera->nombre : 'Sin carrera',
-            'promedio' => $promedio ?? 'N/A'
+            'carrera' => $carrera,
+            'promedio' => $promedio ?? 'N/A',
+            'historialGrupos' => $historialGrupos
         ]);
     }
 
@@ -416,6 +425,323 @@ class AlumnoController extends Controller
             'grupo' => $grupo,
             'actividades' => $actividades
         ]);
+    }
+
+    public function cargarAlumno($id){
+        $usuario = User::findOrFail($id);
+
+        $alumno = Alumno::where('fk_usuario', $id)->firstOrFail();
+
+        $grupos = Grupo::with('carrera')
+            ->whereHas('alumnos', function($q) use ($alumno) {
+                $q->where('fk_alumno', $alumno->pk_alumno);
+            })
+            ->get();
+
+
+        $carrera = $grupos->last()?->carrera;
+
+        $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
+
+        return view('coordinacion.detalle-alumno', [
+            'usuario' => $usuario,
+            'alumno' => $alumno,
+            'carrera' => $carrera?->nombre ?? 'Sin carrera',
+            'promedio' => $promedio ?? 'N/A',
+            'grupos' => $grupos
+        ]);
+    }
+
+    public function loadAlumno($id){
+        $usuario = User::findOrFail($id);
+
+        return view('coordinacion.editar-alumno', compact('usuario'));
+    }
+
+    public function editarAlumno(Request $request){
+         try {
+            $validated = $request->validate([
+                'nombres' => 'required|string|max:100',
+                'ap_paterno' => 'required|string|max:100',
+                'ap_materno' => 'nullable|string|max:100',
+            ],[
+                'nombres.required' => 'El nombre es obligatorio.',
+                'ap_paterno.required' => 'El apellido paterno es obligatorio',
+            ]);
+
+            $usuario = User::findOrFail($request->pk_usuario);
+
+            DB::beginTransaction();
+
+            $usuario->nombres = $validated['nombres'];
+            $usuario->ap_paterno = $validated['ap_paterno'];
+            $usuario->ap_materno = $validated['ap_materno'];
+            $usuario->save();
+
+            DB::commit();
+
+            return response()->json([
+                'mensaje' => 'Alumno actualizado correctamente.',
+                'ruta' => route('coordinacion.lista-alumnos'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al actualizar al alumno.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+    public function cargarPanel(){
+        $usuario = Auth::user();
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $promedio = round(Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion') ?? 0, 1);
+
+        $grupoActivo = GrupoAlumno::where('fk_alumno', $alumno->pk_alumno)->first();
+
+        if (!$grupoActivo) {
+            return view('alumno.inicio', [
+                'pendientes' => collect(),
+                'entregadas' => collect(),
+                'noEntregadas' => collect(),
+                'count_pendientes' => 0,
+                'count_entregadas' => 0,
+                'count_no_entregadas' => 0,
+                'promedio' => $promedio,
+                'porcentaje_general' => 0,
+                'porcentaje_entregadas' => 0,
+                'porcentaje_pendientes' => 0,
+                'porcentaje_no_entregadas' => 0,
+                'materia' => null,
+            ]);
+        }
+
+        $grupo = Grupo::with('grupoMaterias.materia')
+            ->where('pk_grupo', $grupoActivo->fk_grupo)
+            ->first();
+
+        $materia = optional($grupo->grupoMaterias->first()->materia)->nombre ?? 'Sin materia asignada';
+
+        $ahora = now();
+
+        $pendientes = [];
+        $entregadas = [];
+        $noEntregadas = [];
+
+        $actividades = DB::table('actividad_grupo')
+            ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
+            ->where('actividad_grupo.fk_grupo', $grupoActivo->fk_grupo)
+            ->select(
+                'actividades.pk_actividad',
+                'actividades.nom_actividad',
+                'actividades.descripcion',
+                'actividades.tipo',
+                'actividad_grupo.pk_asignacion',
+                'actividad_grupo.fecha_inicio',
+                'actividad_grupo.fecha_fin',
+                'actividad_grupo.fk_grupo'
+            )
+            ->get();
+
+        foreach ($actividades as $act) {
+            $entregada = false;
+
+            switch ($act->tipo) {
+                case 'preguntas':
+                    $entregada = DB::table('respuestas_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+
+                case 'pdf':
+                    $entregada = DB::table('entrega_pdf_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+
+                case 'auditiva':
+                    $entregada = DB::table('respuesta_auditiva_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                    break;
+            }
+
+            $fechaFin = Carbon::parse($act->fecha_fin);
+
+            $actividadData = [
+                'pk_actividad' => $act->pk_actividad,
+                'nom_actividad' => $act->nom_actividad,
+                'descripcion' => $act->descripcion,
+                'tipo' => $act->tipo,
+                'fecha_inicio' => $act->fecha_inicio,
+                'fecha_fin' => $act->fecha_fin,
+                'fk_grupo' => $act->fk_grupo,
+                'pk_asignacion' => $act->pk_asignacion,
+            ];
+
+            if ($entregada) {
+                $entregadas[] = $actividadData;
+            } elseif ($ahora->lessThan($fechaFin)) {
+                $pendientes[] = $actividadData;
+            } else {
+                $noEntregadas[] = $actividadData;
+            }
+        }
+
+        $pendientes = collect($pendientes);
+        $entregadas = collect($entregadas);
+        $noEntregadas = collect($noEntregadas);
+
+        $count_pendientes = $pendientes->count();
+        $count_entregadas = $entregadas->count();
+        $count_no_entregadas = $noEntregadas->count();
+
+        $total_actividades = $count_pendientes + $count_entregadas + $count_no_entregadas;
+
+        if ($total_actividades > 0) {
+            $porcentaje_general = round(($count_entregadas / $total_actividades) * 100, 1);
+            $porcentaje_entregadas = round(($count_entregadas / $total_actividades) * 100, 1);
+            $porcentaje_pendientes = round(($count_pendientes / $total_actividades) * 100, 1);
+            $porcentaje_no_entregadas = round(($count_no_entregadas / $total_actividades) * 100, 1);
+        } else {
+            $porcentaje_general = $porcentaje_entregadas = $porcentaje_pendientes = $porcentaje_no_entregadas = 0;
+        }
+
+        return view('alumno.inicio', compact(
+            'pendientes',
+            'entregadas',
+            'noEntregadas',
+            'count_pendientes',
+            'count_entregadas',
+            'count_no_entregadas',
+            'promedio',
+            'porcentaje_general',
+            'porcentaje_entregadas',
+            'porcentaje_pendientes',
+            'porcentaje_no_entregadas',
+            'materia'
+        ));
+    }
+
+    public function misActividades(Request $request){
+        $usuario = Auth::user();
+
+        if (!$usuario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el usuario o no es un alumno.',
+            ], 404);
+        }
+
+        $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró el registro del alumno.',
+            ], 404);
+        }
+
+        $grupos = GrupoAlumno::withTrashed()->where('fk_alumno', $alumno->pk_alumno)->get();
+        $ahora = now();
+
+        $pendientes = [];
+        $entregadas = [];
+        $noEntregadas = [];
+
+        foreach ($grupos as $grupoAlumno) {
+            $actividades = DB::table('actividad_grupo')
+                ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
+                ->where('actividad_grupo.fk_grupo', $grupoAlumno->fk_grupo)
+                ->select(
+                    'actividades.pk_actividad',
+                    'actividades.nom_actividad',
+                    'actividades.descripcion',
+                    'actividades.tipo',
+                    'actividad_grupo.fecha_inicio',
+                    'actividad_grupo.fecha_fin',
+                    'actividad_grupo.fk_grupo'
+                )
+                ->get();
+
+            foreach ($actividades as $act) {
+                $fechaFin = Carbon::parse($act->fecha_fin);
+                $entregada = false;
+
+                if ($act->tipo === 'preguntas') {
+                    $entregada = DB::table('respuestas_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
+
+                if ($act->tipo === 'pdf') {
+                    $entregada = DB::table('entrega_pdf_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
+
+                if ($act->tipo === 'auditiva') {
+                    $entregada = DB::table('respuesta_auditiva_alumno')
+                        ->where('fk_actividad', $act->pk_actividad)
+                        ->where('fk_alumno', $alumno->pk_alumno)
+                        ->exists();
+                }
+
+                if ($entregada) {
+                    $entregadas[] = $act;
+                } elseif ($ahora->lessThan($fechaFin)) {
+                    $pendientes[] = $act;
+                } else {
+                    $noEntregadas[] = $act;
+                }
+            }
+        }
+
+        $pendientes = collect($pendientes);
+        $entregadas = collect($entregadas);
+        $noEntregadas = collect($noEntregadas);
+
+        $filtro = $request->query('filtro', 'pendientes');
+
+        $actividadesFiltradas = match ($filtro) {
+            'entregadas' => $entregadas,
+            'no_entregadas' => $noEntregadas,
+            default => $pendientes,
+        };
+
+        return view('alumno.lista-actividades', compact(
+            'pendientes',
+            'entregadas',
+            'noEntregadas',
+            'actividadesFiltradas',
+            'filtro'
+        ));
     }
 
 
