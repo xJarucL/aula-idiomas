@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\DocenteController;
 use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\ActividadController;
 use App\Http\Controllers\Api\GrupoController;
+use App\Http\Controllers\Api\MensajeController;
 use App\Models\Grupo;
 
 // Ruta de prueba
@@ -101,5 +102,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::put('perfil-editar/{id}', [AuthController::class, 'update']);
+
+    Route::prefix('chat')->group(function(){
+        Route::post('/enviar-mensaje', [MensajeController::class, 'enviar']);
+        Route::get('/historial/{id}', [MensajeController::class, 'obtenerChats']);
+        Route::get('/mensajes/{id_propio}/contacto/{id_contacto}', [MensajeController::class, 'obtenerMensajesChat']);
+    });
 
 });
