@@ -33,7 +33,7 @@
         <div class="col-span-1 sm:col-span-7 mt-7">
             <div class="bg-white p-4 border border-gray-200 h-125 rounded-xl shadow-sm">
                 <div class="border-b border-gray-300">
-                    <h1 class="text-2xl font-semibold text-teal-700 mb-3">Historial de actividades</h1>
+                    <h1 class="text-xl sm:text-2xl font-semibold text-teal-700 mb-3">Historial de actividades</h1>
                 </div>
                 <div>
                     <div>
@@ -45,11 +45,11 @@
         </div>
         {{-- ACCESSOS RAPIDOS --}}
         <div class="col-span-1 sm:col-span-3 mt-7">
-            <div class="bg-white w-full p-4 h-125 border border-gray-200 rounded-lg shadow">
-                <h1 class="text-2xl font-semibold text-teal-700 mb-3">Accesos Rapidos</h1>
+            <div class="bg-white w-full p-4 h-auto border border-gray-200 rounded-lg shadow">
+                <h1 class="text-xl sm:text-2xl font-semibold text-teal-700 mb-3">Accesos Rapidos</h1>
                 {{-- FORMULARIO DOCENTE --}}
                 <a href="{{ route('coordinacion.lista-docentes') }}"
-                    class="h-20 flex justify-between border rounded-xl shadow-sm">
+                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm">
                     <div class="p-3">
                         <h1 class="text-[20px] font-bold mt-1">Gestión de Docente</h1>
                         <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de docente</h4>
@@ -65,7 +65,7 @@
                 </a>
                 {{-- FORMULARIO ALUMNOS --}}
                 <a href="{{ route('coordinacion.lista-alumnos') }}"
-                    class="h-20 flex justify-between rounded-xl shadow-sm mt-9">
+                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
                     <div class="p-3">
                         <h1 class="text-[20px] font-bold mt-1">Gestión de Alumnos</h1>
                         <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de alumnos</h4>
@@ -79,9 +79,8 @@
                         </div>
                     </div>
                 </a>
-                {{-- FORMULARIO GRUGPOS --}}
                 <a href="{{ route('coordinacion.lista-grupos') }}"
-                    class="h-20 flex justify-between rounded-xl shadow-sm mt-9">
+                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
                     <div class="p-3">
                         <h1 class="text-[20px] font-bold mt-1">Gestión de Grupos</h1>
                         <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4>
@@ -95,7 +94,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="#" class="h-20 flex justify-between rounded-xl shadow-sm mt-9">
+                <a href="#" class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
                     <div class="p-3">
                         <h1 class="text-[20px] font-bold mt-1">Gestión de Grupos</h1>
                         <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4>
