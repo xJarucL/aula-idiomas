@@ -30,9 +30,11 @@ Route::prefix('chat')->middleware(['auth'])->group(function () {
     Route::get('/mensajeria', function () {
         return view('chat.inicio');
     })->name('chat.inicio');
-    // Route::get('/', [UserController::class, 'chat'])->name('chat.index');
-    // Route::get('/conversacion/{id}', [UserController::class, 'conversacion'])->name('chat.conversacion');
-    // Route::post('/enviar-mensaje', [UserController::class, 'enviarMensaje'])->name('chat.enviar-mensaje');
+
+    Route::get('/chats-usuarios', function () {
+        return view('chat.chat_usuarios');
+    })->name('chat.usuarios');
+  
 });
 
 Route::prefix('alumno')
