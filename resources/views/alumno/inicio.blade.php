@@ -87,7 +87,7 @@
         <div class="flex flex-col-reverse sm:flex-row  sm:justify-between gap-3">
             <div class="bg-white p-5 w-full h-auto sm:w-2/3 border border-gray-200 rounded-lg shadow">
                 {{-- CONTENIDO PENDIENTE --}}
-                <h3 class="text-lg text-gray-700 mb-2 font-semibold">Actividades pendientes</h3>
+                <h3 class="text-lg text-teal-700 mb-2 font-semibold">Actividades pendientes</h3>
                 <div class="max-h-79 sm:max-h-80 overflow-y-auto pr-1">
                     @foreach($pendientes as $actividad)
                         <x-card-actividad iconoA="question" color1="blue" nombreActividad="{{ $actividad['nom_actividad'] }}"

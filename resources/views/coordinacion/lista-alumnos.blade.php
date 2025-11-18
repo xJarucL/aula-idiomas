@@ -7,7 +7,7 @@
 
     <section class="flex sm:flex-row justify-between gap-6 sm:gap-2">
         <div>
-            <h1 class="text-2xl md:text-4xl font-bold text-black">Gestión de alumnos</h1>
+            <h1 class="text-2xl md:text-4xl font-bold text-teal-700">Gestión de alumnos</h1>
             <span class="text-gray-500 font-light mt-2 block">Listado de Información de los alumnos</span>
         </div>
         {{-- ESCRITORIO --}}

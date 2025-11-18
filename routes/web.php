@@ -26,6 +26,16 @@ Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
+Route::prefix('chat')->middleware(['auth'])->group(function () {
+    Route::get('/mensajeria', function () {
+        return view('chat.inicio');
+    })->name('chat.inicio');
+
+    Route::get('/chats-usuarios', function () {
+        return view('chat.chat_usuarios');
+    })->name('chat.usuarios');
+  
+});
 
 Route::prefix('alumno')
     ->middleware(['auth', RolMiddleware::class . ':1'])

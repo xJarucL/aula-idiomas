@@ -16,7 +16,7 @@
 
             </div>
             <div class="text-center mb-5 sm:mb-8">
-                <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">Bienvenido de nuevo</h1>
+                <h1 class="text-2xl sm:text-4xl font-bold text-teal-700 mb-2">Bienvenido de nuevo</h1>
                 <h3 class="text-gray-600 text-[13px] sm:text-sm">Inicia sesión para continuar con tus actividades</h3>
             </div>
             <form id="form-insertar" data-url="{{ route('iniciando') }}" class="space-y-4" action="" method="post">
