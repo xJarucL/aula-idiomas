@@ -9,6 +9,7 @@ use App\Http\Controllers\CoordinadorController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\RecuperacionController;
 use App\Http\Controllers\ActividadController;
+use App\Http\Controllers\ChatController;
 use App\Models\Grupo;
 use App\Models\Carrera;
 use App\Models\Cuatrimestre;
@@ -27,14 +28,14 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::prefix('chat')->middleware(['auth'])->group(function () {
-    Route::get('/mensajeria', function () {
-        return view('chat.inicio');
-    })->name('chat.inicio');
 
-    Route::get('/chats-usuarios', function () {
-        return view('chat.chat_usuarios');
-    })->name('chat.usuarios');
-  
+    Route::post('/enviar', [ChatController::class, 'enviar'])->name('chat.enviar');
+    Route::get('/mensajes/contactos', [ChatController::class, 'obtenerChats'])->name('chat.inicio');
+    Route::get('/detalle/{contacto}', [ChatController::class, 'obtenerMensajesChat'])->name('chat.conversacion');
+    Route::get('/mensajes/{contacto}', [ChatController::class, 'actualizarMensajes'])->name('chat.mensajes');
+
+    Route::get('/usuarios', [ChatController::class, 'obtenerUsuarios'])->name('chat.usuarios');
+
 });
 
 Route::prefix('alumno')
