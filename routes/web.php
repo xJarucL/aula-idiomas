@@ -70,9 +70,7 @@ Route::prefix('docente')
     ->middleware(['auth', RolMiddleware::class . ':2'])
     ->group(function(){
 
-    Route::get('/inicio', function () {
-        return view('docente.inicio');
-    })->name('docente.inicio');
+    Route::get('inicio', [DocenteController::class, 'panel'])->name('docente.inicio');
 
     // RUTAS DE GRUPOS - DOCENTE
     Route::get('mis-grupos', [GrupoController::class, 'listaGruposDocente'])->name('docente.mis-grupos');
