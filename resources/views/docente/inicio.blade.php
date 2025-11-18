@@ -29,7 +29,7 @@
             :count="$actividadesCount"
             icon="book"
             color="purple"
-            {{-- link="{{ route('docente.lista-alumnos') }}" --}}
+            link="{{ route('docente.lista-actividades') }}"
         />
 
         <x-card-info
@@ -45,7 +45,6 @@
             :count="$alumnosCount"
             icon="academic"
             color="teal"
-            {{-- link="{{ route('docente.lista-actividades') }}" --}}
         />
     </section>
 
