@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\GrupoMateria;
+use App\Models\Actividades;
+use App\Models\RespuestasAlumno;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -243,6 +246,62 @@ class DocenteController extends Controller
 
             return response()->json([
                 'mensaje' => 'Ocurrió un error al actualizar al docente.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+    public function panel(){
+        try {
+            $usuario = Auth::user();
+            $id = $usuario->pk_usuario;
+
+            $grupos = GrupoMateria::with(['grupo.carrera', 'materia'])
+                ->with(['grupo' => function ($q) {
+                    $q->withCount('alumnos');
+                }])
+                ->where('fk_docente', $id);
+
+            $actividades = Actividades::where('fk_docente', $id)->get();
+
+            $actividadesRevisionCount = RespuestasAlumno::where('calificada', 0)
+                ->whereHas('pregunta', function ($q) {
+                    $q->where('tipo', 'abierta');
+                })
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')
+                        ->from('actividades')
+                        ->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get()
+                ->count();
+
+            $alumnosCount = GrupoMateria::where('fk_docente', $id)
+                ->whereNull('deleted_at')
+                ->with(['grupo.alumnos.usuario' => function($q) {
+                    $q->where('fk_tipo_usuario', 1);
+                }])
+                ->get()
+                ->flatMap(function($gm) {
+                    return $gm->grupo->alumnos
+                        ->map(fn($alumno) => $alumno->usuario)
+                        ->filter();
+                })
+                ->unique('pk_usuario')
+                ->count();
+
+            $gruposCount = $grupos->count();
+            $actividadesCount = $actividades->count();
+
+            return view('docente.inicio', compact('gruposCount', 'actividadesCount', 'actividadesRevisionCount', 'alumnosCount'));
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al cargar el panel.',
                 'detalle' => $th->getMessage(),
                 'class' => 'error'
             ], 500);

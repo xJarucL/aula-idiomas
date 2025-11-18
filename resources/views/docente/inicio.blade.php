@@ -4,6 +4,8 @@
 
 @section('content')
 
+    <x-msj-alert />
+
     <section>
         <div>
             <h1 class="text-4xl font-bold text-black">Panel del Docente</h1>
@@ -15,35 +17,34 @@
     {{-- Cartas de información --}}
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
         <x-card-info
-            title="Actividades"
-            {{-- :count="$gruposCount" --}}
-            icon="activity"
+            title="Grupos Asignados"
+            :count="$gruposCount"
+            icon="users"
             color="blue"
+            link="{{ route('docente.mis-grupos') }}"
+        />
+
+        <x-card-info
+            title="Actividades Creadas"
+            :count="$actividadesCount"
+            icon="book"
+            color="purple"
             link="{{ route('docente.lista-actividades') }}"
         />
 
         <x-card-info
-            title="Actividades pendientes"
-            {{-- :count="$alumnosCount" --}}
+            title="Pendientes de Revisión"
+            :count="$actividadesRevisionCount"
             icon="pending"
-            color="purple"
-            {{-- link="{{ route('docente.lista-alumnos') }}" --}}
-        />
-
-        <x-card-info
-            title="Actividades completadas"
-            {{-- :count="$materiasCount" --}}
-            icon="completed"
-            color="teal"
+            color="yellow"
             {{-- link="{{ route('docente.lista-materias') }}" --}}
         />
 
         <x-card-info
-            title="Actividades totales"
-            {{-- :count="$actividadesCount" --}}
-            icon="total"
-            color="yellow"
-            {{-- link="{{ route('docente.lista-actividades') }}" --}}
+            title="Alumnos"
+            :count="$alumnosCount"
+            icon="academic"
+            color="teal"
         />
     </section>
 
