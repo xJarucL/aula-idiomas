@@ -510,4 +510,90 @@ class ActividadController extends Controller{
             ->with('success', 'Tus respuestas fueron enviadas correctamente.');
     }
 
+    public function cargarPendientes(){
+        try {
+            $id = Auth::user()->pk_usuario;
+
+            $pendientes = RespuestasAlumno::query()
+                ->where('calificada', 0)
+                ->whereHas('pregunta', function($q) {
+                    $q->where('tipo', 'abierta');
+                })
+                ->whereHas('actividad', function($q) use ($id) {
+                    $q->where('fk_docente', $id);
+                })
+                ->with([
+                    'alumno.usuario',
+                    'actividad' => function($q) {
+                        $q->with([
+                            'grupos' => function($g) {
+                                $g->with('carrera');
+                            }
+                        ]);
+                    }
+                ])
+                ->get()
+                ->groupBy(function($item) {
+                    return $item->fk_actividad . '-' . $item->fk_alumno;
+                })
+                ->map(function($grupo) {
+                    return $grupo->first();
+                })
+                ->values();
+
+            $grupos = Grupo::whereHas('grupoMaterias', function($q) use ($id) {
+                    $q->where('fk_docente', $id);
+                })->with('carrera')->get();
+
+            return view('
+                docente.actividades-pendientes',
+                compact(
+                    'pendientes',
+                    'grupos'
+                )
+            );
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al cargar las entregas pendientes.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+    public function filtrarPendientes(Request $request){
+        $id = Auth::user()->pk_usuario;
+        $search = $request->input('search');
+        $grupoId = $request->input('grupo');
+
+        $pendientes = RespuestasAlumno::query()
+            ->where('calificada', 0)
+            ->whereHas('pregunta', fn($q) => $q->where('tipo','abierta'))
+            ->whereHas('actividad', fn($q) => $q->where('fk_docente', $id))
+            ->when($search, function($q, $search) {
+                $q->where(function($query) use ($search) {
+                    $query->whereHas('alumno.usuario', function($u) use ($search) {
+                        $u->where('nombres','like',"%{$search}%")
+                        ->orWhere('ap_paterno','like',"%{$search}%")
+                        ->orWhere('ap_materno','like',"%{$search}%");
+                    })
+                    ->orWhereHas('actividad', function($a) use ($search) {
+                        $a->where('nom_actividad','like',"%{$search}%");
+                    });
+                });
+            })
+            ->when($grupoId, fn($q) => $q->whereHas('actividad.grupos', fn($g) => $g->where('pk_grupo',$grupoId)))
+            ->with([
+                'alumno.usuario',
+                'actividad.grupos.carrera'
+            ])
+            ->get()
+            ->groupBy(fn($item) => $item->fk_actividad . '-' . $item->fk_alumno)
+            ->map(fn($grupo) => $grupo->first())
+            ->values();
+
+        return view('partials.tabla_pendientes', compact('pendientes'));
+    }
+
 }

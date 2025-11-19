@@ -37,7 +37,7 @@
             :count="$actividadesRevisionCount"
             icon="pending"
             color="yellow"
-            {{-- link="{{ route('docente.lista-materias') }}" --}}
+            link="{{ route('docente.actividades-pendientes') }}"
         />
 
         <x-card-info

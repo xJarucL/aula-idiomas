@@ -43,6 +43,8 @@
                                 Grupos</a>
                             <a href="{{ route('docente.lista-actividades') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Actividades</a>
+                            <a href="{{ route('docente.actividades-pendientes') }}"
+                                class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Pendientes</a>
                         @elseif(auth()->user()->fk_tipo_usuario == '3')
                             <a href="{{ route('coordinacion.inicio') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
@@ -182,6 +184,8 @@
                                                     Grupos</a>
                                                 <a href="{{ route('docente.lista-actividades') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Actividades</a>
+                                                <a href="{{ route('docente.actividades-pendientes') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 transition text-m px-2 py-5 rounded">Pendientes</a>
                                             @elseif(auth()->user()->fk_tipo_usuario == '3')
                                                 <a href="{{ route('coordinacion.inicio') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
