@@ -7,7 +7,7 @@
 
     <section class=" flex sm:flex-row justify-between gap-6 sm:gap-2">
         <div class="">
-            <h1 class="text-2xl md:text-4xl font-bold text-black">Gestión de docente</h1>
+            <h1 class="text-2xl md:text-4xl font-bold text-teal-700">Gestión de docente</h1>
             <span class="text-gray-500 font-light text-justify sm:mt-2 block">Listado de Información de los docentes</span>
         </div>
         {{-- ESCRITORIO --}}
@@ -18,7 +18,7 @@
             </a>
         </div>
         {{-- MOVIL --}}
-        <div class="sm:hidden flex justify-end items-end">
+        <div class="sm:hidden flex items-center">
             <a href="{{ route('coordinacion.registro-docente') }}"
                 class="bg-teal-600 p-3 rounded-2xl hover:bg-teal-700 shadow text-sm md:text-base">
                 <svg fill="none" viewBox="0 0 24 24"
