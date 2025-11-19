@@ -91,13 +91,16 @@ Route::prefix('docente')
         return view('docente.crear-actividad');
     })->name('docente.crear-actividad');
     Route::post('actividad/guardar', [ActividadController::class, 'guardar'])->name('actividad.guardar');
-    Route::get('lista-actividades', [ActividadController::class, 'listaActividadesDocente'])->name('docente.lista-actividades');
-    Route::get('lista-actividades-deshabilitadas', [ActividadController::class, 'listaActividadesDocenteDeshabilitadas'])->name('docente.lista-actividades-deshabilitadas');
+    Route::get('actividades', [ActividadController::class, 'listaActividadesDocente'])->name('docente.lista-actividades');
+    Route::get('actividades/deshabilitadas', [ActividadController::class, 'listaActividadesDocenteDeshabilitadas'])->name('docente.lista-actividades-deshabilitadas');
     Route::delete('actividad/eliminar/{id}', [ActividadController::class, 'eliminarActividad'])->name('actividad.eliminar');
     Route::post('actividad/restaurar/{id}', [ActividadController::class, 'restaurarActividad'])->name('actividad.restaurar');
     Route::get('actividad/{actividad}/alumno/{alumno}/respuestas', [ActividadController::class, 'verRespuestasActividadAlumno'])->name('actividad.respuestas');
     Route::get('actividad/{id}/asignar', [ActividadController::class, 'formAsignar'])->name('docente.asignar-actividad');
     Route::post('actividad/{id}/asignando', [ActividadController::class, 'asignarActividad'])->name('docente.asignando-actividad');
+
+    Route::get('actividades/pendientes', [ActividadController::class, 'cargarPendientes'])->name('docente.actividades-pendientes');
+    Route::get('actividades/pendientes/filtrar', [ActividadController::class, 'filtrarPendientes'])->name('docente.pendientes.filtrar');
 
     Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
