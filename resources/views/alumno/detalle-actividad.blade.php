@@ -72,9 +72,6 @@
                                     <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
                                         Calificada
                                     </span>
-                                    <p class="text-sm text-gray-700 mt-1">
-                                        <strong>Calificación:</strong> {{ $p->calificacion ?? 'N/A' }}
-                                    </p>
                                 @else
                                     <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
                                         Pendiente de calificación

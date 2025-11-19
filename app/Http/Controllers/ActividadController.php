@@ -514,31 +514,64 @@ class ActividadController extends Controller{
         try {
             $id = Auth::user()->pk_usuario;
 
-            $pendientes = RespuestasAlumno::query()
-                ->where('calificada', 0)
-                ->whereHas('pregunta', function($q) {
-                    $q->where('tipo', 'abierta');
-                })
-                ->whereHas('actividad', function($q) use ($id) {
-                    $q->where('fk_docente', $id);
-                })
-                ->with([
-                    'alumno.usuario',
-                    'actividad' => function($q) {
-                        $q->with([
-                            'grupos' => function($g) {
-                                $g->with('carrera');
-                            }
-                        ]);
-                    }
-                ])
+            $pendAbiertas = RespuestasAlumno::where('calificada', 0)
+                ->whereHas('pregunta', fn($q)=>$q->where('tipo','abierta'))
+                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
+                ->with(['alumno.usuario','actividad.grupos.carrera','pregunta'])
                 ->get()
-                ->groupBy(function($item) {
-                    return $item->fk_actividad . '-' . $item->fk_alumno;
-                })
-                ->map(function($grupo) {
-                    return $grupo->first();
-                })
+                ->map(function($r){
+                    return [
+                        'tipo' => 'abierta',
+                        'actividad' => $r->actividad,
+                        'alumno' => $r->alumno,
+                        'fk_actividad' => $r->fk_actividad,
+                        'fk_alumno' => $r->fk_alumno,
+                        'extra' => [
+                            'pregunta' => $r->pregunta->pregunta,
+                            'respuesta' => $r->respuesta
+                        ]
+                    ];
+                });
+
+            $pendPdf = EntregaPdfAlumno::whereNull('calificacion')
+                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
+                ->with(['alumno.usuario','actividad.grupos.carrera'])
+                ->get()
+                ->map(function($r){
+                    return [
+                        'tipo' => 'pdf',
+                        'actividad' => $r->actividad,
+                        'alumno' => $r->alumno,
+                        'fk_actividad' => $r->fk_actividad,
+                        'fk_alumno' => $r->fk_alumno,
+                        'extra' => [
+                            'archivo' => $r->archivo_alumno
+                        ]
+                    ];
+                });
+
+            $pendAudio = RespuestaAuditivaAlumno::whereNull('calificacion')
+                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
+                ->with(['alumno.usuario','actividad.grupos.carrera'])
+                ->get()
+                ->map(function($r){
+                    return [
+                        'tipo' => 'audio',
+                        'actividad' => $r->actividad,
+                        'alumno' => $r->alumno,
+                        'fk_actividad' => $r->fk_actividad,
+                        'fk_alumno' => $r->fk_alumno,
+                        'extra' => [
+                            'archivo' => $r->archivo_audio_alumno
+                        ]
+                    ];
+                });
+
+            $pendientes = collect()
+                ->merge($pendAbiertas)
+                ->merge($pendPdf)
+                ->merge($pendAudio)
+                ->unique(fn($i)=>$i['fk_actividad'].'-'.$i['fk_alumno'])
                 ->values();
 
             $grupos = Grupo::whereHas('grupoMaterias', function($q) use ($id) {
@@ -554,11 +587,7 @@ class ActividadController extends Controller{
             );
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'mensaje' => 'Ocurrió un error al cargar las entregas pendientes.',
-                'detalle' => $th->getMessage(),
-                'class' => 'error'
-            ], 500);
+            return back()->with('error', 'Ocurrió un problema al cargar las entregas: ' . $th->getMessage());
         }
     }
 
@@ -567,8 +596,7 @@ class ActividadController extends Controller{
         $search = $request->input('search');
         $grupoId = $request->input('grupo');
 
-        $pendientes = RespuestasAlumno::query()
-            ->where('calificada', 0)
+        $pendAbiertas = RespuestasAlumno::where('calificada', 0)
             ->whereHas('pregunta', fn($q) => $q->where('tipo','abierta'))
             ->whereHas('actividad', fn($q) => $q->where('fk_docente', $id))
             ->when($search, function($q, $search) {
@@ -583,17 +611,241 @@ class ActividadController extends Controller{
                     });
                 });
             })
-            ->when($grupoId, fn($q) => $q->whereHas('actividad.grupos', fn($g) => $g->where('pk_grupo',$grupoId)))
-            ->with([
-                'alumno.usuario',
-                'actividad.grupos.carrera'
-            ])
+            ->when($grupoId, fn($q) =>
+                $q->whereHas('actividad.grupos', fn($g) => $g->where('pk_grupo', $grupoId))
+            )
+            ->with(['alumno.usuario','actividad.grupos.carrera','pregunta'])
             ->get()
-            ->groupBy(fn($item) => $item->fk_actividad . '-' . $item->fk_alumno)
-            ->map(fn($grupo) => $grupo->first())
+            ->map(function($r){
+                return [
+                    'tipo' => 'abierta',
+                    'actividad' => $r->actividad,
+                    'alumno' => $r->alumno,
+                    'fk_actividad' => $r->fk_actividad,
+                    'fk_alumno' => $r->fk_alumno,
+                    'extra' => [
+                        'pregunta' => $r->pregunta->pregunta,
+                        'respuesta' => $r->respuesta
+                    ]
+                ];
+            });
+
+        $pendPdf = EntregaPdfAlumno::whereNull('calificacion')
+            ->whereHas('actividad', fn($q) => $q->where('fk_docente',$id))
+            ->when($search, function($q, $search) {
+                $q->where(function($query) use ($search) {
+                    $query->whereHas('alumno.usuario', function($u) use ($search) {
+                        $u->where('nombres','like',"%{$search}%")
+                        ->orWhere('ap_paterno','like',"%{$search}%")
+                        ->orWhere('ap_materno','like',"%{$search}%");
+                    })
+                    ->orWhereHas('actividad', function($a) use ($search) {
+                        $a->where('nom_actividad','like',"%{$search}%");
+                    });
+                });
+            })
+            ->when($grupoId, fn($q) =>
+                $q->whereHas('actividad.grupos', fn($g) => $g->where('pk_grupo',$grupoId))
+            )
+            ->with(['alumno.usuario','actividad.grupos.carrera'])
+            ->get()
+            ->map(function($r){
+                return [
+                    'tipo' => 'pdf',
+                    'actividad' => $r->actividad,
+                    'alumno' => $r->alumno,
+                    'fk_actividad' => $r->fk_actividad,
+                    'fk_alumno' => $r->fk_alumno,
+                    'extra' => [
+                        'archivo' => $r->archivo_alumno
+                    ]
+                ];
+            });
+
+        $pendAudio = RespuestaAuditivaAlumno::whereNull('calificacion')
+            ->whereHas('actividad', fn($q) => $q->where('fk_docente',$id))
+            ->when($search, function($q, $search) {
+                $q->where(function($query) use ($search) {
+                    $query->whereHas('alumno.usuario', function($u) use ($search) {
+                        $u->where('nombres','like',"%{$search}%")
+                        ->orWhere('ap_paterno','like',"%{$search}%")
+                        ->orWhere('ap_materno','like',"%{$search}%");
+                    })
+                    ->orWhereHas('actividad', function($a) use ($search) {
+                        $a->where('nom_actividad','like',"%{$search}%");
+                    });
+                });
+            })
+            ->when($grupoId, fn($q) =>
+                $q->whereHas('actividad.grupos', fn($g) => $g->where('pk_grupo',$grupoId))
+            )
+            ->with(['alumno.usuario','actividad.grupos.carrera'])
+            ->get()
+            ->map(function($r){
+                return [
+                    'tipo' => 'audio',
+                    'actividad' => $r->actividad,
+                    'alumno' => $r->alumno,
+                    'fk_actividad' => $r->fk_actividad,
+                    'fk_alumno' => $r->fk_alumno,
+                    'extra' => [
+                        'archivo' => $r->archivo_audio_alumno
+                    ]
+                ];
+            });
+
+        $pendientes = collect()
+            ->merge($pendAbiertas)
+            ->merge($pendPdf)
+            ->merge($pendAudio)
+            ->unique(fn($i) => $i['fk_actividad'].'-'.$i['fk_alumno'])
             ->values();
 
         return view('partials.tabla_pendientes', compact('pendientes'));
+    }
+
+
+    public function cargarActividadPendiente($pk_actividad, $pk_alumno){
+        try {
+            $actividad = Actividades::with('preguntas')->findOrFail($pk_actividad);
+
+            $alumno = Alumno::with('usuario')->findOrFail($pk_alumno);
+
+            $respuestas = RespuestasAlumno::with([
+                    'pregunta',
+                    'alumno.usuario'
+                ])
+                ->where('fk_actividad', $pk_actividad)
+                ->where('fk_alumno', $pk_alumno)
+                ->get();
+
+            return view('docente.revisar-actividad', compact(
+                'actividad',
+                'alumno',
+                'respuestas'
+            ));
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar la actividad: ' . $th->getMessage());
+        }
+    }
+
+    public function calificarRespuesta(Request $request, $id){
+        $calificacion = $request->input('calificacion');
+
+        $respuesta = RespuestasAlumno::findOrFail($id);
+        $respuesta->calificada = 1;
+        $respuesta->es_correcta = $calificacion;
+        $respuesta->save();
+
+        return back()->with('success', 'Respuesta calificada correctamente.');
+    }
+
+    public function cargarActividadPendientePDF($pk_actividad, $pk_alumno){
+        try {
+            $actividad = Actividades::findOrFail($pk_actividad);
+            $entrega = EntregaPDFAlumno::where('fk_actividad', $pk_actividad)
+                            ->where('fk_alumno', $pk_alumno)
+                            ->firstOrFail();
+            $alumno = Alumno::with('usuario')->findOrFail($pk_alumno);
+
+            return view(
+                'docente.revisar-actividad-pdf',
+                compact(
+                    'entrega',
+                    'actividad',
+                    'alumno'
+                )
+            );
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar la actividad: ' . $th->getMessage());
+        }
+    }
+
+    public function calificarRespuestaPDF(Request $request){
+        try {
+            $request->validate([
+                'pk_entrega'   => 'required|integer|exists:entrega_pdf_alumno,pk_entrega',
+                'calificacion' => 'required|numeric|min:0|max:10',
+                'observaciones'=> 'nullable|string'
+            ]);
+
+            $entrega = EntregaPDFAlumno::findOrFail($request->pk_entrega);
+
+            $entrega->calificacion  = $request->calificacion;
+            $entrega->observaciones = $request->observaciones;
+            $entrega->save();
+
+
+            return response()->json([
+                'mensaje' => 'Calificación guardada correctamente.',
+                'ruta' => route('docente.actividades-pendientes'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al guardar la calificación.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
+    }
+
+    public function cargarActividadPendienteAudio($pk_actividad, $pk_alumno){
+        try {
+            $actividad = Actividades::findOrFail($pk_actividad);
+            $act_audio = ActividadAuditivaFrases::where('fk_actividad', $pk_actividad)
+                            ->firstOrFail();
+            $entrega = RespuestaAuditivaAlumno::where('fk_actividad', $pk_actividad)
+                            ->where('fk_alumno', $pk_alumno)
+                            ->firstOrFail();
+            $alumno = Alumno::with('usuario')->findOrFail($pk_alumno);
+
+            return view(
+                'docente.revisar-actividad-audio',
+                compact(
+                    'actividad',
+                    'act_audio',
+                    'entrega',
+                    'alumno'
+                )
+            );
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar la actividad: ' . $th->getMessage());
+        }
+    }
+
+    public function calificarRespuestaAudio(Request $request){
+        try {
+            $request->validate([
+                'pk_respuesta'   => 'required|integer|exists:respuesta_auditiva_alumno,pk_respuesta',
+                'calificacion' => 'required|numeric|min:0|max:10',
+                'observaciones'=> 'nullable|string'
+            ]);
+
+            $entrega = RespuestaAuditivaAlumno::findOrFail($request->pk_respuesta);
+
+            $entrega->calificacion  = $request->calificacion;
+            $entrega->observaciones = $request->observaciones;
+            $entrega->save();
+
+
+            return response()->json([
+                'mensaje' => 'Calificación guardada correctamente.',
+                'ruta' => route('docente.actividades-pendientes'),
+                'class' => 'success'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'mensaje' => 'Ocurrió un error al guardar la calificación.',
+                'detalle' => $th->getMessage(),
+                'class' => 'error'
+            ], 500);
+        }
     }
 
 }

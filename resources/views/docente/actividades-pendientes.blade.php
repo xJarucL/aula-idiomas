@@ -3,12 +3,14 @@
 @section('title', 'Pendientes | Aula de Idiomas')
 
 @section('content')
+<x-msj-alert />
+
 <section class="sm:mx-6 mt-6">
     <div class="bg-white shadow-lg rounded-2xl p-4">
         <h2 class="text-2xl font-semibold text-teal-600 mb-4">Entregas pendientes de revisión</h2>
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 mb-4">
-            <div class="relative w-full sm:w-1/2">
+            <div class="relative w-full">
                 <input
                     id="buscador"
                     data-url="{{ route('docente.pendientes.filtrar') }}"
