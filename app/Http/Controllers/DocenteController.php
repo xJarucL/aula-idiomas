@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\GrupoMateria;
 use App\Models\Actividades;
 use App\Models\RespuestasAlumno;
+use App\Models\EntregaPDFAlumno;
+use App\Models\RespuestaAuditivaAlumno;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -265,18 +267,36 @@ class DocenteController extends Controller
 
             $actividades = Actividades::where('fk_docente', $id)->get();
 
-            $actividadesRevisionCount = RespuestasAlumno::where('calificada', 0)
-                ->whereHas('pregunta', function ($q) {
-                    $q->where('tipo', 'abierta');
-                })
+            $actividadesAbiertas = RespuestasAlumno::where('calificada', 0)
+                ->whereHas('pregunta', fn($q) => $q->where('tipo', 'abierta'))
                 ->whereIn('fk_actividad', function ($q) use ($id) {
-                    $q->select('pk_actividad')
-                        ->from('actividades')
-                        ->where('fk_docente', $id);
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
                 })
                 ->select('fk_actividad', 'fk_alumno')
                 ->groupBy('fk_actividad', 'fk_alumno')
-                ->get()
+                ->get();
+
+            $actividadesPDF = EntregaPDFAlumno::whereNull('calificacion')
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get();
+
+            $actividadesAudio = RespuestaAuditivaAlumno::whereNull('calificacion')
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get();
+
+            $actividadesRevisionCount = collect()
+                ->merge($actividadesAbiertas)
+                ->merge($actividadesPDF)
+                ->merge($actividadesAudio)
+                ->unique(fn($item) => $item->fk_actividad . '-' . $item->fk_alumno)
                 ->count();
 
             $alumnosCount = GrupoMateria::where('fk_docente', $id)
@@ -300,11 +320,7 @@ class DocenteController extends Controller
 
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'mensaje' => 'Ocurrió un error al cargar el panel.',
-                'detalle' => $th->getMessage(),
-                'class' => 'error'
-            ], 500);
+           return back()->with('error', 'Ocurrió un problema al cargar el panel: ' . $th->getMessage());
         }
     }
 

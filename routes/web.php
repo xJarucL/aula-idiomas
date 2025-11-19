@@ -101,6 +101,12 @@ Route::prefix('docente')
 
     Route::get('actividades/pendientes', [ActividadController::class, 'cargarPendientes'])->name('docente.actividades-pendientes');
     Route::get('actividades/pendientes/filtrar', [ActividadController::class, 'filtrarPendientes'])->name('docente.pendientes.filtrar');
+    Route::get('actividad/{pk_actividad}/pendiente/revisar/{pk_alumno}', [ActividadController::class, 'cargarActividadPendiente'])->name('docente.revisar');
+    Route::post('calificar/{id}', [ActividadController::class, 'calificarRespuesta'])->name('docente.calificar.respuesta');
+    Route::get('actividad/{pk_actividad}/pendiente-pdf/revisar/{pk_alumno}', [ActividadController::class, 'cargarActividadPendientePDF'])->name('docente.revisar-pdf');
+    Route::put('calificar-pdf', [ActividadController::class, 'calificarRespuestaPDF'])->name('docente.calificar.pdf');
+    Route::get('actividad/{pk_actividad}/pendiente-audio/revisar/{pk_alumno}', [ActividadController::class, 'cargarActividadPendienteAudio'])->name('docente.revisar-audio');
+    Route::put('calificar-audio', [ActividadController::class, 'calificarRespuestaAudio'])->name('docente.calificar.audio');
 
     Route::get('/editar/perfil', function () {
         return view('docente.editar-perfil');
