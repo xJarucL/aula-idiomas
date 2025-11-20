@@ -1,6 +1,6 @@
 @extends('components.menu')
 
-@section('title', 'Registro de Coordinador')
+@section('title', 'Registro de Coordinador | Aula Idiomasz')
 
 @section('content')
 

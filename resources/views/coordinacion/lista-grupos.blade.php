@@ -1,6 +1,6 @@
 @extends('components.menu')
 
-@section('title', 'Gestión de Grupos')
+@section('title', 'Gestión de Grupos | Aula Idiomas')
 
 @section('content')
 

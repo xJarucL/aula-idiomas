@@ -10,16 +10,6 @@
             Bienvenido/a, {{Auth::user()->nombres}} {{Auth::user()->ap_paterno}} {{Auth::user()->ap_materno ?? ''}}
         </span>
     </section>
-    {{-- CARTAS INFOR --}}
-    <!-- <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 sm:mt-7">
-        <x-card-info title="General" icon="activity" color="blue" />
-
-        <x-card-info title="Escritura" icon="pending" color="purple" />
-
-        <x-card-info title="Lectura" icon="completed" color="teal" />
-
-        <x-card-info title="Nos" icon="total" color="yellow" />
-    </section> -->
 
     {{-- APRATDO DE INFOR ADICIONALL --}}
     <section class="grid grid-cols-6 sm:grid-cols-10 gap-3 mt-5">
@@ -33,7 +23,7 @@
             </div>
         </div>
         {{-- MATERIA --}}
-        <div class="col-span-6 sm:col-span-2 bg-white p-3 border border-gray-200 rounded-lg shadow">
+        <div class="col-span-3 sm:col-span-2 bg-white p-3 border border-gray-200 rounded-lg shadow">
             <div class="flex justify-between items-center h-full gap-2">
                 <div class="flex w-full flex-col gap-1 justify-center h-full">
                     <h3 class="text-sm sm:text-lg text-teal-700 font-medium">Materia</h3>
@@ -69,7 +59,7 @@
         </div>
 
         <!-- NO TERMINADAS -->
-         <div class="col-span-3 sm:col-span-2 bg-white p-3 border border-gray-200 rounded-lg shadow">
+         <div class="col-span-6 sm:col-span-2 bg-white p-3 border border-gray-200 rounded-lg shadow">
             <div class="flex justify-between items-center h-full w-full gap-2 ">
                 <div class="flex w-full flex-col gap-1 justify-center h-full ">
                     <h3 class="text-sm sm:text-lg hidden sm:inline-block text-teal-700 font-medium">No entregadas
@@ -88,7 +78,7 @@
             <div class="bg-white p-5 w-full h-auto sm:w-2/3 border border-gray-200 rounded-lg shadow">
                 {{-- CONTENIDO PENDIENTE --}}
                 <h3 class="text-lg text-teal-700 mb-2 font-semibold">Actividades pendientes</h3>
-                <div class="max-h-79 sm:max-h-80 overflow-y-auto pr-1">
+                <div class="max-h-79 sm:h-[800px] overflow-y-auto pr-1">
                     @foreach($pendientes as $actividad)
                         <x-card-actividad iconoA="question" color1="blue" nombreActividad="{{ $actividad['nom_actividad'] }}"
                             tipo="{{ $actividad['tipo'] }}" fecha="{{ $actividad['fecha_fin'] }}" iconoEntregable="pending" color2="orange" link="{{ route('alumno.responder-actividad', $actividad['pk_actividad']) }}"

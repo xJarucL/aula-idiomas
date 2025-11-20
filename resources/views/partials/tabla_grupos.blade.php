@@ -3,12 +3,12 @@
 <div class="h-150 sm:h-125 overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="hidden sm:table-row bg-gray-100 text-left">
-                <th class="py-2 px-2 md:px-4 text-left">Grupo</th>
-                <th class="py-2 px-2 md:px-4 text-left">Carrera</th>
-                <th class="py-2 px-2 md:px-4 text-left">Cuatrimestre</th>
-                <th class="py-2 px-2 md:px-4 text-left">Año</th>
-                <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
+            <tr class="hidden sm:table-row bg-teal-50 text-left">
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">GRUPO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">CARRERA</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">CUATRIMESTRE</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">AÑO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">ACCIONES</th>
             </tr>
         </thead>
         <tbody>

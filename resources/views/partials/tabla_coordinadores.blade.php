@@ -1,11 +1,11 @@
 <div class="h-150 sm:h-125 overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="hidden sm:table-row bg-gray-100">
-                <th class="py-2 px-2 md:px-4 text-left">Nombre Completo</th>
-                <th class="py-2 px-2 md:px-4 text-left">Correo</th>
-                <th class="py-2 px-2 md:px-4 text-left">Permiso</th>
-                <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
+            <tr class="hidden sm:table-row bg-teal-50">
+                <th class="py-2 px-2 md:px-4 text-left text-teal-700">NOMBRE COMPLETO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-700">CORREO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-700">PERMISO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-700">ACCIONES</th>
             </tr>
         </thead>
         <tbody>
