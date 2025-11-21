@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\GrupoMateria;
+use App\Models\Actividades;
+use App\Models\RespuestasAlumno;
+use App\Models\EntregaPDFAlumno;
+use App\Models\RespuestaAuditivaAlumno;
+use App\Models\Mensajes;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +22,92 @@ use Illuminate\Support\Facades\Validator;
 
 class DocenteController extends Controller
 {
+
+    public function panel($id){
+        try {
+            $usuario = User::findOrFail($id);
+            $id = $usuario->pk_usuario;
+
+            $grupos = GrupoMateria::with(['grupo.carrera', 'materia'])
+                ->with(['grupo' => function ($q) {
+                    $q->withCount('alumnos');
+                }])
+                ->where('fk_docente', $id);
+
+            $actividades = Actividades::where('fk_docente', $id)->get();
+
+            $actividadesAbiertas = RespuestasAlumno::where('calificada', 0)
+                ->whereHas('pregunta', fn($q) => $q->where('tipo', 'abierta'))
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get();
+
+            $actividadesPDF = EntregaPDFAlumno::whereNull('calificacion')
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get();
+
+            $actividadesAudio = RespuestaAuditivaAlumno::whereNull('calificacion')
+                ->whereIn('fk_actividad', function ($q) use ($id) {
+                    $q->select('pk_actividad')->from('actividades')->where('fk_docente', $id);
+                })
+                ->select('fk_actividad', 'fk_alumno')
+                ->groupBy('fk_actividad', 'fk_alumno')
+                ->get();
+
+            $actividadesRevisionCount = collect()
+                ->merge($actividadesAbiertas)
+                ->merge($actividadesPDF)
+                ->merge($actividadesAudio)
+                ->unique(fn($item) => $item->fk_actividad . '-' . $item->fk_alumno)
+                ->count();
+
+            $alumnosCount = GrupoMateria::where('fk_docente', $id)
+                ->whereNull('deleted_at')
+                ->with(['grupo.alumnos.usuario' => function($q) {
+                    $q->where('fk_tipo_usuario', 1);
+                }])
+                ->get()
+                ->flatMap(function($gm) {
+                    return $gm->grupo->alumnos
+                        ->map(fn($alumno) => $alumno->usuario)
+                        ->filter();
+                })
+                ->unique('pk_usuario')
+                ->count();
+
+            $gruposCount = $grupos->count();
+            $actividadesCount = $actividades->count();
+
+            $ultimoMensaje = Mensajes::with('deUsuario')
+                                    ->where('para_usuario', $id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->first();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Datos Obtenidos correctamente',
+                'usuario' => $usuario,
+                'gruposCount' => $gruposCount,
+                'actividadesCount' => $actividadesCount,
+                'alumnosCount' => $alumnosCount,
+                'actividadesRevisionCount' => $actividadesRevisionCount,
+                'ultimoMensaje' => $ultimoMensaje
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener datos.',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
 
     public function guardarDocente(Request $request){
         try {
