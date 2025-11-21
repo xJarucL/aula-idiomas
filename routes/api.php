@@ -97,6 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Rutas de alumnos
         Route::get('detalle-alumno/{id}', [AlumnoController::class, 'detalleAlumno']);
 
+        Route::get('panel/{id}', [DocenteController::class, 'panel']);
     });
 
     Route::get('/user', function(Request $request){
