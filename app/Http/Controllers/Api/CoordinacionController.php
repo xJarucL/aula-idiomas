@@ -18,7 +18,7 @@ class CoordinacionController extends Controller
             $alumnosCount = User::where('fk_tipo_usuario', 1)->count();
             $coordinadoresCount = User::where('fk_tipo_usuario', 3)->count();
 
-            $ultimoMensaje = Mensajes::with('paraUsuario')
+            $ultimoMensaje = Mensajes::with('deUsuario')
                                     ->where('para_usuario', $id)
                                     ->orderBy('created_at', 'desc')
                                     ->first();
