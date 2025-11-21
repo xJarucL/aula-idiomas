@@ -7,15 +7,21 @@ use Illuminate\Http\Request;
 
 use App\Models\Grupo;
 use App\Models\User;
+use App\Models\Mensajes;
 
 class CoordinacionController extends Controller
 {
-    public function panel(){
+    public function panel($id){
         try {
             $gruposCount = Grupo::count();
             $docentesCount = User::where('fk_tipo_usuario', 2)->count();
             $alumnosCount = User::where('fk_tipo_usuario', 1)->count();
             $coordinadoresCount = User::where('fk_tipo_usuario', 3)->count();
+
+            $ultimoMensaje = Mensajes::with('paraUsuario')
+                                    ->where('para_usuario', $id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->first();
 
             return response()->json([
                 'success' => true,
@@ -23,7 +29,8 @@ class CoordinacionController extends Controller
                 'gruposCount' => $gruposCount,
                 'docentesCount' => $docentesCount,
                 'alumnosCount' => $alumnosCount,
-                'coordinadoresCount' => $coordinadoresCount
+                'coordinadoresCount' => $coordinadoresCount,
+                'ultimoMensaje' => $ultimoMensaje
             ]);
         } catch (\Throwable $th) {
             return response()->json([

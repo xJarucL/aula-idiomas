@@ -55,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('grupo/crear', [GrupoController::class, 'guardarGrupo']);
         Route::post('grupo/asignar', [GrupoController::class, 'asignarGrupoAlumno']);
 
-        Route::get('panel', [CoordinacionController::class, 'panel']);
+        Route::get('panel/{id}', [CoordinacionController::class, 'panel']);
     });
 
     // Rutas de alumnos
