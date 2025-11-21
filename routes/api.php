@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\ActividadController;
 use App\Http\Controllers\Api\GrupoController;
 use App\Http\Controllers\Api\MensajeController;
+use App\Http\Controllers\Api\CoordinacionController;
 use App\Models\Grupo;
 
 // Ruta de prueba
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('grupo/crear', [GrupoController::class, 'guardarGrupo']);
         Route::post('grupo/asignar', [GrupoController::class, 'asignarGrupoAlumno']);
 
+        Route::get('panel', [CoordinacionController::class, 'panel']);
     });
 
     // Rutas de alumnos
