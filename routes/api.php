@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\ActividadController;
 use App\Http\Controllers\Api\GrupoController;
 use App\Http\Controllers\Api\MensajeController;
+use App\Http\Controllers\Api\RecuperacionController;
 use App\Http\Controllers\Api\CoordinacionController;
 use App\Models\Grupo;
 
@@ -19,6 +20,9 @@ Route::get('/test', function() {
 // Login
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login-google', [AuthController::class, 'loginWithGoogle']);
+
+// Recuperar contraseña
+Route::post('/recuperar-password', [RecuperacionController::class, 'enviarSolicitud']);
 
 // Rutas protegidas
 Route::middleware('auth:sanctum')->group(function () {
