@@ -1,12 +1,12 @@
 <div class="h-150 sm:h-125 overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="hidden sm:table-row bg-gray-100 text-left">
-                <th class="py-3 px-4">Matrícula</th>
-                <th class="py-3 px-4">Nombre Completo</th>
-                <th class="py-3 px-4">Carrera</th>
-                <th class="py-3 px-4">Promedio</th>
-                <th class="py-3 px-4">Acciones</th>
+            <tr class="hidden sm:table-row bg-teal-50 text-left">
+                <th class="py-3 px-4 text-teal-800">MATRICULA</th>
+                <th class="py-3 px-4 text-teal-800">NOMBRE COMPLETO</th>
+                <th class="py-3 px-4 text-teal-800">CARRERA</th>
+                <th class="py-3 px-4 text-teal-800">PROMEDIO</th>
+                <th class="py-3 px-4 text-teal-800">ACCIONES</th>
             </tr>
         </thead>
         <tbody>

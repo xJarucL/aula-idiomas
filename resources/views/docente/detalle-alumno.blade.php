@@ -33,7 +33,7 @@
             </div>
         </section>
     </div>
-    <div class="max-w-4xl mx-auto mt-2 bg-white rounded-lg shadow p-8">
+    <div class="max-w-4xl mx-auto mt-2 bg-white rounded-lg shadow p-4 sm:p-8">
         <section>
             <h2 class="text-2xl font-semibold">Grupos</h2>
         </section>

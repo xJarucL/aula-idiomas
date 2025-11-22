@@ -20,7 +20,7 @@
             </strong>
         </p>
 
-        <hr class="my-4">
+        <hr class="my-4 border-gray-300">
 
         @foreach($respuestas as $respuesta)
             <div class="border border-gray-200 bg-gray-50 p-5 rounded-xl shadow-sm my-5 hover:shadow-md transition">

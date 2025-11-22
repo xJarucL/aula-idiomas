@@ -1,6 +1,8 @@
 @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js'])
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="icon" href="{{ asset('img/logo-ingles.png') }}">
+<title>Inicio de Sesión | Aula Idiomas</title>
 
 <main class="bg-gray-100">
 
@@ -24,7 +26,7 @@
                 <div>
                     <input
                         class="bg-white w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition"
-                        type="text" inputmode="numeric" pattern="[0-9]*" id="matricula" name="matricula"
+                        type="text" inputmode="numeric" pattern="[0-9]*" id="matricula" name="matricula" autocomplete="off"
                         placeholder="Matrícula" required maxlength="9"
                         oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)">
                 </div>
@@ -40,7 +42,7 @@
                     </a>
                 </div>
                 <input
-                    class="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition duration-200 shadow-md"
+                    class="w-full bg-teal-600 text-white font-medium py-3 rounded-lg hover:bg-teal-700 transition duration-200 shadow-md cursor-pointer"
                     type="submit" value="Iniciar sesión">
             </form>
             <a href="{{ route('google.login') }}"
