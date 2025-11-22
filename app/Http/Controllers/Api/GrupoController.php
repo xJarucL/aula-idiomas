@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Alumno;
 use App\Models\RespuestasAlumno;
 use App\Models\ActividadGrupo;
+use App\Models\Mensajes;
 
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
@@ -274,12 +275,18 @@ class GrupoController extends Controller
             return $grupoAlumno;
         });
 
+        $ultimoMensaje = Mensajes::with('deUsuario')
+                                    ->where('para_usuario', $id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->first();
+
         return response()->json([
             'success' => true,
             'message' => 'Grupos obtenidos correctamente',
             'usuario' => $usuario,
             'alumno' => $alumno,
             'grupos' => $grupos,
+            'ultimoMensaje' => $ultimoMensaje
         ]);
     }
 
