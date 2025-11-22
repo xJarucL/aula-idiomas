@@ -21,12 +21,12 @@
             </strong>
         </p>
 
-        <hr class="my-4">
+        <hr class="my-4 border-gray-400">
 
         @if($entrega->archivo_alumno)
             <iframe
                 src="{{ asset('storage/' . $entrega->archivo_alumno) }}"
-                class="w-full h-[800px] border rounded-xl shadow"
+                class="w-full h-[800px] border border-gray-400 rounded-xl shadow"
             ></iframe>
         @else
             <p class="text-gray-500 mt-4">El alumno no subió un archivo PDF.</p>
@@ -39,7 +39,7 @@
             <input type="hidden" name="fk_actividad" value="{{ $actividad->pk_actividad }}">
             <input type="hidden" name="fk_alumno" value="{{ $alumno->pk_alumno }}">
 
-            <div class="bg-gray-50 border rounded-2xl p-6 shadow-inner">
+            <div class="bg-gray-50 border border-gray-400 rounded-2xl p-6 shadow-inner">
 
                 <h3 class="text-2xl font-semibold text-teal-700 mb-4">Calificación</h3>
 
@@ -51,14 +51,14 @@
                     max="10"
                     step="0.01"
                     required
-                    class="mt-1 w-32 px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    class="mt-1 w-32 px-3 py-2 border border-gray-400 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 >
 
                 <label class="block text-gray-700 font-semibold mt-4">Observaciones</label>
                 <textarea
                     name="observaciones"
                     rows="4"
-                    class="mt-1 w-full px-3 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    class="mt-1 w-full px-3 py-2 border border-gray-400 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                     placeholder="Escribe comentarios sobre el desempeño del alumno..."
                 ></textarea>
 

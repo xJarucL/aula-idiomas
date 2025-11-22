@@ -12,8 +12,8 @@
         </a>
     </div>
 
-<div class="p-6 space-y-8">
-    <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-teal-600">
+<div class="sm:p-6 space-y-8">
+    <div class="bg-white rounded-2xl shadow-lg p-6 mt-3 sm:mt-0 border-t-4 border-teal-600">
         <h1 class="text-2xl font-bold text-gray-800 mb-2">
             {{ $grupo->fk_cuatrimestre ?? '' }}{{ $grupo->nombre ?? '' }}{{ $grupo->carrera->abreviatura ?? '' }} {{ $grupo->año ?? '' }}
         </h1>
@@ -55,7 +55,7 @@
             @forelse ($grupo->actividades as $actividad)
                 <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5 mb-3 hover:shadow-lg transition">
                     <h3 class="text-lg font-semibold text-gray-800">{{ $actividad['nom_actividad'] }}</h3>
-                    <p class="text-gray-600 mt-1 text-sm">
+                    <p class="text-gray-600 mt-1 text-sm text-justify">
                         {{ $actividad['descripcion'] ?? 'Sin descripción' }}
                     </p>
                     <div class="flex justify-between items-center mt-4 text-sm text-gray-500">

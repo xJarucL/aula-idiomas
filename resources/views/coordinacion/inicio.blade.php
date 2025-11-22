@@ -6,12 +6,12 @@
 
     <section class="flex flex-col md:flex-row justify-between m-2 items-start md:items-center">
         <div class="">
-            <h1 class="text-3xl sm:text-4xl font-bold text-teal-800">Panel del Coordinador</h1>
+            <h1 class="text-2xl sm:text-4xl font-bold text-teal-700">Panel del Coordinador</h1>
             <span class="text-gray-500 text-[15px] sm:text-lg font-light mt-2">Bienvenido/a, {{ Auth::user()->nombres }}
                 {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno }}.</span>
         </div>
     </section>
-    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5 sm:mt-10">
         {{-- CARTAS INFORAMACION --}}
 
         <x-card-info title="Grupos" :count="$gruposCount" icon="users" color="blue"
@@ -45,16 +45,16 @@
         </div>
         {{-- ACCESSOS RAPIDOS --}}
         <div class="col-span-1 sm:col-span-3 mt-7">
-            <div class="bg-white w-full p-4 h-auto border border-gray-200 rounded-lg shadow">
+            <div class="bg-white w-full p-4 h-125 border border-gray-200 rounded-lg shadow">
                 <h1 class="text-xl sm:text-2xl font-semibold text-teal-700 mb-3">Accesos Rapidos</h1>
                 {{-- FORMULARIO DOCENTE --}}
                 <a href="{{ route('coordinacion.lista-docentes') }}"
                     class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm">
-                    <div class="p-3">
-                        <h1 class="text-[20px] font-bold mt-1">Gestión de Docente</h1>
-                        <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de docente</h4>
+                    <div class="p-3 flex items-center">
+                        <h1 class="text-[15px] sm:text-[20px] text-gray-600 font-bold mt-1">Registrar Docente</h1>
+                        {{-- <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de docente</h4> --}}
                     </div>
-                    <div class="flex justify-center items-center p-3 mr-2">
+                    <div class="flex justify-center items-center p-3">
                         <div>
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#2B877A"
                                 stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -65,12 +65,12 @@
                 </a>
                 {{-- FORMULARIO ALUMNOS --}}
                 <a href="{{ route('coordinacion.lista-alumnos') }}"
-                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
-                    <div class="p-3">
-                        <h1 class="text-[20px] font-bold mt-1">Gestión de Alumnos</h1>
-                        <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de alumnos</h4>
+                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-8">
+                    <div class="p-3 flex items-center">
+                        <h1 class="text-[15px] sm:text-[20px] text-gray-600 font-bold mt-1">Registrar Alumnos</h1>
+                        {{-- <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de alumnos</h4> --}}
                     </div>
-                    <div class="flex justify-center items-center p-3 mr-2">
+                    <div class="flex justify-center items-center p-3">
                         <div>
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#2B877A"
                                 stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -80,12 +80,12 @@
                     </div>
                 </a>
                 <a href="{{ route('coordinacion.lista-grupos') }}"
-                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
-                    <div class="p-3">
-                        <h1 class="text-[20px] font-bold mt-1">Gestión de Grupos</h1>
-                        <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4>
+                    class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-8">
+                    <div class="p-3 flex items-center">
+                        <h1 class="text-[15px] sm:text-[20px] text-gray-600 font-bold mt-1">Registrar Grupos</h1>
+                        {{-- <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4> --}}
                     </div>
-                    <div class="flex justify-center items-center p-3 mr-2">
+                    <div class="flex justify-center items-center p-3">
                         <div>
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#2B877A"
                                 stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -94,12 +94,12 @@
                         </div>
                     </div>
                 </a>
-                <a href="#" class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-9">
-                    <div class="p-3">
-                        <h1 class="text-[20px] font-bold mt-1">Gestión de Grupos</h1>
-                        <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4>
+                <a href="#" class="h-auto flex justify-between border border-gray-300 rounded-xl shadow-sm mt-8">
+                    <div class="p-3 flex items-center">
+                        <h1 class="text-[15px] sm:text-[20px] text-gray-600 font-bold mt-1">Registrar Coordinador</h1>
+                        {{-- <h4 class="text-[15px] font-light text-gray-400">Registra, edita y actualiza datos de grupos</h4> --}}
                     </div>
-                    <div class="flex justify-center items-center p-3 mr-2">
+                    <div class="flex justify-center items-center p-3">
                         <div>
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#2B877A"
                                 stroke-width="4" stroke-linecap="round" stroke-linejoin="round">

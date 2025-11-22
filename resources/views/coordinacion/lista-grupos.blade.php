@@ -1,6 +1,6 @@
 @extends('components.menu')
 
-@section('title', 'Gestión de Grupos')
+@section('title', 'Gestión de Grupos | Aula Idiomas')
 
 @section('content')
 
@@ -51,14 +51,14 @@
 
         <div class="flex gap-2 w-full md:w-1/3">
             <select name="cuatrimestre" data-filter
-                class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
+                class="bg-white text-gray-700 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
                 <option value="" selected>Todos los cuatrimestres</option>
                 @foreach ($cuatrimestres as $c)
                     <option value="{{ $c->pk_cuatrimestre }}">{{ $c->num_cuatri }}</option>
                 @endforeach
             </select>
             <select name="carrera" data-filter
-                class="bg-white border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
+                class="bg-white text-gray-700 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow text-sm md:text-base w-1/2">
                 <option value="" selected>Todas las carreras</option>
                 @foreach ($carreras as $c)
                     <option value="{{ $c->pk_carrera }}">{{ $c->nombre }}</option>
