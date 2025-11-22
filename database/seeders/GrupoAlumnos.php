@@ -17,5 +17,9 @@ class GrupoAlumnos extends Seeder
             'fk_alumno' => '1',
             'fk_grupo' => '1',
         ]);
+        GrupoAlumno::create([
+            'fk_alumno' => '2',
+            'fk_grupo' => '1',
+        ]);
     }
 }

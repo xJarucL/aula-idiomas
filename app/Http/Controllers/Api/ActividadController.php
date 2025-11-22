@@ -326,13 +326,15 @@ class ActividadController extends Controller
             $actividades = DB::table('actividad_grupo')
                 ->join('actividades', 'actividad_grupo.fk_actividad', '=', 'actividades.pk_actividad')
                 ->where('actividad_grupo.fk_grupo', $grupoAlumno->fk_grupo)
+                ->where('actividades.tipo', 'preguntas')
                 ->select(
                     'actividades.pk_actividad',
                     'actividades.nom_actividad',
                     'actividades.descripcion',
                     'actividad_grupo.fecha_inicio',
                     'actividad_grupo.fecha_fin',
-                    'actividad_grupo.fk_grupo'
+                    'actividad_grupo.fk_grupo',
+                    'actividades.tipo'
                 )
                 ->get();
 
