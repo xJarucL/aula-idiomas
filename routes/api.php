@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('alumno/eliminar/{id}', [AlumnoController::class, 'eliminarAlumno']);
         Route::put('alumno/restaurar/{id}', [AlumnoController::class, 'restaurarAlumno']);
         Route::get('alumnos', [AlumnoController::class, 'obtenerAlumnos']);
+        Route::get('alumnos/grupo', [AlumnoController::class, 'obtenerAlumnosPorGrupo']);
 
         // Rutas de gestión de grupos
         Route::get('lista-grupos', [GrupoController::class, 'listaGruposCoordinador']);
@@ -95,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Rutas de actividades
         Route::post('asignar-actividad', [ActividadController::class, 'asignarActividad']);
-        Route::get('grupos-actividad', [ActividadController::class, 'obtenerGrupos']);
+        Route::get('grupos-actividad/{id}', [ActividadController::class, 'obtenerGrupos']);
         Route::get('detalle-actividad/{id}', [ActividadController::class, 'detalleActividad']);
 
         // Rutas de alumnos
