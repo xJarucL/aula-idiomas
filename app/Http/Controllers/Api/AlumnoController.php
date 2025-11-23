@@ -215,6 +215,7 @@ class AlumnoController extends Controller
             return [
                 'pk_actividad' => $act->pk_actividad,
                 'nom_actividad' => $act->nom_actividad,
+                'tipo' => $act->tipo,
                 'entregado' => $entregado,
             ];
         });
@@ -258,6 +259,38 @@ class AlumnoController extends Controller
                 'error' => $th
             ]);
         }
+    }
+
+    public function obtenerAlumnosPorGrupo(){
+        $grupos = Grupo::with(['alumnos.usuario', 'carrera', 'cuatrimestre'])->get();
+
+        $respuesta = [];
+
+        foreach ($grupos as $grupo) {
+            $lista = [];
+
+            foreach ($grupo->alumnos as $a) {
+                $lista[] = [
+                    'pk_usuario' => $a->usuario->pk_usuario,
+                    'nombres' => $a->usuario->nombres,
+                    'ap_paterno' => $a->usuario->ap_paterno,
+                    'ap_materno' => $a->usuario->ap_materno,
+                ];
+            }
+
+            $nombreGrupo =
+                        $grupo->fk_cuatrimestre. ' ' .
+                        $grupo->nombre . ' ' .
+                        $grupo->carrera->abreviatura . ' ' .
+                        $grupo->año;
+
+            $respuesta[$nombreGrupo] = $lista;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $respuesta
+        ]);
     }
 
 

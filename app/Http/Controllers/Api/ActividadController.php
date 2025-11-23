@@ -14,6 +14,7 @@ use App\Models\RespuestasAlumno;
 use App\Models\User;
 use App\Models\Alumno;
 use App\Models\GrupoAlumno;
+use App\Models\GrupoMateria;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -211,8 +212,11 @@ class ActividadController extends Controller
         ]);
     }
 
-    public function obtenerGrupos(){
-        $grupos = Grupo::with('carrera')->get();
+    public function obtenerGrupos($id){
+        $gruposMateria = GrupoMateria::where('fk_docente', $id)->pluck('fk_grupo');
+        $grupos = Grupo::with('carrera')
+                        ->whereIn('pk_grupo', $gruposMateria)
+                        ->get();
 
         return response()->json([
             'success' => true,
