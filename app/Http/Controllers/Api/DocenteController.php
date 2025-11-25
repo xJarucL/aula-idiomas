@@ -32,7 +32,12 @@ class DocenteController extends Controller
                 ->with(['grupo' => function ($q) {
                     $q->withCount('alumnos');
                 }])
-                ->where('fk_docente', $id);
+                ->where('fk_docente', $id)
+                ->whereNull('deleted_at')
+                ->whereHas('grupo', function ($q) {
+                    $q->whereNull('deleted_at');
+                });
+
 
             $actividades = Actividades::where('fk_docente', $id)->get();
 
@@ -70,17 +75,26 @@ class DocenteController extends Controller
 
             $alumnosCount = GrupoMateria::where('fk_docente', $id)
                 ->whereNull('deleted_at')
-                ->with(['grupo.alumnos.usuario' => function($q) {
-                    $q->where('fk_tipo_usuario', 1);
-                }])
+                ->whereHas('grupo', function ($q) {
+                    $q->whereNull('deleted_at');
+                })
+                ->with([
+                    'grupo' => function ($q) {
+                        $q->whereNull('deleted_at');
+                    },
+                    'grupo.alumnos.usuario' => function ($q) {
+                        $q->where('fk_tipo_usuario', 1);
+                    }
+                ])
                 ->get()
-                ->flatMap(function($gm) {
+                ->flatMap(function ($gm) {
                     return $gm->grupo->alumnos
                         ->map(fn($alumno) => $alumno->usuario)
                         ->filter();
                 })
                 ->unique('pk_usuario')
                 ->count();
+
 
             $gruposCount = $grupos->count();
             $actividadesCount = $actividades->count();
@@ -93,11 +107,11 @@ class DocenteController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Datos Obtenidos correctamente',
-                'usuario' => $usuario,
-                'gruposCount' => $gruposCount,
-                'actividadesCount' => $actividadesCount,
-                'alumnosCount' => $alumnosCount,
-                'actividadesRevisionCount' => $actividadesRevisionCount,
+                'usuario' => $usuario ?? null,
+                'gruposCount' => $gruposCount ?? 0,
+                'actividadesCount' => $actividadesCount ?? 0,
+                'alumnosCount' => $alumnosCount ?? 0,
+                'actividadesRevisionCount' => $actividadesRevisionCount ?? 0,
                 'ultimoMensaje' => $ultimoMensaje
             ]);
         } catch (\Throwable $th) {
