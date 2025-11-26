@@ -185,6 +185,8 @@ Route::prefix('coordinacion')
     Route::get('/editar-coordinador/{id}', [CoordinadorController::class, 'cargarCoordinador'])->name('coordinador.cargar');
     Route::put('/editando/coordiandor', [CoordinadorController::class, 'actualizarCorreo'])->name('coordinador.actualizar-correo');
 
+    Route::get('grupo/{id}', [GrupoController::class, 'detalleGrupo'])->name('coordinador.detalle-grupo');
+
 });
 
 // RUTAS PARA RECUPERAR CONTRASEÑA
