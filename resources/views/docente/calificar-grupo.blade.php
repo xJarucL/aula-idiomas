@@ -112,7 +112,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-center">
-                                <a href="#"
+                                <a href="{{ route('docente.alumno-actividades', ['alumno' => $alumno->pk_alumno, 'grupo' => $grupo->pk_grupo]) }}"
                                     class="inline-flex items-center px-3 py-1.5 text-sm font-semibold
                                            bg-teal-600 text-white rounded-lg shadow
                                            hover:bg-teal-700 transition">

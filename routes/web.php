@@ -117,6 +117,8 @@ Route::prefix('docente')
     Route::get('calificar/{id}', [DocenteController::class, 'calificarGrupo'])->name('docente.calificar.grupo');
     Route::post('guardar/calificacion', [DocenteController::class, 'guardarCalificacion'])->name('docente.guardar.calificacion');
 
+    Route::get('actividades/alumno/{alumno}/grupo/{grupo}', [ActividadController::class, 'actividadesAlumno'])->name('docente.alumno-actividades');
+
 });
 
 Route::prefix('coordinacion')

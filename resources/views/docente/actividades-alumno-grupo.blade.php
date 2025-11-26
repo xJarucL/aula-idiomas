@@ -6,6 +6,11 @@
 
 <section class="mx-6 mt-6">
 
+    <a href="{{ route('docente.calificar.grupo', $grupoId) }}"
+        class="inline-flex items-center gap-2 text-teal-700 hover:text-teal-900 mb-4">
+        ← Regresar
+    </a>
+
     <h1 class="text-2xl font-semibold text-gray-800 mb-6">
         Actividades del Alumno
     </h1>
