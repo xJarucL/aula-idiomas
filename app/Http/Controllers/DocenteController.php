@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Calificaciones;
+use App\Models\Grupo;
 use App\Models\GrupoMateria;
+use App\Models\GrupoAlumno;
 use App\Models\Actividades;
 use App\Models\RespuestasAlumno;
 use App\Models\EntregaPDFAlumno;
@@ -323,5 +326,85 @@ class DocenteController extends Controller
            return back()->with('error', 'Ocurrió un problema al cargar el panel: ' . $th->getMessage());
         }
     }
+
+    public function calificar(){
+        try {
+            $docente = Auth::user();
+            $id = $docente->pk_usuario;
+
+            $grupos = GrupoMateria::with('grupo', 'materia')
+                                    ->where('fk_docente', $id)
+                                    ->get();
+
+            return view('docente.calificar', compact('grupos'));
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar los grupos: ' . $th->getMessage());
+        }
+    }
+
+    public function calificarGrupo($id){
+        try {
+            $grupo = Grupo::with('carrera', 'grupoMaterias.materia')->findOrFail($id);
+            $materia = $grupo->grupoMaterias->first()->materia;
+
+            $alumnos = GrupoAlumno::with('alumno.usuario')
+                                    ->where('fk_grupo', $id)
+                                    ->get();
+
+            $calificaciones = Calificaciones::where('fk_materia', $materia->pk_materia)->get();
+
+            return view('docente.calificar-grupo', compact('grupo', 'alumnos', 'materia', 'calificaciones'));
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar los alumnos: ' . $th->getMessage());
+        }
+    }
+
+    public function guardarCalificacion(Request $request){
+        $request->validate([
+            'fk_alumno' => 'required|integer',
+            'fk_materia' => 'required|integer',
+            'calificacion' => 'required|numeric|min:0|max:10',
+        ],[
+            'calificacion.min' => 'La calificación no puede ser menor a 0.',
+            'calificacion.max' => 'La calificación no puede ser mayor a 10.',
+            'calificacion.numeric' => 'La calificación debe ser un número válido.',
+        ]);
+
+        try {
+            $calificacion = Calificaciones::where('fk_alumno', $request->fk_alumno)
+                ->where('fk_materia', $request->fk_materia)
+                ->first();
+
+            if (!$calificacion) {
+                Calificaciones::create([
+                    'fk_alumno' => $request->fk_alumno,
+                    'fk_materia' => $request->fk_materia,
+                    'calificacion' => $request->calificacion,
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Calificación guardada correctamente.'
+                ]);
+            }
+
+            $calificacion->update([
+                'calificacion' => $request->calificacion
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Calificación actualizada correctamente.'
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al guardar la calificación.'
+            ], 500);
+        }
+    }
+
 
 }

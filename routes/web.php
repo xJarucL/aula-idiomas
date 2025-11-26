@@ -112,6 +112,11 @@ Route::prefix('docente')
         return view('docente.editar-perfil');
     })->name('docente.editar');
     Route::put('/editando/perfil', [DocenteController::class, 'actualizarPerfil'])->name('docente.actualizar-perfil');
+
+    Route::get('calificar', [DocenteController::class, 'calificar'])->name('docente.calificar');
+    Route::get('calificar/{id}', [DocenteController::class, 'calificarGrupo'])->name('docente.calificar.grupo');
+    Route::post('guardar/calificacion', [DocenteController::class, 'guardarCalificacion'])->name('docente.guardar.calificacion');
+
 });
 
 Route::prefix('coordinacion')
