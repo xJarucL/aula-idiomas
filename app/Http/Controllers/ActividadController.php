@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Actividades;
 use App\Models\ActividadPDF;
 use App\Models\ActividadAuditivaFrases;
+use App\Models\ActividadGrupo;
 use App\Models\Preguntas;
 use App\Models\Alumno;
 use App\Models\Grupo;
 use App\Models\OpcionesPregunta;
 use App\Models\RespuestasAlumno;
-use App\Models\ActividadGrupo;
 use App\Models\EntregaPDFAlumno;
 use App\Models\RespuestaAuditivaAlumno;
 use Illuminate\Support\Facades\DB;
@@ -845,6 +845,116 @@ class ActividadController extends Controller{
                 'detalle' => $th->getMessage(),
                 'class' => 'error'
             ], 500);
+        }
+    }
+
+    public function actividadesAlumno($alumnoId, $grupoId){
+        try {
+            $actividadesGrupo = ActividadGrupo::with('actividad')
+                ->where('fk_grupo', $grupoId)
+                ->get();
+
+            $resultado = [];
+            $suma = 0;
+            $contador = 0;
+
+            foreach ($actividadesGrupo as $ag) {
+                $actividad = $ag->actividad;
+                $fechaFin = $ag->fecha_fin;
+                $hoy = now();
+
+                $item = [
+                    'actividad' => $actividad,
+                    'entrega' => null,
+                    'calificacion' => null,
+                    'caducada' => $hoy->gt($fechaFin),
+                ];
+
+                if ($actividad->tipo === 'preguntas') {
+
+                    $respuestas = RespuestasAlumno::where('fk_actividad', $actividad->pk_actividad)
+                        ->where('fk_alumno', $alumnoId)
+                        ->get();
+
+                    $item['entrega'] = $respuestas;
+
+                    if ($respuestas->count() > 0) {
+                        $soloCalificadas = $respuestas->filter(fn($r) => $r->calificada);
+
+                        if ($soloCalificadas->count() > 0) {
+                            $cal = round($soloCalificadas->avg('es_correcta') * 10, 2);
+                            $item['calificacion'] = $cal;
+
+                            $suma += $cal;
+                            $contador++;
+                        }
+                    } else {
+                        if ($item['caducada']) {
+                            $item['calificacion'] = 0;
+                            $suma += 0;
+                            $contador++;
+                        }
+                    }
+                }
+
+                if ($actividad->tipo === 'pdf') {
+
+                    $entregaPdf = EntregaPdfAlumno::where('fk_actividad', $actividad->pk_actividad)
+                        ->where('fk_alumno', $alumnoId)
+                        ->first();
+
+                    $item['entrega'] = $entregaPdf;
+
+                    if ($entregaPdf) {
+                        $item['calificacion'] = $entregaPdf->calificacion;
+
+                        $suma += $entregaPdf->calificacion;
+                        $contador++;
+                    } else {
+                        if ($item['caducada']) {
+                            $item['calificacion'] = 0;
+                            $suma += 0;
+                            $contador++;
+                        }
+                    }
+                }
+
+                if ($actividad->tipo === 'auditiva') {
+
+                    $entregaAudio = RespuestaAuditivaAlumno::where('fk_actividad', $actividad->pk_actividad)
+                        ->where('fk_alumno', $alumnoId)
+                        ->first();
+
+                    $item['entrega'] = $entregaAudio;
+
+                    if ($entregaAudio) {
+                        $item['calificacion'] = $entregaAudio->calificacion;
+
+                        $suma += $entregaAudio->calificacion;
+                        $contador++;
+                    } else {
+                        if ($item['caducada']) {
+                            $item['calificacion'] = 0;
+                            $suma += 0;
+                            $contador++;
+                        }
+                    }
+                }
+
+                $resultado[] = $item;
+            }
+
+            $promedioGeneral = $contador > 0 ? round($suma / $contador, 2) : null;
+
+            return view('docente.actividades-alumno-grupo', [
+                'actividades' => $resultado,
+                'alumnoId' => $alumnoId,
+                'grupoId' => $grupoId,
+                'promedioGeneral' => $promedioGeneral
+            ]);
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Ocurrió un problema al cargar las actividades: ' . $th->getMessage());
         }
     }
 
