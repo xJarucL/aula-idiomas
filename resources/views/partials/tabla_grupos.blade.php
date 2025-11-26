@@ -49,7 +49,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <a href="#" class="text-cyan-600 hover:text-cyan-800"
+                                    <a href="{{ route('coordinador.detalle-grupo', $grupo->pk_grupo) }}" class="text-cyan-600 hover:text-cyan-800"
                                         title="Detalles">Detalles</a>
                                     <a href="{{ route('coordinacion.asignar-grupo', $grupo->pk_grupo) }}"
                                         class="text-green-600 hover:text-green-800" title="Asignar">Asignar</a>
