@@ -2,6 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="icon" href="{{ asset('img/logo-ingles.png') }}">
+<link rel="manifest" href="/manifest.json">
 <title>Inicio de Sesión | Aula Idiomas</title>
 
 <main class="bg-gray-100">
@@ -11,7 +12,7 @@
     <div class="flex flex-col items-center justify-center min-h-screen px-4">
         <div
             class="w-full max-w-xs sm:max-w-sm md:max-w-md
-            border border-gray-200 p-5 bg-white rounded-2xl shadow-sm        
+            border border-gray-200 p-5 bg-white rounded-2xl shadow-sm
         ">
             <div class="flex justify-center items-center">
                 <img src="{{ asset('img/logo-ingles.png') }}" class="w-28 h-23 sm:w-39 sm:h-34" alt="logo idioma">
@@ -65,3 +66,11 @@
             </a>
         </div>
 </main>
+
+<script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/serviceworker.js")
+            .then(() => console.log("Service Worker registrado"))
+            .catch(err => console.log("Error SW:", err));
+    }
+</script>

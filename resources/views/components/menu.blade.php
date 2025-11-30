@@ -10,6 +10,9 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="icon" href="{{ asset('img/logo-ingles.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
 </head>
 
 <body class="bg-gray-200 min-h-screen">
@@ -240,6 +243,8 @@
     </nav>
 
     <main class="p-5 md:mr-20 md:ml-20">
+        <x-msj-alert />
+        <div id="alerta" class="error hidden"></div>
         @yield('content')
     </main>
 
@@ -248,6 +253,49 @@
     </main>
 
     @yield('scripts')
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/serviceworker.js")
+                .then(() => console.log("Service Worker registrado"))
+                .catch(err => console.log("Error SW:", err));
+        }
+    </script>
+
+    <script>
+        window.addEventListener('offline', () => {
+            const alerta = document.getElementById('alerta');
+
+            alerta.classList.remove('hidden', 'success');
+            alerta.classList.add('error');
+            alerta.innerHTML = 'No hay conexión. La operación se guardará y se enviará cuando vuelvas online.';
+
+            alerta.style.display = 'block';
+            alerta.style.animation = 'slideUp 0.5s forwards';
+
+            setTimeout(() => {
+                alerta.style.animation = 'slideDown 0.5s forwards';
+                setTimeout(() => alerta.style.display = 'none', 500);
+            }, 6000);
+        });
+
+        window.addEventListener('online', () => {
+            const alerta = document.getElementById('alerta');
+
+            alerta.classList.remove('hidden', 'error');
+            alerta.classList.add('success');
+            alerta.innerHTML = 'Conexión restaurada. Enviando solicitudes pendientes...';
+
+            alerta.style.display = 'block';
+            alerta.style.animation = 'slideUp 0.5s forwards';
+
+            setTimeout(() => {
+                alerta.style.animation = 'slideDown 0.5s forwards';
+                setTimeout(() => alerta.style.display = 'none', 500);
+            }, 4000);
+        });
+    </script>
+
 </body>
 
 </html>
