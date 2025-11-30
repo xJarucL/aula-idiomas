@@ -22,15 +22,15 @@ function actualizarDashboard() {
         const li = document.createElement('li');
         li.className = "flex items-center justify-between bg-yellow-300 px-3 py-2 rounded shadow-sm text-sm animate-fadeIn";
         li.innerHTML = `
-            <span class="font-medium">${item.mensaje || 'Acción pendiente'}</span>
+            <span class="font-medium">${item.alerta || 'Acción pendiente'}</span>
             <span class="text-gray-700 italic text-xs">Pendiente</span>
         `;
         lista.appendChild(li);
     });
 }
 
-function guardarEnCola(url, data, mensaje = 'Acción pendiente') {
-    colaOffline.push({ url, data, mensaje });
+function guardarEnCola(url, data, alerta = 'Acción pendiente') {
+    colaOffline.push({ url, data, alerta });
     localStorage.setItem('colaOffline', JSON.stringify(colaOffline));
     actualizarDashboard();
 }
@@ -43,10 +43,10 @@ function enviarFormulario($form, guardarOffline = true) {
                 let dataObj = {};
                 formData.forEach((value, key) => dataObj[key] = value);
 
-                guardarEnCola($form.data('url'), dataObj, $form.data('mensaje') || 'Formulario pendiente');
+                guardarEnCola($form.data('url'), dataObj, $form.data('alerta') || 'Formulario pendiente');
             }
 
-            $('#mensaje')
+            $('#alerta')
                 .removeClass('hidden')
                 .removeClass('success')
                 .addClass('error')
@@ -62,31 +62,31 @@ function enviarFormulario($form, guardarOffline = true) {
             processData: false,
             contentType: false,
             success: function(response) {
-                $('#mensaje')
+                $('#alerta')
                     .removeClass('hidden')
                     .removeClass('error')
                     .addClass(response.class || 'success')
-                    .html(response.mensaje || response.message || 'Operación exitosa.')
+                    .html(response.alerta || response.message || 'Operación exitosa.')
                     .fadeIn();
                 setTimeout(() => {
                     if (response.ruta) window.location.href = response.ruta;
-                    else $('#mensaje').fadeOut();
+                    else $('#alerta').fadeOut();
                 }, 2000);
                 resolve(response);
             },
             error: function(xhr) {
                 let res = xhr.responseJSON;
-                let mensaje = !navigator.onLine
+                let alerta = !navigator.onLine
                     ? 'No hay conexión. La operación se guardará y se enviará cuando vuelvas online.'
-                    : res?.mensaje || res?.message || 'Ha ocurrido un error inesperado.';
+                    : res?.alerta || res?.message || 'Ha ocurrido un error inesperado.';
 
-                $('#mensaje')
+                $('#alerta')
                     .removeClass('hidden')
                     .removeClass('success')
                     .addClass('error')
-                    .html(mensaje)
+                    .html(alerta)
                     .fadeIn();
-                setTimeout(() => $('#mensaje').fadeOut(), 4000);
+                setTimeout(() => $('#alerta').fadeOut(), 4000);
                 reject(xhr);
             }
         });
@@ -185,14 +185,14 @@ async function procesarColaOffline() {
     colaOffline = [];
     localStorage.removeItem('colaOffline');
 
-    $('#mensaje')
+    $('#alerta')
         .removeClass('hidden')
         .removeClass('error')
         .addClass('success')
         .html('Todas las acciones pendientes se enviaron correctamente.')
         .fadeIn();
     actualizarDashboard();
-    setTimeout(() => $('#mensaje').fadeOut(), 4000);
+    setTimeout(() => $('#alerta').fadeOut(), 4000);
 }
 
 window.addEventListener('online', () => {

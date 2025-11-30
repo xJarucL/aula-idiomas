@@ -243,7 +243,7 @@
     </nav>
 
     <main class="p-5 md:mr-20 md:ml-20">
-        <div id="mensaje" class="hidden"></div>
+        <div id="alerta" class="hidden"></div>
         @yield('content')
     </main>
 
@@ -263,34 +263,34 @@
 
     <script>
         window.addEventListener('offline', () => {
-            const mensaje = document.getElementById('mensaje');
+            const alerta = document.getElementById('alerta');
 
-            mensaje.classList.remove('hidden', 'success');
-            mensaje.classList.add('error');
-            mensaje.innerHTML = 'No hay conexión. La operación se guardará y se enviará cuando vuelvas online.';
+            alerta.classList.remove('hidden', 'success');
+            alerta.classList.add('error');
+            alerta.innerHTML = 'No hay conexión. La operación se guardará y se enviará cuando vuelvas online.';
 
-            mensaje.style.display = 'block';
-            mensaje.style.animation = 'slideUp 0.5s forwards';
+            alerta.style.display = 'block';
+            alerta.style.animation = 'slideUp 0.5s forwards';
 
             setTimeout(() => {
-                mensaje.style.animation = 'slideDown 0.5s forwards';
-                setTimeout(() => mensaje.style.display = 'none', 500);
+                alerta.style.animation = 'slideDown 0.5s forwards';
+                setTimeout(() => alerta.style.display = 'none', 500);
             }, 6000);
         });
 
         window.addEventListener('online', () => {
-            const mensaje = document.getElementById('mensaje');
+            const alerta = document.getElementById('alerta');
 
-            mensaje.classList.remove('hidden', 'error');
-            mensaje.classList.add('success');
-            mensaje.innerHTML = 'Conexión restaurada. Enviando solicitudes pendientes...';
+            alerta.classList.remove('hidden', 'error');
+            alerta.classList.add('success');
+            alerta.innerHTML = 'Conexión restaurada. Enviando solicitudes pendientes...';
 
-            mensaje.style.display = 'block';
-            mensaje.style.animation = 'slideUp 0.5s forwards';
+            alerta.style.display = 'block';
+            alerta.style.animation = 'slideUp 0.5s forwards';
 
             setTimeout(() => {
-                mensaje.style.animation = 'slideDown 0.5s forwards';
-                setTimeout(() => mensaje.style.display = 'none', 500);
+                alerta.style.animation = 'slideDown 0.5s forwards';
+                setTimeout(() => alerta.style.display = 'none', 500);
             }, 4000);
         });
     </script>
