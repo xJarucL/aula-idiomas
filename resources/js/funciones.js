@@ -47,6 +47,7 @@ function enviarFormulario($form, guardarOffline = true) {
             }
 
             $('#mensaje')
+                .removeClass('hidden')
                 .removeClass('success')
                 .addClass('error')
                 .html('No hay conexión. La operación se guardará y se enviará cuando vuelvas online.')
@@ -62,6 +63,7 @@ function enviarFormulario($form, guardarOffline = true) {
             contentType: false,
             success: function(response) {
                 $('#mensaje')
+                    .removeClass('hidden')
                     .removeClass('error')
                     .addClass(response.class || 'success')
                     .html(response.mensaje || response.message || 'Operación exitosa.')
@@ -79,6 +81,7 @@ function enviarFormulario($form, guardarOffline = true) {
                     : res?.mensaje || res?.message || 'Ha ocurrido un error inesperado.';
 
                 $('#mensaje')
+                    .removeClass('hidden')
                     .removeClass('success')
                     .addClass('error')
                     .html(mensaje)
@@ -183,6 +186,7 @@ async function procesarColaOffline() {
     localStorage.removeItem('colaOffline');
 
     $('#mensaje')
+        .removeClass('hidden')
         .removeClass('error')
         .addClass('success')
         .html('Todas las acciones pendientes se enviaron correctamente.')
