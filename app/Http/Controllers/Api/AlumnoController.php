@@ -124,7 +124,7 @@ class AlumnoController extends Controller
 
         $alumnos->getCollection()->transform(function ($alumno) {
             $promedio = $alumno->calificaciones->avg('calificacion');
-            $alumno->promedio = $promedio ? number_format($promedio, 1) : null;
+            $alumno->promedio = $promedio ? round($promedio, 1) : null;
             return $alumno;
         });
 
