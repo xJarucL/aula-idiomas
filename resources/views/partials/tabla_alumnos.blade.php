@@ -1,4 +1,4 @@
-<div class="h-150 sm:h-125 overflow-auto pr-1">
+<div class="h-150 sm:max-h-screen overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
             <tr class="hidden sm:table-row bg-teal-50 text-left">
