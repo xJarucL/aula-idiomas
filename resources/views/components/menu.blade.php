@@ -243,7 +243,8 @@
     </nav>
 
     <main class="p-5 md:mr-20 md:ml-20">
-        <div id="alerta" class="hidden"></div>
+        <x-msj-alert />
+        <div id="alerta" class="error hidden"></div>
         @yield('content')
     </main>
 

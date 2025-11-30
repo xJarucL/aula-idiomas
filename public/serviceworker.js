@@ -5,6 +5,8 @@ const STATIC_ASSETS = [
     "/",
     "/offline",
     "/img/logo-ingles.png",
+    "/build/assets/app-BICDzDkj.css",
+    "/build/assets/app-B1nSm56y.js",
 ];
 
 self.addEventListener("install", (event) => {
