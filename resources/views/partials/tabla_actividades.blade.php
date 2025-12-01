@@ -1,13 +1,13 @@
-<div class="h-150 sm:h-125 overflow-auto pr-1">
+<div class="h-150 sm:max-h-screen overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="bg-gray-100 text-left hidden sm:table-row">
-                <th class="py-2 px-2">Código</th>
-                <th class="py-2 px-2">Nombre de Actividad</th>
-                <th class="py-2 px-2">Descripción</th>
-                <th class="py-2 px-2">Tipo</th>
-                <th class="py-2 px-2">Fecha de Creación</th>
-                <th class="py-2 px-2">Acciones</th>
+            <tr class="bg-teal-50 text-left hidden sm:table-row">
+                <th class="py-2 px-2 text-teal-800">CÓDIGO</th>
+                <th class="py-2 px-2 text-teal-800">NOMBRE DE ACTIVIDAD</th>
+                <th class="py-2 px-2 text-teal-800">DESCRIPCIÓN</th>
+                <th class="py-2 px-2 text-teal-800">TIPO</th>
+                <th class="py-2 px-2 text-teal-800">FECHA DE CREACIÓN</th>
+                <th class="py-2 px-2 text-teal-800">ACCIONES</th>
             </tr>
         </thead>
         <tbody>

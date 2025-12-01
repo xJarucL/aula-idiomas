@@ -1,14 +1,14 @@
 @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
 
-<div class="h-150 sm:h-[35rem] overflow-auto pr-1">
+<div class="h-150 sm:max-h-screen overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base ">
         <thead class="sticky top-0">
-            <tr class="hidden sm:table-row bg-gray-100">
-                <th class="py-2 px-2 md:px-4 text-left">Nombre del grupo</th>
-                <th class="py-2 px-2 md:px-4 text-left">Cantidad Estudiantes</th>
-                <th class="py-2 px-2 md:px-4 text-left">Carrera</th>
-                <th class="py-2 px-2 md:px-4 text-left">Grado</th>
-                <th class="py-2 px-2 md:px-4 text-left">Acciones</th>
+            <tr class="hidden sm:table-row bg-teal-50">
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">NOMBRE DEL GRUPO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">CANTIDAD ESTUDIANTES</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">CARRERA</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">GRADO</th>
+                <th class="py-2 px-2 md:px-4 text-left text-teal-800">ACCIONES</th>
             </tr>
         </thead>
         <tbody>
@@ -60,7 +60,7 @@
                         </td>
                         <td class="py-3 px-4 align-middle text-gray-800 hidden sm:table-cell">
                             <a href="{{ route('docente.detalle-grupo', $grupo->grupo->pk_grupo) }}"
-                                class="hover:border-b hover:border-teal-700 hover:text-teal-700">Ver detalles</a>
+                                class="p-1 hover:border hover:rounded-lg hover:bg-teal-600 hover:text-white">Ver detalles</a>
                         </td>
                     </tr>
                 @endforeach
