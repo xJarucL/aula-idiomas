@@ -27,6 +27,8 @@ Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
+Route::view('/offline', 'offline');
+
 Route::prefix('chat')->middleware(['auth'])->group(function () {
 
     Route::post('/enviar', [ChatController::class, 'enviar'])->name('chat.enviar');

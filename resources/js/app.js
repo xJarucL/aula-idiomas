@@ -8,3 +8,7 @@ window.jQuery = $;
 window.Alpine = Alpine
 
 Alpine.start()
+
+import './funciones.js';
+import './sweetalert.js';
+import './buscador.js';
