@@ -4,6 +4,7 @@
 
 @section('content')
     <section>
+        <x-msj-alert />
         <h1 class="text-3xl sm:text-5xl font-bold text-teal-800">Listado de actividades</h1>
         <span class="text-xs sm:text-lg text-gray-500">Consulta en este apartado todas las actividades asignadas.</span>
     </section>

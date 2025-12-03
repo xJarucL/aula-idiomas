@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="max-w-4xl mx-auto mt-2 bg-white rounded-lg shadow p-8">
-
+    <x-msj-alert />
     <section class="flex flex-col items-center text-center mb-8">
         <img
             class="w-28 h-28 border border-l-gray-500 rounded-full mb-4 object-cover"
