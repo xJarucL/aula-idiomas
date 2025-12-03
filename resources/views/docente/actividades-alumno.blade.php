@@ -6,13 +6,13 @@
 
 <section class="mx-6 mt-6">
 
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+    <h1 class="text-5xl font-semibold text-teal-700 mb-6">
         Actividades del Alumno
     </h1>
 
     @if($promedioGeneral !== null)
         <div class="bg-teal-50 border border-teal-200 text-teal-800 px-5 py-3 rounded-lg shadow mb-6">
-            <p class="text-lg font-semibold">
+            <p class="text-sm sm:text-lg font-semibold">
                 Promedio por entrega de actividades:
                 <span class="text-teal-700">{{ number_format($promedioGeneral, 2) }}</span> / 10
             </p>

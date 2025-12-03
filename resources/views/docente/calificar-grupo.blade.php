@@ -72,6 +72,11 @@
             </p>
         </div>
 
+        <a href="{{ route('docente.calificar') }}"
+            class="inline-flex items-center gap-2 mb-4 bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-800 transition">
+            ← Volver
+        </a>
+
         @if ($alumnos->isEmpty())
             <div class="p-6 bg-white shadow rounded-xl text-center text-gray-500 italic">
                 No hay alumnos registrados en este grupo.

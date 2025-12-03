@@ -5,6 +5,8 @@
 @section('content')
     <x-msj-alert />
 
+
+
     <div class="sm:p-6 space-y-8">
         <div class="text-left pt-6">
             <a href="{{ route('docente.mis-grupos') }}"
@@ -12,7 +14,6 @@
                 ← Volver al listado
             </a>
         </div>
-
         <div class="bg-white rounded-2xl shadow-lg p-6 mt-3 sm:mt-0 border-t-4 border-teal-600">
             <h1 class="text-2xl font-bold text-gray-800 mb-2">
                 {{ $grupo->fk_cuatrimestre ?? '' }}{{ $grupo->nombre ?? '' }}{{ $grupo->carrera->abreviatura ?? '' }}
@@ -27,27 +28,64 @@
             </div>
         </div>
 
-            @forelse ($grupo->alumnos as $alumno)
-                @php
-                    $authTipo = Auth::user()->fk_tipo_usuario;
-                    $id = $alumno->usuario->pk_usuario;
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h2 class="text-xl font-semibold text-teal-700 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-teal-600"></i> Participantes
+                </h2>
 
-                    $ruta = $authTipo == 2
-                        ? route('docente.detalle-alumno', $id)
-                        : ($authTipo == 3
-                            ? route('coordinacion.detalle-alumno', $id)
-                            : '#');
-                @endphp
+                @forelse ($grupo->alumnos as $alumno)
+                    @php
+                        $authTipo = Auth::user()->fk_tipo_usuario;
+                        $id = $alumno->usuario->pk_usuario;
 
-                <a href="{{ $ruta }}">
-                    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-3 flex items-center justify-between hover:shadow-lg transition">
-                        <div>
-                            <h3 class="text-gray-800 font-semibold">
-                                {{ $alumno->usuario->nombres ?? 'N/A' }}
-                                {{ $alumno->usuario->ap_paterno ?? '' }}
-                                {{ $alumno->usuario->ap_materno ?? '' }}
-                            </h3>
-                            <p class="text-gray-500 text-sm">{{ $alumno->usuario->matricula ?? 'Sin matrícula' }}</p>
+                        $ruta =
+                            $authTipo == 2
+                                ? route('docente.detalle-alumno', $id)
+                                : ($authTipo == 3
+                                    ? route('coordinacion.detalle-alumno', $id)
+                                    : '#');
+                    @endphp
+
+                    <a href="{{ $ruta }}">
+                        <div
+                            class="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-3 flex items-center justify-between hover:shadow-lg transition">
+                            <div>
+                                <h3 class="text-gray-800 font-semibold">
+                                    {{ $alumno->usuario->nombres ?? 'N/A' }}
+                                    {{ $alumno->usuario->ap_paterno ?? '' }}
+                                    {{ $alumno->usuario->ap_materno ?? '' }}
+                                </h3>
+                                <p class="text-gray-500 text-sm">{{ $alumno->usuario->matricula ?? 'Sin matrícula' }}</p>
+                            </div>
+                        </div>
+                    </a>
+                @empty
+                    <p class="text-gray-500 italic">No hay participantes registrados.</p>
+                @endforelse
+            </div>
+
+            <div>
+                <h2 class="text-xl font-semibold text-teal-700 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-teal-600"></i> Actividades
+                </h2>
+
+                @forelse ($grupo->actividades as $actividad)
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-5 mb-3 hover:shadow-lg transition">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ $actividad['nom_actividad'] }}</h3>
+                        <p class="text-gray-600 mt-1 text-sm text-justify">
+                            {{ $actividad['descripcion'] ?? 'Sin descripción' }}
+                        </p>
+                        <div class="flex justify-between items-center mt-4 text-sm text-gray-500">
+                            <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-medium uppercase">
+                                {{ $actividad['tipo'] ?? 'General' }}
+                            </span>
+                            <div class="text-right">
+                                <p><span class="font-semibold text-gray-700">Inicio:</span>
+                                    {{ \Carbon\Carbon::parse($actividad['fecha_inicio'])->format('d/m/Y') }}</p>
+                                <p><span class="font-semibold text-gray-700">Fin:</span>
+                                    {{ \Carbon\Carbon::parse($actividad['fecha_fin'])->format('d/m/Y') }}</p>
+                            </div>
                         </div>
                     </div>
                 @empty

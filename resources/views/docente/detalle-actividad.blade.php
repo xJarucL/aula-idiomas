@@ -8,7 +8,7 @@
 
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <h1 class="text-3xl font-bold text-teal-700 mb-2">{{ $actividad->nom_actividad }}</h1>
-        <p class="text-gray-600 mb-6">{{ $actividad->descripcion }}</p>
+        <p class="text-gray-600 mb-6 text-justify">{{ $actividad->descripcion }}</p>
 
         @if ($tipo === 'preguntas')
                 @foreach ($preguntas as $index => $pregunta)
