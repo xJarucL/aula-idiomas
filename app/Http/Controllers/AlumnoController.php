@@ -384,17 +384,28 @@ class AlumnoController extends Controller
             })
             ->get();
 
-
         $carrera = $grupos->last()?->carrera;
+
+        $historialGrupos = GrupoAlumno::withTrashed()
+            ->with(['grupo' => function ($q) {
+                $q->withTrashed()
+                ->with(['carrera' => function ($c) {
+                    $c->withTrashed();
+                }]);
+            }])
+            ->where('fk_alumno', $alumno->pk_alumno)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
 
-        return view('docente.detalle-alumno', [
+        return view('coordinacion.detalle-alumno', [
             'usuario' => $usuario,
             'alumno' => $alumno,
             'carrera' => $carrera?->nombre ?? 'Sin carrera',
             'promedio' => $promedio ?? 'N/A',
-            'grupos' => $grupos
+            'grupos' => $grupos,
+            'historialGrupos' => $historialGrupos
         ]);
     }
 
@@ -519,8 +530,18 @@ class AlumnoController extends Controller
             })
             ->get();
 
-
         $carrera = $grupos->last()?->carrera;
+
+        $historialGrupos = GrupoAlumno::withTrashed()
+            ->with(['grupo' => function ($q) {
+                $q->withTrashed()
+                ->with(['carrera' => function ($c) {
+                    $c->withTrashed();
+                }]);
+            }])
+            ->where('fk_alumno', $alumno->pk_alumno)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $promedio = Calificaciones::where('fk_alumno', $alumno->pk_alumno)->avg('calificacion');
 
@@ -529,7 +550,8 @@ class AlumnoController extends Controller
             'alumno' => $alumno,
             'carrera' => $carrera?->nombre ?? 'Sin carrera',
             'promedio' => $promedio ?? 'N/A',
-            'grupos' => $grupos
+            'grupos' => $grupos,
+            'historialGrupos' => $historialGrupos
         ]);
     }
 
