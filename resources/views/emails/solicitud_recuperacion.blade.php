@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Solicitud de Restauración de Contraseña</title>
   </head>
+  <x-msj-alert />
   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
     <table align="center" width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 0;">
       <tr>

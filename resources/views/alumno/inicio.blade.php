@@ -6,6 +6,7 @@
 
     <section>
         <h1 class="text-3xl sm:text-5xl font-bold text-teal-700  ">Panel del Alumno</h1>
+        <x-msj-alert />
         <span class="text-sm sm:text-lg text-gray-500 sm:font-light mt-2">
             Bienvenido/a, {{ Auth::user()->nombres }} {{ Auth::user()->ap_paterno }} {{ Auth::user()->ap_materno ?? '' }}
         </span>

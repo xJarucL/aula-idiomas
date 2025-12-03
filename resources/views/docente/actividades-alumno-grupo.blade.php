@@ -4,7 +4,8 @@
 
 @section('content')
 
-<section class="">
+<section class="mx-6 mt-6">
+    <x-msj-alert />
 
     <a href="{{ route('docente.calificar.grupo', $grupoId) }}"
         class="inline-flex items-center gap-2 bg-teal-600 text-sm sm:text-lg text-white border-lg hover:bg-teal-800 rounded-lg mb-4 p-2">

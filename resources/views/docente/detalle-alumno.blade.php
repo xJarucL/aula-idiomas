@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow-lg overflow-hidden">
+    <x-msj-alert />
 
     <section class="flex flex-col items-center text-center p-8">
         <img class="w-28 h-28 border-4 border-white rounded-full mb-4 object-cover shadow-xl"

@@ -1,3 +1,4 @@
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="/build/assets/app-BICDzDkj.css">
     <script src="/build/assets/app-B1nSm56y.js" defer></script>
 </head>
-
+<x-msj-alert />
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center h-screen p-6">
 
     <div class="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center border border-gray-200">

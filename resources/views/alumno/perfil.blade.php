@@ -6,6 +6,7 @@
 
 <div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow-lg overflow-hidden">
     <section class="flex flex-col items-center text-center p-8">
+        <x-msj-alert />
         <img class="w-28 h-28 border-4 border-white rounded-full mb-4 object-cover shadow-xl"
              src="{{ $usuario->img_user ? asset('storage/' . $usuario->img_user) : asset('img/default.jpg') }}"
              alt="Foto de perfil">

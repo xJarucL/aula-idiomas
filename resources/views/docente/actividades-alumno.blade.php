@@ -5,6 +5,7 @@
 @section('content')
 
 <section class="mx-6 mt-6">
+    <x-msj-alert />
 
     <h1 class="text-5xl font-semibold text-teal-700 mb-6">
         Actividades del Alumno

@@ -4,6 +4,7 @@
 
 @section('content')
 <section class="sm:mx-6 mt-6">
+    <x-msj-alert />
 
     <a href="{{ route('docente.actividades-pendientes') }}"
         class="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-800 transition">

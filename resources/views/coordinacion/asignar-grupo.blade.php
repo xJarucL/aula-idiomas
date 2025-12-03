@@ -5,6 +5,7 @@
 @section('content')
 <div class="max-w-2xl mx-auto mt-10 bg-white shadow rounded-lg p-8">
     <h2 class="text-2xl font-semibold mb-4 text-gray-800">Asignar alumnos de grupo</h2>
+    <x-msj-alert />
 
     <p class="mb-6 text-gray-600">
         Vas a asignar los alumnos del grupo

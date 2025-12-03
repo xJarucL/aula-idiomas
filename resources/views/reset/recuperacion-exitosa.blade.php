@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
+<x-msj-alert />
 <body class="bg-gray-100 p-4">
     <div class="flex justify-center items-center min-h-screen">
         <div class="w-full max-w-md p-8 border border-gray-300 rounded-md shadow bg-white">
