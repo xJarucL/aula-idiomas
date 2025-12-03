@@ -4,6 +4,8 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto mt-8">
+    <x-msj-alert />
+
     <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ $actividad->nom_actividad }}</h2>
     <p class="text-sm text-gray-600 mb-6">
         Alumno:

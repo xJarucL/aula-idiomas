@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="p-6 md:p-10 bg-gradient-to-b from-teal-50 to-white min-h-screen">
+    <x-msj-alert />
     <a href="{{ route('alumno.lista-actividades') }}"
        class="inline-flex items-center text-sm text-gray-700 hover:text-teal-700 transition mb-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

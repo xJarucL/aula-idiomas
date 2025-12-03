@@ -9,6 +9,8 @@ window.Alpine = Alpine
 
 Alpine.start()
 
-import './funciones.js';
-import './sweetalert.js';
-import './buscador.js';
+$(document).ready(function () {
+    import('./sweetalert.js').then(() => console.log('sweetalert.js cargado'));
+    import('./funciones.js').then(() => console.log('funciones.js cargado'));
+    import('./buscador.js').then(() => console.log('buscador.js cargado'));
+});

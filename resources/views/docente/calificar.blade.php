@@ -5,6 +5,7 @@
 @section('content')
 
 <div class="h-150 sm:h-[35rem] overflow-auto pr-2">
+    <x-msj-alert />
 
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Mis grupos</h2>
