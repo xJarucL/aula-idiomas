@@ -83,7 +83,7 @@
                     e.preventDefault();
                     Swal.fire({
                         icon: 'error',
-                        title: '⚠️ Actividad no entregada',
+                        title: 'Actividad no entregada',
                         html: `
                     <p style="font-size:16px; color:#555;">
                         Esta actividad <strong>no fue entregada</strong> en los tiempos establecidos.<br>

@@ -120,6 +120,7 @@ Route::prefix('docente')
     Route::post('guardar/calificacion', [DocenteController::class, 'guardarCalificacion'])->name('docente.guardar.calificacion');
 
     Route::get('actividades/alumno/{alumno}/grupo/{grupo}', [ActividadController::class, 'actividadesAlumno'])->name('docente.alumno-actividades');
+    Route::get('/detalle-actividad/{id}', [ActividadController::class, 'detalleActividad'])->name('docente.detalle-actividad');
 
 });
 
