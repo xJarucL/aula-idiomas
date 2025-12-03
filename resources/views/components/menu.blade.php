@@ -5,9 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Aula de Inglés')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/funciones.js', 'resources/js/sweetalert.js', 'resources/js/buscador.js'])
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <link rel="icon" href="{{ asset('img/logo-ingles.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="manifest" href="/manifest.json">
@@ -36,8 +41,8 @@
                             <a href="{{ route('alumno.lista-actividades') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
                                 actividades</a>
-                            <a href="{{ route('alumno.progreso') }}"
-                                class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
+                            <!-- <a href="{{ route('alumno.progreso') }}"
+                                class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a> -->
                         @elseif(auth()->user()->fk_tipo_usuario == '2')
                             <a href="{{ route('docente.inicio') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
@@ -75,15 +80,6 @@
                         </path>
                     </svg>
                 </a>
-                <!-- Icono de Notificaciones -->
-                <!-- <a href="#" class="text-white hover:text-teal-100 transition" aria-label="Notificaciones">
-                    <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                        </path>
-                    </svg>
-                </a> -->
-                <!-- Icono de Usuario -->
                 <div x-data="{ open: false }" class="relative hidden sm:block">
                     <button @click="open = !open"
                         class="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-teal-50 transition cursor-pointer"
@@ -179,8 +175,8 @@
                                                 <a href="{{ route('alumno.lista-actividades') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
                                                     actividades</a>
-                                                <a href="{{ route('alumno.progreso') }}"
-                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
+                                                <!-- <a href="{{ route('alumno.progreso') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a> -->
                                             @elseif(auth()->user()->fk_tipo_usuario == '2')
                                                 <a href="{{ route('docente.inicio') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
@@ -243,7 +239,6 @@
     </nav>
 
     <main class="p-5 md:mr-20 md:ml-20">
-        <x-msj-alert />
         <div id="alerta" class="error hidden"></div>
         @yield('content')
     </main>

@@ -120,6 +120,7 @@ Route::prefix('docente')
     Route::post('guardar/calificacion', [DocenteController::class, 'guardarCalificacion'])->name('docente.guardar.calificacion');
 
     Route::get('actividades/alumno/{alumno}/grupo/{grupo}', [ActividadController::class, 'actividadesAlumno'])->name('docente.alumno-actividades');
+    Route::get('/detalle-actividad/{id}', [ActividadController::class, 'detalleActividad'])->name('docente.detalle-actividad');
 
 });
 
@@ -190,6 +191,8 @@ Route::prefix('coordinacion')
     Route::put('/editando/coordiandor', [CoordinadorController::class, 'actualizarCorreo'])->name('coordinador.actualizar-correo');
 
     Route::get('grupo/{id}', [GrupoController::class, 'detalleGrupo'])->name('coordinador.detalle-grupo');
+    Route::get('alumno/{id}', [AlumnoController::class, 'detalleAlumno'])->name('coordinacion.detalle-alumno');
+    Route::get('alumno/{alumno}/grupo/{grupo}/actividades', [AlumnoController::class, 'actividadesGrupo'])->name('coordinacion.actividades-alumno');
 
 });
 

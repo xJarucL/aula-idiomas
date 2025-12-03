@@ -1,65 +1,138 @@
 @extends('components.menu')
 
-@section('title', 'Detalle del alumno | Aula de Idiomas')
+@section('title', 'Alumno - Detalle')
 
 @section('content')
-    <x-msj-alert />
+<div class="max-w-5xl mx-auto mt-6 bg-white rounded-2xl shadow-lg overflow-hidden">
 
-    <div class="max-w-4xl mx-auto mt-2 bg-white rounded-lg shadow p-8">
-        <section class="flex flex-col items-center text-center mb-8">
-            <img class="w-28 h-28 border border-l-gray-500 rounded-full mb-4 object-cover"
-                src="{{ $usuario->img_user ? asset('storage/' . $usuario->img_user) : asset('img/default.jpg') }}"
-                alt="foto de perfil">
-            <h2 class="text-2xl font-semibold">{{ $usuario->nombres }} {{ $usuario->ap_paterno }} {{ $usuario->ap_materno }}</h2>
-            <p class="text-sm text-gray-600 mb-3 mt-2">Alumno</p>
+    <section class="flex flex-col items-center text-center p-8">
+        <img class="w-28 h-28 border-4 border-white rounded-full mb-4 object-cover shadow-xl"
+             src="{{ $usuario->img_user ? asset('storage/' . $usuario->img_user) : asset('img/default.jpg') }}"
+             alt="Foto de perfil">
 
-        </section>
+        <h2 class="text-3xl font-semibold tracking-wide">
+            {{ $usuario->nombres }} {{ $usuario->ap_paterno }} {{ $usuario->ap_materno }}
+        </h2>
+        <p class="text-sm opacity-90 mt-1">Alumno</p>
+    </section>
 
-        <section class="pt-5 mb-6">
-            <div class="border-b border-gray-200 pt-6 mb-4">
-                <h3 class="text-2xl font-semibold mb-2">Información de contacto</h3>
+    <section class="p-8">
+        <div class="border-b border-gray-200 mb-6 pb-2">
+            <h3 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+                Información del Alumno
+            </h3>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 text-gray-700">
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <span class="block text-sm text-gray-500">Matrícula</span>
+                <p class="font-semibold text-lg text-gray-800">{{ $usuario->matricula }}</p>
             </div>
-            <div class="flex justify-start border-b border-gray-200 pb-4 mb-4">
-                <span class="font-medium mr-12">Matrícula:</span>
-                <span class="text-gray-600">{{ $usuario->matricula }}</span>
+
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <span class="block text-sm text-gray-500">Carrera</span>
+                <p class="font-semibold text-lg text-gray-800">{{ $carrera }}</p>
             </div>
-            <div class="flex justify-start border-b border-gray-200 pb-4 mb-4">
-                <span class="font-medium mr-12">Carrera:</span>
-                <span class="text-gray-600">{{ $carrera ?? 'No definida' }}</span>
+
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <span class="block text-sm text-gray-500">Promedio general</span>
+                <p class="font-semibold text-lg text-teal-700">{{ $promedio ?? 'N/A' }}</p>
             </div>
-            <div class="flex justify-start border-b border-gray-200 pb-4 mb-4">
-                <span class="font-medium mr-12">Promedio:</span>
-                <span class="text-gray-600">{{$promedio ?? 'N/A' }}</span>
+        </div>
+    </section>
+
+    @php
+        $grupoActual = $grupos->last();
+    @endphp
+
+    @if($grupoActual)
+    <section class="bg-teal-50 p-6 border-t border-gray-200">
+        <h3 class="text-xl font-semibold text-teal-800 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />
+            </svg>
+            Grupo Actual
+        </h3>
+
+        <div class="bg-white rounded-xl p-5 shadow-md border border-gray-100 flex flex-col md:flex-row md:items-center justify-between">
+            <div>
+                <p class="font-bold text-gray-800 text-lg">
+                    {{ $grupoActual->fk_cuatrimestre }}{{ $grupoActual->nombre }}{{ $grupoActual->carrera->abreviatura }} {{ $grupoActual->año }}
+                </p>
+                <p class="text-sm text-gray-600">
+                    Carrera: {{ $grupoActual->carrera->nombre ?? 'Sin carrera' }}
+                </p>
             </div>
-        </section>
-    </div>
-    <div class="max-w-4xl mx-auto mt-2 bg-white rounded-lg shadow p-4 sm:p-8">
-        <section>
-            <h2 class="text-2xl font-semibold">Grupos</h2>
-        </section>
-        <section class="mt-5">
-            @forelse($grupos as $grupo)
-                <div class="bg-teal-50 border border-teal-200 rounded-lg p-4 shadow hover:shadow-md transition">
-                    <h3 class="text-lg font-semibold text-teal-700 mb-2">
-                        {{ $grupo->fk_cuatrimestre }}{{ $grupo->nombre }}{{ $grupo->carrera->abreviatura }} {{ $grupo->año }}
-                    </h3>
-                    <p class="text-sm text-gray-600 mb-1">
-                        Carrera: <span class="font-medium text-teal-800">{{ $grupo->carrera->nombre ?? '-' }}</span>
-                    </p>
-                    <p class="text-sm text-gray-600 mb-1">
-                        Cuatrimestre: <span class="font-medium text-teal-800">{{ $grupo->fk_cuatrimestre }}°</span>
-                    </p>
-                    <p class="text-sm text-gray-600 mb-2">
-                        Año: <span class="font-medium text-teal-800">{{ $grupo->año }}</span>
-                    </p>
-                   <a href="{{ route('docente.actividades-alumno', ['alumno' => $alumno->pk_alumno, 'grupo' => $grupo->pk_grupo]) }}"
-                        class="bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
-                        Ver Actividades
-                    </a>
-                </div>
-            @empty
-                <p class="col-span-2 text-gray-500 italic">No tiene grupos asignados.</p>
-            @endforelse
-        </section>
-    </div>
+
+            @php
+                $authTipo = Auth::user()->fk_tipo_usuario;
+
+                $alumnoId = $alumno->pk_alumno;
+                $grupoId = $grupoActual->pk_grupo;
+
+                $rutaActividades = $authTipo == 2
+                    ? route('docente.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                    : ($authTipo == 3
+                        ? route('coordinacion.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                        : '#');
+            @endphp
+
+            <a href="{{ $rutaActividades }}"
+                class="mt-4 md:mt-0 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition shadow text-sm">
+                Ver Actividades
+            </a>
+        </div>
+    </section>
+    @endif
+    <section class="p-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+            </svg>
+            Historial de Grupos
+        </h3>
+
+        @if($historialGrupos->count() > 1)
+            <div class="grid md:grid-cols-2 gap-5">
+
+                @foreach($historialGrupos->skip(1) as $g)
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg transition relative">
+                        <div class="absolute right-2 top-2 bg-teal-500 text-white px-2 py-1 text-xs rounded-full shadow">
+                            Pasado
+                        </div>
+
+                        <p class="font-bold text-gray-800 text-lg">
+                            {{ $g->grupo->fk_cuatrimestre }}{{ $g->grupo->nombre }}{{ $g->grupo->carrera->abreviatura }} {{ $g->grupo->año }}
+                        </p>
+
+                        <p class="text-sm text-gray-600">
+                            Carrera: {{ $g->grupo->carrera->nombre ?? 'Sin carrera' }}
+                        </p>
+
+                        @php
+                            $grupoId = $g->grupo->pk_grupo;
+                            $rutaAct = $authTipo == 2
+                                ? route('docente.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                                : ($authTipo == 3
+                                    ? route('coordinacion.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                                    : '#');
+                        @endphp
+
+                        <a href="{{ $rutaAct }}"
+                            class="inline-block mt-3 bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
+                            Ver Actividades
+                        </a>
+                    </div>
+                @endforeach
+
+            </div>
+        @else
+            <p class="text-gray-500 italic text-center">No hay grupos anteriores registrados.</p>
+        @endif
+    </section>
+
+</div>
 @endsection

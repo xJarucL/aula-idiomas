@@ -1,13 +1,14 @@
 <div class="h-150 sm:max-h-screen overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="bg-teal-50 text-left hidden sm:table-row">
-                <th class="py-2 px-2 text-teal-800">CÓDIGO</th>
-                <th class="py-2 px-2 text-teal-800">NOMBRE DE ACTIVIDAD</th>
-                <th class="py-2 px-2 text-teal-800">DESCRIPCIÓN</th>
-                <th class="py-2 px-2 text-teal-800">TIPO</th>
-                <th class="py-2 px-2 text-teal-800">FECHA DE CREACIÓN</th>
-                <th class="py-2 px-2 text-teal-800">ACCIONES</th>
+            <tr class="bg-gray-100 text-left hidden sm:table-row">
+                <th class="py-2 px-2">Código</th>
+                <th class="py-2 px-2">Nombre de Actividad</th>
+                <th class="py-2 px-2">Descripción</th>
+                <th class="py-2 px-2">Tipo</th>
+                <th class="py-2 px-2">Fecha de Creación</th>
+                <th class="py-2 px-2">Autor</th>
+                <th class="py-2 px-2">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -67,6 +68,9 @@
                         <td class="py-3 px-4 align-middle text-gray-800 hidden sm:table-cell">
                             {{ $actividad->created_at->format('d/m/Y') }}
                         </td>
+                        <td class="py-3 px-4 align-middle text-gray-800 hidden sm:table-cell">
+                            {{ $actividad->docente->nombres }} {{ $actividad->docente->ap_paterno }} {{ $actividad->docente->ap_materno ?? '' }}
+                        </td>
                         <td class="py-3 px-4 align-middle">
                             <div class="flex items-center justify-center gap-2">
                                 @if ($actividad->deleted_at)
@@ -83,6 +87,9 @@
                                 @else
                                     <a href="{{ route('docente.asignar-actividad', $actividad->pk_actividad) }}"
                                         class="text-cyan-600 hover:text-cyan-800" title="Asignar">Asignar</a>
+
+                                    <a href="{{route('docente.detalle-actividad', $actividad->pk_actividad)}}" class="text-cyan-600 hover:text-cyan-800"
+                                        title="Detalles">Detalles</a>
 
                                     <form action="{{ route('actividad.eliminar', $actividad->pk_actividad) }}"
                                         method="POST">
