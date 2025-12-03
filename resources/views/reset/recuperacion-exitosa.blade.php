@@ -11,7 +11,7 @@
 <body class="bg-gray-100 p-4">
     <div class="flex justify-center items-center min-h-screen">
         <div class="w-full max-w-md p-8 border border-gray-300 rounded-md shadow bg-white">
-            <h1 class="flex justify-center text-xl md:text-3xl font-bold text-gray-800">¡Contraseña Restablecida!</h1>
+            <h1 class="flex justify-center text-xl md:text-3xl font-bold text-teal-700">¡Contraseña Restablecida!</h1>
             <p class="text-lg font-light mt-4 mb-4 text-justify">
                 La contraseña del usuario <strong>{{ $usuario->nombres }} {{ $usuario->ap_paterno }}</strong> (Matrícula: <strong>{{ $usuario->matricula }}</strong>) ha sido restablecida correctamente.
             </p>
