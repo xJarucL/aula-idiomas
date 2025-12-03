@@ -32,11 +32,24 @@
             </h2>
 
             @forelse ($grupo->alumnos as $alumno)
-                <a href="{{ route('docente.detalle-alumno', $alumno->usuario->pk_usuario) }}">
+                @php
+                    $authTipo = Auth::user()->fk_tipo_usuario;
+                    $id = $alumno->usuario->pk_usuario;
+
+                    $ruta = $authTipo == 2
+                        ? route('docente.detalle-alumno', $id)
+                        : ($authTipo == 3
+                            ? route('coordinacion.detalle-alumno', $id)
+                            : '#');
+                @endphp
+
+                <a href="{{ $ruta }}">
                     <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4 mb-3 flex items-center justify-between hover:shadow-lg transition">
                         <div>
                             <h3 class="text-gray-800 font-semibold">
-                                {{ $alumno->usuario->nombres ?? 'N/A' }} {{ $alumno->usuario->ap_paterno ?? '' }} {{ $alumno->usuario->ap_materno ?? '' }}
+                                {{ $alumno->usuario->nombres ?? 'N/A' }}
+                                {{ $alumno->usuario->ap_paterno ?? '' }}
+                                {{ $alumno->usuario->ap_materno ?? '' }}
                             </h3>
                             <p class="text-gray-500 text-sm">{{ $alumno->usuario->matricula ?? 'Sin matrícula' }}</p>
                         </div>

@@ -52,8 +52,21 @@
                     <p class="text-sm text-gray-600 mb-2">
                         Año: <span class="font-medium text-teal-800">{{ $grupo->año }}</span>
                     </p>
-                   <a href="{{ route('docente.actividades-alumno', ['alumno' => $alumno->pk_alumno, 'grupo' => $grupo->pk_grupo]) }}"
-                        class="bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
+                  @php
+                    $authTipo = Auth::user()->fk_tipo_usuario;
+
+                    $alumnoId = $alumno->pk_alumno;
+                    $grupoId = $grupo->pk_grupo;
+
+                    $rutaActividades = $authTipo == 2
+                        ? route('docente.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                        : ($authTipo == 3
+                            ? route('coordinacion.actividades-alumno', ['alumno' => $alumnoId, 'grupo' => $grupoId])
+                            : '#');
+                  @endphp
+
+                    <a href="{{ $rutaActividades }}"
+                    class="bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 text-sm">
                         Ver Actividades
                     </a>
                 </div>

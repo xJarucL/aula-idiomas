@@ -104,9 +104,8 @@ class ActividadController extends Controller{
 
     public function listaActividadesDocente(Request $request){
         try {
-            $usuario = Auth::user();
 
-            $query = Actividades::where('fk_docente', $usuario->pk_usuario);
+            $query = Actividades::with('docente');
 
             if ($request->filled('search')) {
                 $search = str_replace(' ', '', $request->input('search'));
@@ -131,6 +130,7 @@ class ActividadController extends Controller{
             }
 
             return view('docente.lista-actividades', compact('actividades'));
+
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -142,9 +142,8 @@ class ActividadController extends Controller{
 
     public function listaActividadesDocenteDeshabilitadas(Request $request){
         try {
-            $usuario = Auth::user();
 
-            $query = Actividades::onlyTrashed()->where('fk_docente', $usuario->pk_usuario);
+            $query = Actividades::onlyTrashed()->with('docente');
 
             if ($request->filled('search')) {
                 $search = str_replace(' ', '', $request->input('search'));
@@ -165,6 +164,7 @@ class ActividadController extends Controller{
             }
 
             return view('docente.lista-actividades', compact('actividades'));
+
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -173,8 +173,6 @@ class ActividadController extends Controller{
             ]);
         }
     }
-
-
 
     public function eliminarActividad($id){
         try {

@@ -1,64 +1,89 @@
-const CACHE_NAME = "aula-ingles-v1";
+const CACHE_NAME = "aula-ingles-v4";
 const OFFLINE_URL = "/offline";
 
 const STATIC_ASSETS = [
-    "/",
     "/offline",
     "/img/logo-ingles.png",
-    "/build/assets/app-BICDzDkj.css",
-    "/build/assets/app-B1nSm56y.js",
 ];
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        (async () => {
-            const cache = await caches.open(CACHE_NAME);
-
-            await cache.addAll(STATIC_ASSETS);
-
-            try {
-                const res = await fetch("/");
-                const html = await res.text();
-
-                const viteAssets = [...html.matchAll(/\/build\/assets\/[^\"]+/g)].map(
-                    (m) => m[0]
-                );
-
-                console.log("[SW] Detectados assets de Vite:", viteAssets);
-
-                await cache.addAll(viteAssets);
-            } catch (e) {
-                console.warn("[SW] No pude precargar assets de Vite:", e);
-            }
-        })()
+        caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
     );
-
     self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
     event.waitUntil(
-        caches.keys().then((keys) =>
+        caches.keys().then(keys =>
             Promise.all(
                 keys
-                    .filter((key) => key !== CACHE_NAME)
-                    .map((key) => caches.delete(key))
+                    .filter(key => key !== CACHE_NAME)
+                    .map(key => caches.delete(key))
             )
         )
     );
-
     self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
-    if (event.request.method !== "GET") return;
+    const req = event.request;
+    const url = new URL(req.url);
+
+    if (req.method !== "GET") return;
+
+    const rutasBloqueadas = [
+        "/",
+        "/login",
+        "/logout",
+        "/iniciando",
+        "/recuperar-contrasena",
+        "/recuperar-password",
+    ];
+
+    if (rutasBloqueadas.some(r => url.pathname === r)) {
+        event.respondWith(fetch(req));
+        return;
+    }
+
+    if (url.pathname.startsWith("/build/")) {
+        event.respondWith(
+            caches.match(req).then(cached => {
+                return cached || fetch(req).then(res => {
+                    if (res.ok) {
+                        caches.open(CACHE_NAME).then(cache =>
+                            cache.put(req, res.clone())
+                        );
+                    }
+                    return res;
+                });
+            })
+        );
+        return;
+    }
+
+    if (req.mode === "navigate") {
+        event.respondWith(
+            fetch(req).catch(() => caches.match(OFFLINE_URL))
+        );
+        return;
+    }
 
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            return (
-                cached ||
-                fetch(event.request).catch(() => caches.match(OFFLINE_URL))
-            );
+        caches.match(req).then(cached => {
+            return cached ||
+                fetch(req).then(res => {
+                    if (res.ok) {
+                        caches.open(CACHE_NAME).then(cache =>
+                            cache.put(req, res.clone())
+                        );
+                    }
+                    return res;
+                }).catch(() => {
+                    if (req.destination === "image") {
+                        return caches.match("/img/logo-ingles.png");
+                    }
+                });
         })
     );
 });
