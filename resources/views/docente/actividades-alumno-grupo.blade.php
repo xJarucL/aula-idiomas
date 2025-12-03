@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section class="mx-6 mt-6">
+<section class="">
     <x-msj-alert />
 
     <a href="{{ route('docente.calificar.grupo', $grupoId) }}"
@@ -12,7 +12,7 @@
         ← Regresar
     </a>
 
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+    <h1 class="text-3xl sm:text-4xl font-semibold text-teal-700 mb-6">
         Actividades del Alumno
     </h1>
 
