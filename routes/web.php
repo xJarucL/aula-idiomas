@@ -190,6 +190,8 @@ Route::prefix('coordinacion')
     Route::put('/editando/coordiandor', [CoordinadorController::class, 'actualizarCorreo'])->name('coordinador.actualizar-correo');
 
     Route::get('grupo/{id}', [GrupoController::class, 'detalleGrupo'])->name('coordinador.detalle-grupo');
+    Route::get('alumno/{id}', [AlumnoController::class, 'detalleAlumno'])->name('coordinacion.detalle-alumno');
+    Route::get('alumno/{alumno}/grupo/{grupo}/actividades', [AlumnoController::class, 'actividadesGrupo'])->name('coordinacion.actividades-alumno');
 
 });
 
