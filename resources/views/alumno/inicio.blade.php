@@ -129,7 +129,7 @@
                     </div>
                 </div>
                 {{-- PARTE DE ACCESO --}}
-                <a href="{{ route('alumno.progreso') }}">
+                <!-- <a href="{{ route('alumno.progreso') }}">
                     <div class=" bg-white p-4 h-auto border border-gray-300 rounded-lg shadow">
                         <div class="flex justify-between">
                             <div class="w-5/6 text-justify">
@@ -145,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </a> -->
                 <a href="{{ route('alumno.lista-actividades') }}" class="mt-4">
                     <div class=" bg-white p-4 h-auto border border-gray-300 rounded-lg shadow">
                         <div class="flex justify-between">

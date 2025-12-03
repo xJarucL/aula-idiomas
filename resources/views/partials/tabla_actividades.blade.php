@@ -88,6 +88,9 @@
                                     <a href="{{ route('docente.asignar-actividad', $actividad->pk_actividad) }}"
                                         class="text-cyan-600 hover:text-cyan-800" title="Asignar">Asignar</a>
 
+                                    <a href="{{route('docente.detalle-actividad', $actividad->pk_actividad)}}" class="text-cyan-600 hover:text-cyan-800"
+                                        title="Detalles">Detalles</a>
+
                                     <form action="{{ route('actividad.eliminar', $actividad->pk_actividad) }}"
                                         method="POST">
                                         @csrf

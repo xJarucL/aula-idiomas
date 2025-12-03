@@ -405,6 +405,26 @@ class ActividadController extends Controller{
         return view('alumno.responder-actividad', compact('actividad', 'tipo', 'preguntas', 'pdf', 'auditiva'));
     }
 
+    public function detalleActividad($id){
+        $actividad = Actividades::findOrFail($id);
+
+        $tipo = $actividad->tipo;
+
+        $preguntas = [];
+        $pdf = null;
+        $auditiva = null;
+
+        if ($tipo === 'preguntas') {
+            $preguntas = Preguntas::with('opciones')->where('fk_actividad', $id)->get();
+        } elseif ($tipo === 'pdf') {
+            $pdf = ActividadPdf::where('fk_actividad', $id)->first();
+        } elseif ($tipo === 'auditiva') {
+            $auditiva = ActividadAuditivaFrases::where('fk_actividad', $id)->first();
+        }
+
+        return view('docente.detalle-actividad', compact('actividad', 'tipo', 'preguntas', 'pdf', 'auditiva'));
+    }
+
     public function guardarRespuestas(Request $request, $id){
         $usuario = Auth::user();
         $alumno = Alumno::where('fk_usuario', $usuario->pk_usuario)->first();
@@ -514,7 +534,6 @@ class ActividadController extends Controller{
 
             $pendAbiertas = RespuestasAlumno::where('calificada', 0)
                 ->whereHas('pregunta', fn($q)=>$q->where('tipo','abierta'))
-                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
                 ->with(['alumno.usuario','actividad.grupos.carrera','pregunta'])
                 ->get()
                 ->map(function($r){
@@ -532,7 +551,6 @@ class ActividadController extends Controller{
                 });
 
             $pendPdf = EntregaPdfAlumno::whereNull('calificacion')
-                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
                 ->with(['alumno.usuario','actividad.grupos.carrera'])
                 ->get()
                 ->map(function($r){
@@ -549,7 +567,6 @@ class ActividadController extends Controller{
                 });
 
             $pendAudio = RespuestaAuditivaAlumno::whereNull('calificacion')
-                ->whereHas('actividad', fn($q)=>$q->where('fk_docente',$id))
                 ->with(['alumno.usuario','actividad.grupos.carrera'])
                 ->get()
                 ->map(function($r){

@@ -41,8 +41,8 @@
                             <a href="{{ route('alumno.lista-actividades') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
                                 actividades</a>
-                            <a href="{{ route('alumno.progreso') }}"
-                                class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
+                            <!-- <a href="{{ route('alumno.progreso') }}"
+                                class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a> -->
                         @elseif(auth()->user()->fk_tipo_usuario == '2')
                             <a href="{{ route('docente.inicio') }}"
                                 class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
@@ -175,8 +175,8 @@
                                                 <a href="{{ route('alumno.lista-actividades') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Mis
                                                     actividades</a>
-                                                <a href="{{ route('alumno.progreso') }}"
-                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a>
+                                                <!-- <a href="{{ route('alumno.progreso') }}"
+                                                    class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Progreso</a> -->
                                             @elseif(auth()->user()->fk_tipo_usuario == '2')
                                                 <a href="{{ route('docente.inicio') }}"
                                                     class="font-semibold text-white hover:text-white hover:bg-teal-800 px-2 py-5 rounded text-m">Panel</a>
