@@ -13,8 +13,8 @@
 <body class="bg-gray-100 p-4">
     <div class="flex justify-center items-center min-h-screen">
         <div class="w-full max-w-md p-8 border border-gray-300 rounded-md shadow bg-white">
-            <h1 class="flex justify-center text-xl md:text-3xl font-bold text-gray-800">Recuperar contraseña</h1>
-            <p class="text-sm font-light mt-2 mb-2 text-justify">Para recuperar el acceso a tu cuenta, por favor ingresa tu matrícula en el campo correspondiente.</p>
+            <h1 class="flex justify-center text-xl md:text-3xl font-bold text-teal-700">Recuperar contraseña</h1>
+            <p class="text-[10px] sm:text-base font-light mt-2 mb-2 text-justify">Para recuperar el acceso a tu cuenta, por favor ingresa tu matrícula en el campo correspondiente.</p>
             <p></p>
             <form action="{{ route('recuperar.enviar') }}" method="POST">
                 @csrf

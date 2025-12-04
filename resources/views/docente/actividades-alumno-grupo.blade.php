@@ -1,18 +1,18 @@
 @extends('components.menu')
 
-@section('title', 'Actividades del Alumno')
+@section('title', 'Actividades del Alumno | Aula de Idiomas')
 
 @section('content')
 
-<section class="mx-6 mt-6">
+<section class="">
     <x-msj-alert />
 
     <a href="{{ route('docente.calificar.grupo', $grupoId) }}"
-        class="inline-flex items-center gap-2 text-teal-700 hover:text-teal-900 mb-4">
+        class="inline-flex items-center gap-2 bg-teal-600 text-sm sm:text-lg text-white border-lg hover:bg-teal-800 rounded-lg mb-4 p-2">
         ← Regresar
     </a>
 
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6">
+    <h1 class="text-3xl sm:text-4xl font-semibold text-teal-700 mb-6">
         Actividades del Alumno
     </h1>
 
@@ -69,7 +69,7 @@
                                 </p>
 
                                 @if(isset($resp->pregunta->descripcion))
-                                    <p class="text-gray-600 text-sm mb-1">
+                                    <p class="text-gray-600 text-sm mb-1 text-justify">
                                         {{ $resp->pregunta->descripcion }}
                                     </p>
                                 @endif

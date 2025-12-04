@@ -26,13 +26,13 @@
             <div class="mb-6">
                 <label for="nom_actividad" class="block text-gray-700 font-semibold mb-2">Nombre de la actividad</label>
                 <input type="text" name="nom_actividad" id="nom_actividad" required
-                    class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm placeholder-gray-400">
+                    class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent shadow-sm placeholder-gray-400">
             </div>
 
             <div class="mb-6">
                 <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción</label>
                 <textarea name="descripcion" id="descripcion" rows="3" required
-                    class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm placeholder-gray-400"></textarea>
+                    class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition shadow-sm placeholder-gray-400"></textarea>
             </div>
 
             <div class="mb-6">
@@ -49,7 +49,7 @@
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold text-teal-700">Preguntas</h2>
                     <button type="button" id="btn-agregar-pregunta"
-                        class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition shadow">
+                        class="bg-teal-600 text-white text-sm sm:text-base px-4 py-2 rounded-lg hover:bg-teal-700 transition shadow cursor-pointer">
                         + Agregar pregunta
                     </button>
                 </div>
@@ -88,7 +88,7 @@
 
             <div class="mt-10 flex justify-end">
                 <button type="submit"
-                    class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition">
+                    class="bg-teal-600 hover:bg-teal-700 text-white text-sm sm:text-base font-semibold px-8 py-3 rounded-xl shadow-md transition cursor-pointer">
                     Guardar actividad
                 </button>
             </div>
@@ -110,19 +110,19 @@
         <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-sm pregunta" data-index="${contadorPreguntas}">
             <div class="flex justify-between items-center mb-3">
                 <h3 class="font-semibold text-teal-700">Pregunta ${contadorPreguntas}</h3>
-                <button type="button" class="text-red-600 hover:text-red-800 eliminar-pregunta text-sm font-medium">Eliminar</button>
+                <button type="button" class="text-red-600 hover:text-red-800 eliminar-pregunta text-sm font-medium cursor-pointer">Eliminar</button>
             </div>
 
             <label class="block text-gray-700 font-medium mb-1">Texto de la pregunta</label>
             <input type="text" name="preguntas[${contadorPreguntas}][pregunta]" required
-                   class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm">
+                   class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition shadow-sm">
 
             <label class="block text-gray-700 font-medium mb-1">Descripción / Instrucción</label>
             <textarea name="preguntas[${contadorPreguntas}][descripcion]" rows="2"
-                      class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm"></textarea>
+                      class="w-full bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition shadow-sm"></textarea>
 
             <label class="block text-gray-700 font-medium mb-1">Tipo de pregunta</label>
-            <select name="preguntas[${contadorPreguntas}][tipo]" class="tipo-pregunta bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:ring-2 focus:ring-teal-400 focus:border-teal-500 shadow-sm">
+            <select name="preguntas[${contadorPreguntas}][tipo]" class="tipo-pregunta bg-white border border-gray-300 rounded-lg p-2.5 mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition shadow-sm">
                 <option value="opcion_multiple">Opción múltiple</option>
                 <option value="abierta">Abierta</option>
             </select>
@@ -131,7 +131,7 @@
             <div class="opciones space-y-2">
                 <div class="flex justify-between items-center">
                     <h4 class="font-semibold text-teal-600">Opciones</h4>
-                    <button type="button" class="agregar-opcion bg-teal-500 text-white px-3 py-1 rounded-md hover:bg-teal-600 text-sm">+ Opción</button>
+                    <button type="button" class="agregar-opcion bg-teal-500 text-white px-3 py-1 rounded-md hover:bg-teal-600 text-sm cursor-pointer">+ Opción</button>
                 </div>
                 <div class="lista-opciones mt-2"></div>
             </div>
@@ -151,15 +151,17 @@
                     const totalOpciones = listaOpciones.children.length + 1;
 
                     const opcionHTML = `
-            <div class="flex items-center gap-2 bg-white border border-gray-200 p-2 rounded-lg shadow-sm">
+            <div class="flex flex-col sm:flex-row gap-2 bg-white border border-gray-200 p-2 rounded-lg shadow-sm">
                 <input type="text" name="preguntas[${index}][opciones][${totalOpciones}][texto_opcion]"
                        placeholder="Texto de opción"
-                       class="flex-1 bg-gray-50 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-teal-400 focus:border-teal-500">
+                       class="bg-gray-50 w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus-border-transparent transition">
+                <article class="flex justify-end sm:w-24 gap-2">
                 <label class="flex items-center gap-1 text-sm text-gray-700">
                     <input type="checkbox" name="preguntas[${index}][opciones][${totalOpciones}][es_correcta]" value="1">
                     Correcta
                 </label>
-                <button type="button" class="eliminar-opcion text-red-600 hover:text-red-800 text-xs font-bold">✕</button>
+                <button type="button" class="eliminar-opcion text-red-600 hover:text-red-800 text-xs font-bold cursor-pointer">✕</button>
+                </article>
             </div>`;
                     listaOpciones.insertAdjacentHTML('beforeend', opcionHTML);
                 }

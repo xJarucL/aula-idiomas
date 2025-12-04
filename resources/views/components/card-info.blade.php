@@ -31,7 +31,7 @@
     ];
 @endphp
 
-<a href="{{ $link }}" class="block bg-white hover:bg-gray-100 rounded-xl shadow-sm p-6 hover:shadow-md transition">
+<a href="{{ $link }}" class="block bg-white rounded-xl shadow-sm p-6 hover:shadow-xl hover:scale-[1.02] transition cursor-pointer">
     <div class="flex items-center gap-4">
         <div class="w-10 h-8 sm:w-12 sm:h-12 {{ $colorClasses[$color] ?? $colorClasses['blue'] }} rounded-full flex items-center justify-center">
             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

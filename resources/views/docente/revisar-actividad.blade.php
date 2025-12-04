@@ -7,7 +7,7 @@
     <x-msj-alert />
 
     <a href="{{ route('docente.actividades-pendientes') }}"
-        class="inline-flex items-center gap-2 bg-teal-100 text-gray-700 px-4 py-2 rounded-lg shadow hover:bg-teal-200 hover:scale-105 transition">
+        class="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-800 transition">
         ← Guardar y volver
     </a>
 

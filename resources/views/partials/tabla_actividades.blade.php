@@ -1,14 +1,14 @@
-<div class="h-150 sm:h-125 overflow-auto pr-1">
+<div class="h-150 sm:max-h-screen overflow-auto pr-1">
     <table class="min-w-full text-xs md:text-base">
         <thead class="sticky top-0">
-            <tr class="bg-gray-100 text-left hidden sm:table-row">
-                <th class="py-2 px-2">Código</th>
-                <th class="py-2 px-2">Nombre de Actividad</th>
-                <th class="py-2 px-2">Descripción</th>
-                <th class="py-2 px-2">Tipo</th>
-                <th class="py-2 px-2">Fecha de Creación</th>
-                <th class="py-2 px-2">Autor</th>
-                <th class="py-2 px-2">Acciones</th>
+            <tr class="bg-teal-50 text-left hidden sm:table-row">
+                <th class="py-2 px-2 text-teal-800">CODIGO</th>
+                <th class="py-2 px-2 text-teal-800">NOMBRE DE ACTIVIDADES</th>
+                <th class="py-2 px-2 text-teal-800">DESCRIPCION</th>
+                <th class="py-2 px-2 text-teal-800">TIPO</th>
+                <th class="py-2 px-2 text-teal-800">FECHA DE CREACION</th>
+                <th class="py-2 px-2 text-teal-800">AUTOR</th>
+                <th class="py-2 px-2 text-teal-800">ACCIONES</th>
             </tr>
         </thead>
         <tbody>
